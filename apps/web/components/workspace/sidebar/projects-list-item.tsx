@@ -307,35 +307,30 @@ export const SidebarProjectsListItem = observer(function SidebarProjectsListItem
                     }
                   )}
                   ref={dragHandleRef}
+                  tabIndex={-1}
                 />
               </Tooltip>
             )}
             <>
-              <ControlLink href={projectUrl} className="flex flex-grow truncate" onClick={handleItemClick}>
-                {isAccordionMode ? (
-                  <button
-                    type="button"
-                    className="flex w-full flex-grow items-center gap-1.5 text-left select-none"
-                    aria-expanded={isProjectListOpen}
-                    aria-label={
-                      isProjectListOpen
-                        ? t("aria_labels.projects_sidebar.close_project_menu")
-                        : t("aria_labels.projects_sidebar.open_project_menu")
-                    }
-                  >
-                    <div className="grid size-4 flex-shrink-0 place-items-center">
-                      <Logo logo={project.logo_props} size={16} />
-                    </div>
-                    <p className="truncate text-13 font-medium text-secondary">{project.name}</p>
-                  </button>
-                ) : (
-                  <div className="flex w-full flex-grow items-center gap-1.5 text-left select-none">
-                    <div className="grid size-4 flex-shrink-0 place-items-center">
-                      <Logo logo={project.logo_props} size={16} />
-                    </div>
-                    <p className="truncate text-13 font-medium text-secondary">{project.name}</p>
+              <ControlLink
+                href={projectUrl}
+                className="flex flex-grow truncate"
+                onClick={handleItemClick}
+                aria-expanded={isAccordionMode ? isProjectListOpen : undefined}
+                onKeyDown={(e) => {
+                  // a disclosure also toggles on Space, which a link ignores
+                  if (isAccordionMode && e.key === " ") {
+                    e.preventDefault();
+                    handleItemClick();
+                  }
+                }}
+              >
+                <div className="flex w-full flex-grow items-center gap-1.5 text-left select-none">
+                  <div className="grid size-4 flex-shrink-0 place-items-center">
+                    <Logo logo={project.logo_props} size={16} />
                   </div>
-                )}
+                  <p className="truncate text-13 font-medium text-secondary">{project.name}</p>
+                </div>
               </ControlLink>
               <div className="flex items-center gap-1">
                 <div

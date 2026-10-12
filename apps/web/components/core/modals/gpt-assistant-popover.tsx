@@ -26,12 +26,14 @@ const aiService = new AIService();
 
 type Props = {
   isOpen: boolean;
+  handleOpen: () => void;
   handleClose: () => void;
   onResponse: (response: any) => void;
   onError?: (error: any) => void;
   placement?: TPopoverMenuPlacement;
   prompt?: string;
-  button: React.ReactNode;
+  /** Becomes the popover trigger, so it must be a button without its own toggle. */
+  button: React.ReactElement;
   className?: string;
   workspaceId: string;
   workspaceSlug: string;
@@ -46,6 +48,7 @@ type FormData = {
 export function GptAssistantPopover(props: Props) {
   const {
     isOpen,
+    handleOpen,
     handleClose,
     onResponse,
     onError,
@@ -193,22 +196,11 @@ export function GptAssistantPopover(props: Props) {
       <Popover
         open={isOpen}
         onOpenChange={(nextOpen) => {
-          // The caller's own button owns opening (`openOnClick={false}` below), so the only
-          // transitions Base UI drives here are dismissals: Escape and outside press.
-          if (!nextOpen) onClose();
+          if (nextOpen) handleOpen();
+          else onClose();
         }}
       >
-        {/* The trigger only anchors the panel: the `button` node the caller hands us already toggles
-            `isOpen`, so a second toggle here would cancel it out. It stays out of the tab order,
-            as the `<button tabIndex={-1}>` it replaces did. */}
-        <PopoverTrigger
-          nativeButton={false}
-          openOnClick={false}
-          tabIndex={-1}
-          render={<span className="flex items-center" />}
-        >
-          {button}
-        </PopoverTrigger>
+        <PopoverTrigger render={button} />
         {/* The popover owns the portal, positioning, enter/leave and the panel surface, so
             the old popper positioning, enter/leave transition and hand-rolled chrome all go. */}
         <PopoverContent variant="rich" side={side} align={align}>

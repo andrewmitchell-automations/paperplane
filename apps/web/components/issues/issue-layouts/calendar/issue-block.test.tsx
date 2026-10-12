@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import type { TIssue } from "@plane/types";
+import { findNestedInteractive } from "@/lib/testing/nested-interactive";
 import { CalendarIssueBlock } from "./issue-block";
 
 const issue: TIssue = {
@@ -46,11 +47,13 @@ describe("CalendarIssueBlock", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <CalendarIssueBlock issue={issue} quickActions={() => null} />
+        <CalendarIssueBlock issue={issue} quickActions={() => <button type="button">More</button>} />
       </MemoryRouter>
     );
 
     expect(errorSpy).not.toHaveBeenCalled();
-    expect(container.querySelector("a#issue-issue-1")).not.toBeNull();
+    expect(container.querySelector("a#issue-issue-1")?.getAttribute("role")).not.toBe("button");
+    expect(findNestedInteractive(container)).toEqual([]);
+    expect(container.querySelector("#calendar-issue-issue-1[data-issue-row='issue-1']")).not.toBeNull();
   });
 });
