@@ -27,7 +27,13 @@ import { GanttChartBlocksList } from "@/components/gantt-chart/blocks/blocks-lis
 import { IssueBulkOperationsRoot } from "@/components/issues/bulk-operations";
 import { useBulkOperationStatus } from "@/hooks/use-bulk-operation-status";
 // local imports
-import { DEFAULT_BLOCK_WIDTH, GANTT_SELECT_GROUP, HEADER_HEIGHT } from "../constants";
+import {
+  DEFAULT_BLOCK_WIDTH,
+  GANTT_SELECT_GROUP,
+  HEADER_HEIGHT,
+  SIDEBAR_SIZE_PROPERTY,
+  SIDEBAR_SIZE_VALUE,
+} from "../constants";
 import { getBlockChartDates, getItemPositionWidth } from "../views/helpers";
 import { TimelineDragHelper } from "./timeline-drag-helper";
 
@@ -173,11 +179,12 @@ export const GanttChartMainContent = observer(function GanttChartMainContent(pro
               // DO NOT REMOVE THE ID
               id="gantt-container"
               className={cn(
-                "vertical-scrollbar horizontal-scrollbar scrollbar-lg flex h-full w-full overflow-auto border-t-[0.5px] border-subtle",
+                "vertical-scrollbar horizontal-scrollbar @container scrollbar-lg flex h-full w-full overflow-auto border-t-[0.5px] border-subtle",
                 {
                   "mb-8": bottomSpacing,
                 }
               )}
+              style={{ [SIDEBAR_SIZE_PROPERTY]: SIDEBAR_SIZE_VALUE }}
               ref={ganttContainerRef}
               onScroll={onScroll}
             >
@@ -195,7 +202,7 @@ export const GanttChartMainContent = observer(function GanttChartMainContent(pro
                 showAllBlocks={showAllBlocks}
                 isEpic={isEpic}
               />
-              <div className="relative h-max min-h-full flex-shrink-0 flex-grow">
+              <div data-gantt-chart-area className="relative h-max min-h-full flex-shrink-0 flex-grow">
                 <ActiveChartView />
                 {currentViewData && (
                   <div

@@ -23,14 +23,29 @@ class TestResizeObserver implements ResizeObserver {
 }
 
 class TestIntersectionObserver implements IntersectionObserver {
-  readonly root: Element | Document | null = null;
-  readonly rootMargin: string = "";
-  readonly thresholds: readonly number[] = [0];
+  readonly root: Element | Document | null;
+  readonly rootMargin: string;
+  readonly thresholds: readonly number[];
+  private readonly callback: IntersectionObserverCallback;
 
-  constructor(private readonly callback: IntersectionObserverCallback) {}
+  constructor(callback: IntersectionObserverCallback, options: IntersectionObserverInit = {}) {
+    this.callback = callback;
+    this.root = options.root ?? null;
+    this.rootMargin = options.rootMargin ?? "0px 0px 0px 0px";
+    this.thresholds = Array.isArray(options.threshold) ? options.threshold : [options.threshold ?? 0];
+  }
 
   observe(target: Element): void {
-    const entry = { isIntersecting: true, target } as IntersectionObserverEntry;
+    const bounds = target.getBoundingClientRect();
+    const entry: IntersectionObserverEntry = {
+      boundingClientRect: bounds,
+      intersectionRatio: 1,
+      intersectionRect: bounds,
+      isIntersecting: true,
+      rootBounds: null,
+      target,
+      time: performance.now(),
+    };
     this.callback([entry], this);
   }
   unobserve(): void {}

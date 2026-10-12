@@ -17,8 +17,8 @@ import { GanttChartHeader, GanttChartMainContent } from "@/components/gantt-char
 import { useUserProfile } from "@/hooks/store/user";
 import { useTimeLineChartStore } from "@/hooks/use-timeline-chart";
 //
-import { SIDEBAR_WIDTH } from "../constants";
 import { currentViewDataWithView } from "../data";
+import { getChartOffset } from "../helpers/chart-area";
 import type { IMonthBlock, IMonthView, IWeekBlock } from "../views";
 import { getNumberOfDaysBetweenTwoDates, monthView, quarterView, weekView } from "../views";
 
@@ -166,6 +166,7 @@ export const ChartViewRoot = observer(function ChartViewRoot(props: ChartViewRoo
     const scrollContainer = document.querySelector("#gantt-container") as HTMLDivElement;
     if (!scrollContainer) return;
 
+    const chartOffset = getChartOffset(scrollContainer);
     const clientVisibleWidth: number = scrollContainer?.clientWidth;
     let scrollWidth: number = 0;
     let daysDifference: number = 0;
@@ -174,7 +175,7 @@ export const ChartViewRoot = observer(function ChartViewRoot(props: ChartViewRoo
     scrollWidth =
       Math.abs(daysDifference) * currentState.data.dayWidth -
       (clientVisibleWidth / 2 - currentState.data.dayWidth) +
-      SIDEBAR_WIDTH / 2;
+      chartOffset / 2;
 
     scrollContainer.scrollLeft = scrollWidth;
   };
