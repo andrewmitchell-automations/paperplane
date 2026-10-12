@@ -13,6 +13,7 @@ from plane.bgtasks.email_notification_task import (
     stack_email_notification,
 )
 from plane.db.models import EmailNotificationLog, Issue, Page, Project, State, User
+from plane.license.models import InstanceConfiguration
 from plane.utils.issue_type import link_starter_type
 
 pytestmark = pytest.mark.unit
@@ -84,12 +85,15 @@ def test_logs_older_than_a_day_are_dropped(project, receiver, create_user, mocke
 
 
 @pytest.fixture
-def smtp(mocker, settings):
+def smtp(settings):
     settings.APP_BASE_URL = "https://plane.example.com"
-    mocker.patch(
-        "plane.bgtasks.email_notification_task.get_email_configuration",
-        return_value=("smtp.example.com", "", "", "25", "0", "0", "plane@example.com"),
-    )
+    for key, value in {
+        "EMAIL_TRANSPORT": "smtp",
+        "EMAIL_HOST": "smtp.example.com",
+        "EMAIL_PORT": "25",
+        "EMAIL_FROM": "plane@example.com",
+    }.items():
+        InstanceConfiguration.objects.update_or_create(key=key, defaults={"value": value, "category": "SMTP"})
 
 
 def test_sends_without_a_request_origin_and_marks_only_its_logs(project, receiver, create_user, smtp):
