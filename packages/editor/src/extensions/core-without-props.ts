@@ -4,9 +4,8 @@
  * See the LICENSE file for details.
  */
 
-import TaskItem from "@tiptap/extension-task-item";
-import TaskList from "@tiptap/extension-task-list";
-import { TextStyle } from "@tiptap/extension-text-style";
+import { TaskItem } from "@tiptap/extension-task-item";
+import { TaskList } from "@tiptap/extension-task-list";
 import { Underline } from "@tiptap/extension-underline";
 // plane editor imports
 import { CoreEditorAdditionalExtensionsWithoutProps } from "@/extensions/core/without-props";
@@ -37,6 +36,7 @@ import { TableCell } from "./table/table-cell";
 import { TableHeader } from "./table/table-header";
 import { TableRow } from "./table/table-row";
 import { CustomTextAlignExtension } from "./text-align";
+import { CustomTextStyle as TextStyle } from "./text-style";
 import { TableOfContentsExtensionConfig } from "./toc/extension-config";
 import { WorkItemEmbedExtensionConfig } from "./work-item-embed/extension-config";
 

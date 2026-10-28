@@ -16585,6 +16585,7 @@ components:
         deleted_at:
           type: string
           format: date-time
+          readOnly: true
           nullable: true
         point:
           type: integer
@@ -16629,6 +16630,7 @@ components:
         archived_at:
           type: string
           format: date
+          readOnly: true
           nullable: true
         is_draft:
           type: boolean
@@ -16643,6 +16645,7 @@ components:
         created_by:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
         updated_by:
           type: string
@@ -17774,10 +17777,6 @@ components:
           format: uuid
           description: The work item type. Required on create and must be enabled
             for the project.
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         point:
           type: integer
           maximum: 12
@@ -17805,10 +17804,6 @@ components:
         sort_order:
           type: number
           format: double
-        archived_at:
-          type: string
-          format: date
-          nullable: true
         is_draft:
           type: boolean
         external_source:
@@ -17819,10 +17814,6 @@ components:
           type: string
           nullable: true
           maxLength: 255
-        created_by:
-          type: string
-          format: uuid
-          nullable: true
         parent:
           type: string
           format: uuid
@@ -20320,10 +20311,6 @@ components:
           format: uuid
           description: The work item type. Required on create and must be enabled
             for the project.
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         point:
           type: integer
           maximum: 12
@@ -20351,10 +20338,6 @@ components:
         sort_order:
           type: number
           format: double
-        archived_at:
-          type: string
-          format: date
-          nullable: true
         is_draft:
           type: boolean
         external_source:
@@ -20365,10 +20348,6 @@ components:
           type: string
           nullable: true
           maxLength: 255
-        created_by:
-          type: string
-          format: uuid
-          nullable: true
         parent:
           type: string
           format: uuid

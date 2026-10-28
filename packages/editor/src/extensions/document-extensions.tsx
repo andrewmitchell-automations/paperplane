@@ -6,7 +6,7 @@
 
 import type { HocuspocusProvider } from "@hocuspocus/provider";
 import type { AnyExtension } from "@tiptap/core";
-import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import CollaborationCaret from "@tiptap/extension-collaboration-caret";
 import {
   AnchorExtensionConfig,
   ChildPagesExtension,
@@ -105,7 +105,7 @@ const extensionRegistry: TDocumentEditorAdditionalExtensionsRegistry[] = [
     isEnabled: (disabledExtensions, _flaggedExtensions, { provider }) =>
       !!provider && !disabledExtensions.includes("collaboration-cursor"),
     getExtension: ({ provider, userDetails }) =>
-      CollaborationCursor.configure({
+      CollaborationCaret.configure({
         provider,
         user: {
           id: userDetails.id,

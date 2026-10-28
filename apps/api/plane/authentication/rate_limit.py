@@ -28,6 +28,10 @@ class AuthenticationThrottle(ConfigurableAnonRateThrottle):
     # var of the same name (DRF format: "<num>/<period>", period s/m/h/d).
     scope = "authentication"
 
+    def get_cache_key(self, request, view):
+        # Key on the client IP for every caller, signed in or not.
+        return self.cache_format % {"scope": self.scope, "ident": self.get_ident(request)}
+
     def throttle_failure_view(self, request, *args, **kwargs):
         try:
             raise AuthenticationException(
@@ -54,7 +58,7 @@ def authentication_throttle_allows(request):
     return throttle.allow_request(request, None)
 
 
-def throttle_auth_redirect(*, is_app=False, is_space=False):
+def throttle_auth_redirect(*, is_app=False, is_space=False, is_admin=False):
     """
     Decorator for redirect-flow ``django.views.View`` POST handlers.
 
@@ -64,8 +68,9 @@ def throttle_auth_redirect(*, is_app=False, is_space=False):
     endpoint uses). The throttle runs before any DB access in the handler, so
     brute-force traffic is rejected without touching the database.
 
-    Pass ``is_app=True`` for /app auth views and ``is_space=True`` for /spaces
-    auth views so the redirect targets the correct base host.
+    Pass ``is_app=True`` for /app auth views, ``is_space=True`` for /spaces
+    auth views and ``is_admin=True`` for instance-admin auth views so the
+    redirect targets the correct base host.
     """
 
     def decorator(post_method):
@@ -77,7 +82,7 @@ def throttle_auth_redirect(*, is_app=False, is_space=False):
                     error_message="RATE_LIMIT_EXCEEDED",
                 )
                 url = get_safe_redirect_url(
-                    base_url=base_host(request=request, is_app=is_app, is_space=is_space),
+                    base_url=base_host(request=request, is_app=is_app, is_space=is_space, is_admin=is_admin),
                     next_path=request.POST.get("next_path"),
                     params=exc.get_error_dict(),
                 )

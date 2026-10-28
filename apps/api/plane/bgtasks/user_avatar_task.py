@@ -162,5 +162,6 @@ def sync_user_avatar(user_id, provider, avatar_url, fallback_url=""):
 
     user.avatar_asset = new_asset
     user.save(update_fields=["avatar_asset"])
-    if old_asset:
+    # Only the user's own asset: a link to someone else's must not delete it.
+    if old_asset and old_asset.user_id == user.id:
         delete_avatar_asset(old_asset)

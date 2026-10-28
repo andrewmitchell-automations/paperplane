@@ -49,6 +49,20 @@ def _fetch(result):
 @pytest.mark.unit
 @pytest.mark.django_db
 class TestSyncUserAvatar:
+    def test_a_new_avatar_leaves_another_users_asset_alone(self, storage):
+        user, owner = _user(), _user()
+        foreign = _asset(owner, "old-hash")
+        user.avatar_asset = foreign
+        user.save()
+
+        with _fetch((CONTENT, "image/png", "png")):
+            sync_user_avatar(str(user.id), "oidc", GRAPH_URL)
+
+        user.refresh_from_db()
+        assert user.avatar_asset_id != foreign.id
+        storage.delete_files.assert_not_called()
+        assert FileAsset.objects.filter(pk=foreign.pk).exists()
+
     def test_new_avatar_replaces_old_asset(self, storage):
         user = _user()
         old = _asset(user, "old-hash")

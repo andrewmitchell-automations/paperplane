@@ -14,23 +14,30 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - name: Set up Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - name: Set up uv
+        uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         with:
-          python-version: "3.12.x"
-          cache: 'pip'
-          cache-dependency-path: 'apps/api/requirements.txt'
-      - name: Install Pylint
-        run: python -m pip install ruff
+          # uv version comes from [tool.uv] required-version.
+          version-file: "apps/api/pyproject.toml"
+          # Same patch release as the production image (python:3.12.12-alpine).
+          python-version: "3.12.12"
+          enable-cache: true
+          cache-dependency-glob: "apps/api/uv.lock"
+      # The app dependencies and the dev group (ruff). --locked fails the job if
+      # uv.lock is out of date with pyproject.toml.
       - name: Install API Dependencies
-        run: cd apps/api && pip install -r requirements.txt
-      # No --fix: ruff exits 0 when it fixes everything, and CI discards the fixes.
+        working-directory: apps/api
+        run: uv sync --locked --no-default-groups --group dev
+      # No --fix: fixable violations must fail the job, not be rewritten on the runner.
       - name: Lint apps/api
-        run: ruff check apps/api
+        working-directory: apps/api
+        run: uv run --no-sync ruff check .
       - name: Check apps/api formatting
-        run: ruff format --check apps/api
+        working-directory: apps/api
+        run: uv run --no-sync ruff format --check .
       - name: Check migrations
-        run: cd apps/api && python manage.py makemigrations --check --dry-run
+        working-directory: apps/api
+        run: uv run --no-sync python manage.py makemigrations --check --dry-run
         env:
           SECRET_KEY: migration-check
           REDIS_URL: redis://localhost:6379/

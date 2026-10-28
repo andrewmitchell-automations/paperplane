@@ -7,7 +7,7 @@ from unittest.mock import patch
 import pytest
 from rest_framework import status
 
-from plane.db.models import FileAsset
+from plane.db.models import FileAsset, Project, ProjectMember
 
 INTERNAL = "http://seaweedfs-s3.storage:8333"
 PUBLIC = "http://testserver"
@@ -38,10 +38,12 @@ class TestServerAssetEndpoints:
         assert response.status_code == status.HTTP_200_OK, response.data
         assert response.data["upload_data"]["url"].startswith(PUBLIC)
 
-    def test_generic_asset_upload(self, api_key_client, workspace):
+    def test_generic_asset_upload(self, api_key_client, workspace, create_user):
+        project = Project.objects.create(name="Docs", identifier="DOCS", workspace=workspace)
+        ProjectMember.objects.create(project=project, member=create_user, role=20)
         response = api_key_client.post(
             f"/api/v1/workspaces/{workspace.slug}/assets/",
-            {"name": "doc.pdf", "type": "application/pdf", "size": 100},
+            {"name": "doc.pdf", "type": "application/pdf", "size": 100, "project_id": str(project.id)},
             format="json",
         )
 

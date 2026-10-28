@@ -50,19 +50,19 @@ describe("DocumentEditorAdditionalExtensions", () => {
   it("leaves out the collaboration cursor when there is no provider", () => {
     // A page version renders read-only with no Hocuspocus connection; the cursor
     // extension would dereference provider.awareness and throw on editor creation.
-    expect(names(DocumentEditorAdditionalExtensions(props()))).not.toContain("collaborationCursor");
+    expect(names(DocumentEditorAdditionalExtensions(props()))).not.toContain("collaborationCaret");
   });
 
   it("adds the collaboration cursor once a provider is connected", () => {
     const extensions = DocumentEditorAdditionalExtensions(props({ provider: provider as never, isEditable: true }));
-    expect(names(extensions)).toContain("collaborationCursor");
+    expect(names(extensions)).toContain("collaborationCaret");
   });
 
   it("honours the collaboration-cursor disabled flag even with a provider", () => {
     const extensions = DocumentEditorAdditionalExtensions(
       props({ provider: provider as never, disabledExtensions: ["collaboration-cursor"] })
     );
-    expect(names(extensions)).not.toContain("collaborationCursor");
+    expect(names(extensions)).not.toContain("collaborationCaret");
   });
 
   it("mounts a provider-less editor, as a page version does", () => {
@@ -82,6 +82,6 @@ describe("DocumentEditorAdditionalExtensions", () => {
   it("keeps every other extension in place without a provider", () => {
     const withProvider = names(DocumentEditorAdditionalExtensions(props({ provider: provider as never })));
     const without = names(DocumentEditorAdditionalExtensions(props()));
-    expect(withProvider.filter((name) => name !== "collaborationCursor")).toEqual(without);
+    expect(withProvider.filter((name) => name !== "collaborationCaret")).toEqual(without);
   });
 });

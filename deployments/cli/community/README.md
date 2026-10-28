@@ -63,7 +63,7 @@ mkdir plane-selfhost
 cd plane-selfhost
 ```
 
-#### For *Docker Compose* based setup
+#### For _Docker Compose_ based setup
 
 ```
 curl -fsSL -o setup.sh https://github.com/makeplane/plane/releases/latest/download/setup.sh
@@ -81,7 +81,8 @@ Lets get started by running the `./setup.sh` command.
 
 This will prompt you with the below options.
 
-#### Docker Compose 
+#### Docker Compose
+
 ```bash
 Select an Action you want to perform:
    1) Install (x86_64)
@@ -120,6 +121,16 @@ Below are the most import keys you must refer to. _<span style="color: #fcba03">
 
 There are many other settings you can play with, but we suggest you configure `EMAIL SETTINGS` as it will enable you to invite your teammates onto the platform.
 
+#### Client IP and rate limiting behind proxies
+
+Some endpoints are rate-limited per client IP. Two settings in `plane.env` control how that IP is determined:
+
+- **Plane directly on the internet behind the bundled proxy:** set `TRUSTED_PROXIES=private_ranges` (or your load balancer's ranges) and `NUM_PROXIES=1`.
+- **Behind an additional load balancer or CDN:** add its ranges to `TRUSTED_PROXIES` (space-separated, e.g. `TRUSTED_PROXIES=private_ranges 203.0.113.0/24`) and raise `NUM_PROXIES` by one per extra hop (e.g. `NUM_PROXIES=2`).
+- **Leaving `NUM_PROXIES` empty and `TRUSTED_PROXIES` at its default (`0.0.0.0/0`)** keeps the current behaviour.
+
+Restart the services after changing these values.
+
 ---
 
 ### Continue with setup - Start Server (Docker Compose)
@@ -157,7 +168,7 @@ You have successfully self hosted `Plane` instance. Access the application by go
 
 In case you want to make changes to `plane.env` variables, we suggest you to stop the services before doing that.
 
-#### Docker Compose 
+#### Docker Compose
 
 Lets again run the `./setup.sh` command. You will again be prompted with the below options. This time select `3` to stop the services
 
@@ -188,6 +199,7 @@ In case you want to make changes to `plane.env` variables, without stopping the 
 Lets again run the `./setup.sh` command. You will again be prompted with the below options. This time select `4` to restart the services
 
 #### Docker Compose
+
 ```bash
 Select a Action you want to perform:
    1) Install (x86_64)
@@ -208,9 +220,11 @@ If all goes well, you must see something like this
 
 ---
 
-### Upgrading Plane Version 
+### Upgrading Plane Version
 
 It is always advised to keep Plane up to date with the latest release.
+
+> Download the latest `setup.sh` (see [Downloading Latest Release](#downloading-latest-release)) before upgrading. The upgrade runs your local copy of the script, and newer versions generate or rotate the object-storage (MinIO) credentials in `plane.env`.
 
 Lets again run the `./setup.sh` command. You will again be prompted with the below options. This time select `5` to upgrade the release.
 
@@ -246,9 +260,9 @@ Once done with making changes in `plane.env` file, jump on to `Start Server`
 
 ### View Logs
 
-There would a time when you might want to check what is happening inside the API, Worker or any other container.  
+There would a time when you might want to check what is happening inside the API, Worker or any other container.
 
-Lets again run the `./setup.sh` command. You will again be prompted with the below options. 
+Lets again run the `./setup.sh` command. You will again be prompted with the below options.
 
 This time select `6` to view logs.
 
@@ -269,7 +283,9 @@ Action [2]: 6
 ```
 
 #### Service Menu Options for Logs
+
 This will further open sub-menu with list of services
+
 ```bash
 Select a Service you want to view the logs for:
    1) Web
@@ -289,6 +305,7 @@ Service: 3
 ```
 
 Select any of the service to view the logs e.g. `3`. Expect something similar to this
+
 ```bash
 api-1  | Waiting for database...
 api-1  | Database available!
@@ -333,9 +350,9 @@ api-1  | [2024-05-02 03:56:03 +0000] [25] [INFO] Application startup complete.
 
 ```
 
-To exit this, use `CTRL+C` and then you will land on to the main-menu with the list of actions. 
+To exit this, use `CTRL+C` and then you will land on to the main-menu with the list of actions.
 
-Similarly, you can view the logs of other services. 
+Similarly, you can view the logs of other services.
 
 ---
 
@@ -394,12 +411,12 @@ When you want to restore the previously backed-up data, follow the instructions 
 
    ```bash
    --------------------------------------------
-    ____  _                          ///////// 
-   |  _ \| | __ _ _ __   ___         ///////// 
-   | |_) | |/ _` | '_ \ / _ \   /////    ///// 
-   |  __/| | (_| | | | |  __/   /////    ///// 
-   |_|   |_|\__,_|_| |_|\___|        ////      
-                                    ////      
+    ____  _                          /////////
+   |  _ \| | __ _ _ __   ___         /////////
+   | |_) | |/ _` | '_ \ / _ \   /////    /////
+   |  __/| | (_| | | | |  __/   /////    /////
+   |_|   |_|\__,_|_| |_|\___|        ////
+                                    ////
    --------------------------------------------
    Project management tool from the future
    --------------------------------------------
@@ -443,7 +460,7 @@ When you want to restore the previously backed-up data on Plane Commercial Air-G
    ./restore-airgapped.sh <path to backup folder containing *.tar.gz files>
    ```
 
-1. After restoration, you are ready to start Plane Commercial (Airgapped) will all your previously saved data. 
+1. After restoration, you are ready to start Plane Commercial (Airgapped) will all your previously saved data.
 
 ---
 
@@ -520,4 +537,5 @@ In case the suffixes are wrong or the mentioned volumes are not found, you will 
 In case of successful migration, it will be a silent exit without error.
 
 Now its time to restart v0.14.0 setup.
+
 </details>

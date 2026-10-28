@@ -5,7 +5,6 @@
 # Python imports
 from urllib.parse import urlencode, urljoin
 import uuid
-from zxcvbn import zxcvbn
 
 # Django imports
 from django.http import HttpResponseRedirect
@@ -37,6 +36,8 @@ from plane.authentication.utils.host import base_host, user_ip
 from plane.authentication.utils.instance_admin import sync_instance_admin
 from plane.authentication.utils.user_auth_workflow import post_user_auth_workflow
 from plane.authentication.provider.oauth.oidc import OIDCOAuthProvider
+from plane.authentication.rate_limit import throttle_auth_redirect
+from plane.authentication.utils.password import is_password_strong
 from plane.authentication.adapter.error import (
     AUTHENTICATION_ERROR_CODES,
     AuthenticationException,
@@ -93,6 +94,7 @@ class InstanceAdminEndpoint(BaseAPIView):
 class InstanceAdminSignUpEndpoint(View):
     permission_classes = [AllowAny]
 
+    @throttle_auth_redirect(is_admin=True)
     @invalidate_cache(path="/api/instances/", user=False)
     def post(self, request):
         # Check instance first (outside the transaction — no need to lock yet)
@@ -195,8 +197,7 @@ class InstanceAdminSignUpEndpoint(View):
             )
             return HttpResponseRedirect(url)
         else:
-            results = zxcvbn(password)
-            if results["score"] < 3:
+            if not is_password_strong(password):
                 exc = AuthenticationException(
                     error_code=AUTHENTICATION_ERROR_CODES["PASSWORD_TOO_WEAK"],
                     error_message="PASSWORD_TOO_WEAK",
@@ -272,6 +273,7 @@ class InstanceAdminSignUpEndpoint(View):
 class InstanceAdminSignInEndpoint(View):
     permission_classes = [AllowAny]
 
+    @throttle_auth_redirect(is_admin=True)
     @invalidate_cache(path="/api/instances/", user=False)
     def post(self, request):
         # Check instance first

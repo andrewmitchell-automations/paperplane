@@ -57,6 +57,10 @@ app.conf.beat_schedule = {
         "task": "plane.bgtasks.automation_task.run_due_automations",
         "schedule": crontab(minute="*/5"),  # Every 5 minutes
     },
+    "check-every-five-minutes-to-unsnooze-intake-issues": {
+        "task": "plane.bgtasks.issue_automation_task.unsnooze_expired_intake_issues",
+        "schedule": crontab(minute="*/5"),  # Every 5 minutes
+    },
     # Reconciliation fallback; Graph push notifications deliver mail near-instantly
     "check-every-two-minutes-service-desk-mailboxes": {
         "task": "plane.bgtasks.service_desk_task.service_desk_poll",

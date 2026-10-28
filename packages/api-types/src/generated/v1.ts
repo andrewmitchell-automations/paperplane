@@ -2633,7 +2633,7 @@ export interface components {
              */
             readonly updated_at?: string;
             /** Format: date-time */
-            deleted_at?: string | null;
+            readonly deleted_at?: string | null;
             point?: number | null;
             /** Issue Name */
             name: string;
@@ -2653,12 +2653,12 @@ export interface components {
             /** Format: date-time */
             readonly completed_at?: string | null;
             /** Format: date */
-            archived_at?: string | null;
+            readonly archived_at?: string | null;
             is_draft?: boolean;
             external_source?: string | null;
             external_id?: string | null;
             /** Format: uuid */
-            created_by?: string | null;
+            readonly created_by?: string | null;
             /**
              * Last Modified By
              * Format: uuid
@@ -3281,8 +3281,6 @@ export interface components {
              * @description The work item type. Required on create and must be enabled for the project.
              */
             type_id: string;
-            /** Format: date-time */
-            deleted_at?: string | null;
             point?: number | null;
             /** Issue Name */
             name: string;
@@ -3295,13 +3293,9 @@ export interface components {
             target_date?: string | null;
             /** Format: double */
             sort_order?: number;
-            /** Format: date */
-            archived_at?: string | null;
             is_draft?: boolean;
             external_source?: string | null;
             external_id?: string | null;
-            /** Format: uuid */
-            created_by?: string | null;
             /** Format: uuid */
             parent?: string | null;
             /** Format: uuid */
@@ -4406,8 +4400,6 @@ export interface components {
              * @description The work item type. Required on create and must be enabled for the project.
              */
             type_id?: string;
-            /** Format: date-time */
-            deleted_at?: string | null;
             point?: number | null;
             /** Issue Name */
             name?: string;
@@ -4420,13 +4412,9 @@ export interface components {
             target_date?: string | null;
             /** Format: double */
             sort_order?: number;
-            /** Format: date */
-            archived_at?: string | null;
             is_draft?: boolean;
             external_source?: string | null;
             external_id?: string | null;
-            /** Format: uuid */
-            created_by?: string | null;
             /** Format: uuid */
             parent?: string | null;
             /** Format: uuid */

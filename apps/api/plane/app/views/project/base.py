@@ -22,6 +22,7 @@ from plane.app.serializers import (
     ProjectListSerializer,
     ProjectSerializer,
 )
+from plane.app.serializers.favorite import get_favorite_entities
 from plane.app.serializers.project import intake_form_error
 from plane.app.views.base import BaseAPIView, BaseViewSet
 from plane.bgtasks.recent_visited_task import recent_visited_task
@@ -546,6 +547,9 @@ class ProjectFavoritesViewSet(BaseViewSet):
         serializer.save(user=self.request.user)
 
     def create(self, request, slug):
+        project_id = request.data.get("project")
+        # 404 unless the project is in this workspace and visible to the user
+        get_favorite_entities("project", request.user.id, project_id).get(pk=project_id, workspace__slug=slug)
         _ = UserFavorite.objects.create(
             user=request.user,
             entity_type="project",
@@ -570,6 +574,17 @@ class DeployBoardViewSet(BaseViewSet):
     permission_classes = [ProjectMemberPermission]
     serializer_class = DeployBoardSerializer
     model = DeployBoard
+
+    def get_queryset(self):
+        # retrieve/partial_update/destroy come from ModelViewSet and resolve the
+        # board through get_object() -> get_queryset(), so limit it to the URL
+        # workspace + project; a board outside that scope returns 404.
+        return DeployBoard.objects.filter(
+            workspace__slug=self.kwargs.get("slug"),
+            entity_name="project",
+            entity_identifier=self.kwargs.get("project_id"),
+            project_id=self.kwargs.get("project_id"),
+        )
 
     def list(self, request, slug, project_id):
         project_deploy_board = DeployBoard.objects.filter(
@@ -597,6 +612,16 @@ class DeployBoardViewSet(BaseViewSet):
                 "spreadsheet": True,
             },
         )
+
+        # project_id comes from the URL and was never checked against slug, so a
+        # caller could aim their own workspace at another tenant's project id.
+        # Defence in depth: the permission class now binds both.
+        if not Project.objects.filter(pk=project_id, workspace__slug=slug).exists():
+            return Response({"error": "Project does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+        # A board can only publish an intake from its own project.
+        if intake and not Intake.objects.filter(pk=intake, project_id=project_id).exists():
+            return Response({"error": "Intake is not valid"}, status=status.HTTP_400_BAD_REQUEST)
 
         project_deploy_board, _ = DeployBoard.objects.get_or_create(
             entity_name="project", entity_identifier=project_id, project_id=project_id

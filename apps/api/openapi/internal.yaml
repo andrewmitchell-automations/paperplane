@@ -1381,9 +1381,7 @@ paths:
   /api/public/anchor/{anchor}/comments/{comment_id}/reactions/:
     get:
       operationId: public_anchor_comments_reactions_list
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1417,9 +1415,7 @@ paths:
           description: ''
     post:
       operationId: public_anchor_comments_reactions_create
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1458,9 +1454,7 @@ paths:
   /api/public/anchor/{anchor}/comments/{comment_id}/reactions/{reaction_code}/:
     delete:
       operationId: public_anchor_comments_reactions_destroy
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1488,9 +1482,7 @@ paths:
   /api/public/anchor/{anchor}/cycles/:
     get:
       operationId: public_anchor_cycles_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1508,9 +1500,7 @@ paths:
   /api/public/anchor/{anchor}/intakes/{intake_id}/inbox-issues/:
     get:
       operationId: public_anchor_intakes_inbox_issues_list
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1544,9 +1534,7 @@ paths:
           description: ''
     post:
       operationId: public_anchor_intakes_inbox_issues_create
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1584,9 +1572,7 @@ paths:
   /api/public/anchor/{anchor}/intakes/{intake_id}/intake-issues/:
     get:
       operationId: public_anchor_intakes_intake_issues_list
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1620,9 +1606,7 @@ paths:
           description: ''
     post:
       operationId: public_anchor_intakes_intake_issues_create
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1660,9 +1644,7 @@ paths:
   /api/public/anchor/{anchor}/intakes/{intake_id}/intake-issues/{pk}/:
     get:
       operationId: public_anchor_intakes_intake_issues_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1694,9 +1676,7 @@ paths:
           description: ''
     patch:
       operationId: public_anchor_intakes_intake_issues_partial_update
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1739,9 +1719,7 @@ paths:
           description: ''
     delete:
       operationId: public_anchor_intakes_intake_issues_destroy
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1770,9 +1748,7 @@ paths:
   /api/public/anchor/{anchor}/issues/:
     get:
       operationId: public_anchor_issues_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1790,9 +1766,7 @@ paths:
   /api/public/anchor/{anchor}/issues/{issue_id}/:
     get:
       operationId: public_anchor_issues_retrieve_2
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1816,9 +1790,7 @@ paths:
   /api/public/anchor/{anchor}/issues/{issue_id}/comments/:
     get:
       operationId: public_anchor_issues_comments_list
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1853,9 +1825,7 @@ paths:
           description: ''
     post:
       operationId: public_anchor_issues_comments_create
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1893,9 +1863,7 @@ paths:
   /api/public/anchor/{anchor}/issues/{issue_id}/comments/{pk}/:
     get:
       operationId: public_anchor_issues_comments_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1928,9 +1896,7 @@ paths:
           description: ''
     patch:
       operationId: public_anchor_issues_comments_partial_update
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -1973,9 +1939,7 @@ paths:
           description: ''
     delete:
       operationId: public_anchor_issues_comments_destroy
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2004,9 +1968,7 @@ paths:
   /api/public/anchor/{anchor}/issues/{issue_id}/reactions/:
     get:
       operationId: public_anchor_issues_reactions_list
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2040,9 +2002,7 @@ paths:
           description: ''
     post:
       operationId: public_anchor_issues_reactions_create
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2081,9 +2041,7 @@ paths:
   /api/public/anchor/{anchor}/issues/{issue_id}/reactions/{reaction_code}/:
     delete:
       operationId: public_anchor_issues_reactions_destroy
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2111,9 +2069,7 @@ paths:
   /api/public/anchor/{anchor}/issues/{issue_id}/votes/:
     get:
       operationId: public_anchor_issues_votes_list
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2147,9 +2103,7 @@ paths:
           description: ''
     post:
       operationId: public_anchor_issues_votes_create
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2175,9 +2129,7 @@ paths:
           description: ''
     delete:
       operationId: public_anchor_issues_votes_destroy
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2200,9 +2152,7 @@ paths:
   /api/public/anchor/{anchor}/labels/:
     get:
       operationId: public_anchor_labels_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2220,9 +2170,7 @@ paths:
   /api/public/anchor/{anchor}/members/:
     get:
       operationId: public_anchor_members_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2240,9 +2188,7 @@ paths:
   /api/public/anchor/{anchor}/meta/:
     get:
       operationId: public_anchor_meta_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2260,9 +2206,7 @@ paths:
   /api/public/anchor/{anchor}/modules/:
     get:
       operationId: public_anchor_modules_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2280,9 +2224,7 @@ paths:
   /api/public/anchor/{anchor}/settings/:
     get:
       operationId: public_anchor_settings_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2300,9 +2242,7 @@ paths:
   /api/public/anchor/{anchor}/states/:
     get:
       operationId: public_anchor_states_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2320,9 +2260,7 @@ paths:
   /api/public/assets/v2/anchor/{anchor}/:
     get:
       operationId: public_assets_v2_anchor_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2339,9 +2277,7 @@ paths:
           description: No response body
     post:
       operationId: public_assets_v2_anchor_create
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2357,9 +2293,7 @@ paths:
           description: No response body
     patch:
       operationId: public_assets_v2_anchor_partial_update
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2375,9 +2309,7 @@ paths:
           description: No response body
     delete:
       operationId: public_assets_v2_anchor_destroy
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2417,9 +2349,7 @@ paths:
   /api/public/assets/v2/anchor/{anchor}/{pk}/:
     get:
       operationId: public_assets_v2_anchor_retrieve_2
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2442,9 +2372,7 @@ paths:
           description: No response body
     post:
       operationId: public_assets_v2_anchor_create_2
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2466,9 +2394,7 @@ paths:
           description: No response body
     patch:
       operationId: public_assets_v2_anchor_partial_update_2
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2490,9 +2416,7 @@ paths:
           description: No response body
     delete:
       operationId: public_assets_v2_anchor_destroy_2
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: anchor
@@ -2538,9 +2462,7 @@ paths:
   /api/public/workspaces/{slug}/project-boards/:
     get:
       operationId: public_workspaces_project_boards_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: slug
@@ -2558,9 +2480,7 @@ paths:
   /api/public/workspaces/{slug}/projects/{project_id}/anchor/:
     get:
       operationId: public_workspaces_projects_anchor_retrieve
-      description: |-
-        This enables timezone conversion according
-        to the user set timezone
+      description: A project board only serves the project it belongs to.
       parameters:
       - in: path
         name: project_id
@@ -5662,7 +5582,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/WorkspaceMemberAdminRequest'
-        required: true
       security:
       - sessionAuth: []
       responses:
@@ -18940,11 +18859,12 @@ components:
         entity_identifier:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
         entity_name:
           type: string
+          readOnly: true
           nullable: true
-          maxLength: 30
         anchor:
           type: string
           readOnly: true
@@ -19014,14 +18934,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        entity_identifier:
-          type: string
-          format: uuid
-          nullable: true
-        entity_name:
-          type: string
-          nullable: true
-          maxLength: 30
         is_comments_enabled:
           type: boolean
         is_reactions_enabled:
@@ -19440,6 +19352,7 @@ components:
           $ref: '#/components/schemas/TriageStateGroupEnum'
         default:
           type: boolean
+          readOnly: true
         description:
           type: string
           title: State Description
@@ -20024,6 +19937,7 @@ components:
         deleted_at:
           type: string
           format: date-time
+          readOnly: true
           nullable: true
         point:
           type: integer
@@ -20059,8 +19973,7 @@ components:
           nullable: true
         sequence_id:
           type: integer
-          maximum: 2147483647
-          minimum: -2147483648
+          readOnly: true
           title: Issue Sequence ID
         sort_order:
           type: number
@@ -20073,6 +19986,7 @@ components:
         archived_at:
           type: string
           format: date
+          readOnly: true
           nullable: true
         is_draft:
           type: boolean
@@ -20193,10 +20107,6 @@ components:
             type: string
             format: uuid
           writeOnly: true
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         point:
           type: integer
           maximum: 12
@@ -20225,18 +20135,9 @@ components:
           type: string
           format: date
           nullable: true
-        sequence_id:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          title: Issue Sequence ID
         sort_order:
           type: number
           format: double
-        archived_at:
-          type: string
-          format: date
-          nullable: true
         is_draft:
           type: boolean
         external_source:
@@ -21547,10 +21448,12 @@ components:
         created_by:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
         updated_by:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
           title: Last Modified By
         workspace:
@@ -21615,15 +21518,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        created_by:
-          type: string
-          format: uuid
-          nullable: true
-        updated_by:
-          type: string
-          format: uuid
-          nullable: true
-          title: Last Modified By
       required:
       - name
     IssueVote:
@@ -22630,6 +22524,7 @@ components:
           $ref: '#/components/schemas/ProjectStateGroupEnum'
         default:
           type: boolean
+          readOnly: true
         description:
           type: string
           title: State Description
@@ -23373,14 +23268,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        entity_identifier:
-          type: string
-          format: uuid
-          nullable: true
-        entity_name:
-          type: string
-          nullable: true
-          maxLength: 30
         is_comments_enabled:
           type: boolean
         is_reactions_enabled:
@@ -23618,10 +23505,6 @@ components:
             type: string
             format: uuid
           writeOnly: true
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         point:
           type: integer
           maximum: 12
@@ -23650,18 +23533,9 @@ components:
           type: string
           format: date
           nullable: true
-        sequence_id:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          title: Issue Sequence ID
         sort_order:
           type: number
           format: double
-        archived_at:
-          type: string
-          format: date
-          nullable: true
         is_draft:
           type: boolean
         external_source:
@@ -23827,15 +23701,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        created_by:
-          type: string
-          format: uuid
-          nullable: true
-        updated_by:
-          type: string
-          format: uuid
-          nullable: true
-          title: Last Modified By
     PatchedLabelRequest:
       type: object
       properties:
@@ -24293,8 +24158,6 @@ components:
           maxLength: 255
         group:
           $ref: '#/components/schemas/Group272Enum'
-        default:
-          type: boolean
         description:
           type: string
           title: State Description
@@ -24341,10 +24204,6 @@ components:
     PatchedUserNotificationPreferenceRequest:
       type: object
       properties:
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         property_change:
           type: boolean
         state_change:
@@ -24355,26 +24214,6 @@ components:
           type: boolean
         issue_completed:
           type: boolean
-        created_by:
-          type: string
-          format: uuid
-          nullable: true
-        updated_by:
-          type: string
-          format: uuid
-          nullable: true
-          title: Last Modified By
-        user:
-          type: string
-          format: uuid
-        workspace:
-          type: string
-          format: uuid
-          nullable: true
-        project:
-          type: string
-          format: uuid
-          nullable: true
     PatchedUserRequest:
       type: object
       properties:
@@ -24457,10 +24296,6 @@ components:
     PatchedWorkSpaceRequest:
       type: object
       properties:
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         name:
           type: string
           minLength: 1
@@ -24503,10 +24338,6 @@ components:
     PatchedWorkspaceMemberAdminRequest:
       type: object
       properties:
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         role:
           allOf:
           - $ref: '#/components/schemas/RoleEnum'
@@ -24518,23 +24349,9 @@ components:
         view_props: {}
         default_props: {}
         issue_props: {}
-        is_active:
-          type: boolean
         getting_started_checklist: {}
         tips: {}
         explored_features: {}
-        created_by:
-          type: string
-          format: uuid
-          nullable: true
-        updated_by:
-          type: string
-          format: uuid
-          nullable: true
-          title: Last Modified By
-        workspace:
-          type: string
-          format: uuid
     PatchedWorkspaceThemeRequest:
       type: object
       properties:
@@ -25237,6 +25054,7 @@ components:
           $ref: '#/components/schemas/ProjectStateGroupEnum'
         default:
           type: boolean
+          readOnly: true
         description:
           type: string
           title: State Description
@@ -25362,8 +25180,6 @@ components:
           maxLength: 255
         group:
           $ref: '#/components/schemas/Group272Enum'
-        default:
-          type: boolean
         description:
           type: string
           title: State Description
@@ -26737,6 +26553,7 @@ components:
         deleted_at:
           type: string
           format: date-time
+          readOnly: true
           nullable: true
         property_change:
           type: boolean
@@ -26751,22 +26568,27 @@ components:
         created_by:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
         updated_by:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
           title: Last Modified By
         user:
           type: string
           format: uuid
+          readOnly: true
         workspace:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
         project:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
       required:
       - id
@@ -27745,6 +27567,7 @@ components:
         deleted_at:
           type: string
           format: date-time
+          readOnly: true
           nullable: true
         name:
           type: string
@@ -27900,10 +27723,6 @@ components:
     WorkSpaceRequest:
       type: object
       properties:
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         name:
           type: string
           minLength: 1
@@ -27995,6 +27814,7 @@ components:
         deleted_at:
           type: string
           format: date-time
+          readOnly: true
           nullable: true
         role:
           allOf:
@@ -28009,21 +27829,25 @@ components:
         issue_props: {}
         is_active:
           type: boolean
+          readOnly: true
         getting_started_checklist: {}
         tips: {}
         explored_features: {}
         created_by:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
         updated_by:
           type: string
           format: uuid
+          readOnly: true
           nullable: true
           title: Last Modified By
         workspace:
           type: string
           format: uuid
+          readOnly: true
       required:
       - id
       - member
@@ -28045,10 +27869,6 @@ components:
     WorkspaceMemberAdminRequest:
       type: object
       properties:
-        deleted_at:
-          type: string
-          format: date-time
-          nullable: true
         role:
           allOf:
           - $ref: '#/components/schemas/RoleEnum'
@@ -28060,25 +27880,9 @@ components:
         view_props: {}
         default_props: {}
         issue_props: {}
-        is_active:
-          type: boolean
         getting_started_checklist: {}
         tips: {}
         explored_features: {}
-        created_by:
-          type: string
-          format: uuid
-          nullable: true
-        updated_by:
-          type: string
-          format: uuid
-          nullable: true
-          title: Last Modified By
-        workspace:
-          type: string
-          format: uuid
-      required:
-      - workspace
     WorkspaceRecentVisit:
       type: object
       properties:

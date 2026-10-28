@@ -13,11 +13,11 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from zxcvbn import zxcvbn
 
 ## Module imports
 from plane.app.serializers import UserSerializer
 from plane.authentication.utils.login import user_login
+from plane.authentication.utils.password import is_password_strong
 from plane.db.models import User
 from plane.license.utils.instance_value import get_configuration_value
 from plane.authentication.adapter.error import (
@@ -27,6 +27,7 @@ from plane.authentication.adapter.error import (
 from django.middleware.csrf import get_token
 from plane.utils.cache import invalidate_cache
 from plane.authentication.utils.host import base_host
+from plane.authentication.rate_limit import AuthenticationThrottle
 
 
 def _password_auth_disabled():
@@ -56,6 +57,8 @@ def csrf_failure(request, reason=""):
 
 
 class ChangePasswordEndpoint(APIView):
+    throttle_classes = [AuthenticationThrottle]
+
     def post(self, request):
         if _password_auth_disabled():
             exc = AuthenticationException(
@@ -98,8 +101,7 @@ class ChangePasswordEndpoint(APIView):
             return Response(exc.get_error_dict(), status=status.HTTP_400_BAD_REQUEST)
 
         # check the password score
-        results = zxcvbn(new_password)
-        if results["score"] < 3:
+        if not is_password_strong(new_password):
             exc = AuthenticationException(
                 error_code=AUTHENTICATION_ERROR_CODES["PASSWORD_TOO_WEAK"],
                 error_message="PASSWORD_TOO_WEAK",
@@ -144,8 +146,7 @@ class SetUserPasswordEndpoint(APIView):
             )
             return Response(exc.get_error_dict(), status=status.HTTP_400_BAD_REQUEST)
 
-        results = zxcvbn(password)
-        if results["score"] < 3:
+        if not is_password_strong(password):
             exc = AuthenticationException(
                 error_code=AUTHENTICATION_ERROR_CODES["INVALID_PASSWORD"],
                 error_message="INVALID_PASSWORD",

@@ -431,16 +431,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_comments_reactions_list"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_anchor_comments_reactions_create"];
         delete?: never;
         options?: never;
@@ -458,10 +452,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         delete: operations["public_anchor_comments_reactions_destroy"];
         options?: never;
         head?: never;
@@ -475,10 +466,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_cycles_retrieve"];
         put?: never;
         post?: never;
@@ -495,16 +483,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_intakes_inbox_issues_list"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_anchor_intakes_inbox_issues_create"];
         delete?: never;
         options?: never;
@@ -519,16 +501,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_intakes_intake_issues_list"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_anchor_intakes_intake_issues_create"];
         delete?: never;
         options?: never;
@@ -543,24 +519,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_intakes_intake_issues_retrieve"];
         put?: never;
         post?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         delete: operations["public_anchor_intakes_intake_issues_destroy"];
         options?: never;
         head?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         patch: operations["public_anchor_intakes_intake_issues_partial_update"];
         trace?: never;
     };
@@ -571,10 +538,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_issues_retrieve"];
         put?: never;
         post?: never;
@@ -591,10 +555,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_issues_retrieve_2"];
         put?: never;
         post?: never;
@@ -611,16 +572,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_issues_comments_list"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_anchor_issues_comments_create"];
         delete?: never;
         options?: never;
@@ -635,24 +590,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_issues_comments_retrieve"];
         put?: never;
         post?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         delete: operations["public_anchor_issues_comments_destroy"];
         options?: never;
         head?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         patch: operations["public_anchor_issues_comments_partial_update"];
         trace?: never;
     };
@@ -663,16 +609,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_issues_reactions_list"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_anchor_issues_reactions_create"];
         delete?: never;
         options?: never;
@@ -690,10 +630,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         delete: operations["public_anchor_issues_reactions_destroy"];
         options?: never;
         head?: never;
@@ -707,21 +644,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_issues_votes_list"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_anchor_issues_votes_create"];
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         delete: operations["public_anchor_issues_votes_destroy"];
         options?: never;
         head?: never;
@@ -735,10 +663,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_labels_retrieve"];
         put?: never;
         post?: never;
@@ -755,10 +680,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_members_retrieve"];
         put?: never;
         post?: never;
@@ -775,10 +697,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_meta_retrieve"];
         put?: never;
         post?: never;
@@ -795,10 +714,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_modules_retrieve"];
         put?: never;
         post?: never;
@@ -815,10 +731,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_settings_retrieve"];
         put?: never;
         post?: never;
@@ -835,10 +748,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_anchor_states_retrieve"];
         put?: never;
         post?: never;
@@ -855,28 +765,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_assets_v2_anchor_retrieve"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_assets_v2_anchor_create"];
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         delete: operations["public_assets_v2_anchor_destroy"];
         options?: never;
         head?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         patch: operations["public_assets_v2_anchor_partial_update"];
         trace?: never;
     };
@@ -904,28 +802,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_assets_v2_anchor_retrieve_2"];
         put?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         post: operations["public_assets_v2_anchor_create_2"];
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         delete: operations["public_assets_v2_anchor_destroy_2"];
         options?: never;
         head?: never;
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         patch: operations["public_assets_v2_anchor_partial_update_2"];
         trace?: never;
     };
@@ -953,10 +839,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_workspaces_project_boards_retrieve"];
         put?: never;
         post?: never;
@@ -973,10 +856,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * @description This enables timezone conversion according
-         *     to the user set timezone
-         */
+        /** @description A project board only serves the project it belongs to. */
         get: operations["public_workspaces_projects_anchor_retrieve"];
         put?: never;
         post?: never;
@@ -7921,8 +7801,8 @@ export interface components {
             /** Format: date-time */
             deleted_at: string | null;
             /** Format: uuid */
-            entity_identifier: string | null;
-            entity_name: string | null;
+            readonly entity_identifier: string | null;
+            readonly entity_name: string | null;
             readonly anchor: string;
             is_comments_enabled: boolean;
             is_reactions_enabled: boolean;
@@ -7949,9 +7829,6 @@ export interface components {
         DeployBoardRequest: {
             /** Format: date-time */
             deleted_at?: string | null;
-            /** Format: uuid */
-            entity_identifier?: string | null;
-            entity_name?: string | null;
             is_comments_enabled?: boolean;
             is_reactions_enabled?: boolean;
             is_votes_enabled?: boolean;
@@ -8153,7 +8030,7 @@ export interface components {
             /** State Color */
             color: string;
             group: components["schemas"]["TriageStateGroupEnum"];
-            default: boolean;
+            readonly default: boolean;
             /** State Description */
             description: string;
             /** Format: double */
@@ -8394,7 +8271,7 @@ export interface components {
              */
             readonly updated_at: string;
             /** Format: date-time */
-            deleted_at: string | null;
+            readonly deleted_at: string | null;
             point: number | null;
             /** Issue Name */
             name: string;
@@ -8410,13 +8287,13 @@ export interface components {
             /** Format: date */
             target_date: string | null;
             /** Issue Sequence ID */
-            sequence_id: number;
+            readonly sequence_id: number;
             /** Format: double */
             sort_order: number;
             /** Format: date-time */
             readonly completed_at: string | null;
             /** Format: date */
-            archived_at: string | null;
+            readonly archived_at: string | null;
             is_draft: boolean;
             external_source: string | null;
             external_id: string | null;
@@ -8451,8 +8328,6 @@ export interface components {
             type_id: string;
             label_ids?: string[];
             assignee_ids?: string[];
-            /** Format: date-time */
-            deleted_at?: string | null;
             point?: number | null;
             /** Issue Name */
             name: string;
@@ -8465,12 +8340,8 @@ export interface components {
             start_date?: string | null;
             /** Format: date */
             target_date?: string | null;
-            /** Issue Sequence ID */
-            sequence_id?: number;
             /** Format: double */
             sort_order?: number;
-            /** Format: date */
-            archived_at?: string | null;
             is_draft?: boolean;
             external_source?: string | null;
             external_id?: string | null;
@@ -9063,12 +8934,12 @@ export interface components {
             /** Format: date-time */
             archived_at: string | null;
             /** Format: uuid */
-            created_by: string | null;
+            readonly created_by: string | null;
             /**
              * Last Modified By
              * Format: uuid
              */
-            updated_by: string | null;
+            readonly updated_by: string | null;
             /** Format: uuid */
             readonly workspace: string;
             /** Format: uuid */
@@ -9092,13 +8963,6 @@ export interface components {
             logo_props?: unknown;
             /** Format: date-time */
             archived_at?: string | null;
-            /** Format: uuid */
-            created_by?: string | null;
-            /**
-             * Last Modified By
-             * Format: uuid
-             */
-            updated_by?: string | null;
         };
         IssueVote: {
             /** Format: uuid */
@@ -9532,7 +9396,7 @@ export interface components {
             /** State Color */
             color: string;
             group: components["schemas"]["ProjectStateGroupEnum"];
-            default: boolean;
+            readonly default: boolean;
             /** State Description */
             description: string;
             /** Format: double */
@@ -9859,9 +9723,6 @@ export interface components {
         PatchedDeployBoardRequest: {
             /** Format: date-time */
             deleted_at?: string | null;
-            /** Format: uuid */
-            entity_identifier?: string | null;
-            entity_name?: string | null;
             is_comments_enabled?: boolean;
             is_reactions_enabled?: boolean;
             is_votes_enabled?: boolean;
@@ -9979,8 +9840,6 @@ export interface components {
             type_id?: string;
             label_ids?: string[];
             assignee_ids?: string[];
-            /** Format: date-time */
-            deleted_at?: string | null;
             point?: number | null;
             /** Issue Name */
             name?: string;
@@ -9993,12 +9852,8 @@ export interface components {
             start_date?: string | null;
             /** Format: date */
             target_date?: string | null;
-            /** Issue Sequence ID */
-            sequence_id?: number;
             /** Format: double */
             sort_order?: number;
-            /** Format: date */
-            archived_at?: string | null;
             is_draft?: boolean;
             external_source?: string | null;
             external_id?: string | null;
@@ -10085,13 +9940,6 @@ export interface components {
             logo_props?: unknown;
             /** Format: date-time */
             archived_at?: string | null;
-            /** Format: uuid */
-            created_by?: string | null;
-            /**
-             * Last Modified By
-             * Format: uuid
-             */
-            updated_by?: string | null;
         };
         PatchedLabelRequest: {
             /** Format: uuid */
@@ -10314,7 +10162,6 @@ export interface components {
             /** State Color */
             color?: string;
             group?: components["schemas"]["Group272Enum"];
-            default?: boolean;
             /** State Description */
             description?: string;
             /** Format: double */
@@ -10341,26 +10188,11 @@ export interface components {
             updated_by?: string | null;
         };
         PatchedUserNotificationPreferenceRequest: {
-            /** Format: date-time */
-            deleted_at?: string | null;
             property_change?: boolean;
             state_change?: boolean;
             comment?: boolean;
             mention?: boolean;
             issue_completed?: boolean;
-            /** Format: uuid */
-            created_by?: string | null;
-            /**
-             * Last Modified By
-             * Format: uuid
-             */
-            updated_by?: string | null;
-            /** Format: uuid */
-            user?: string;
-            /** Format: uuid */
-            workspace?: string | null;
-            /** Format: uuid */
-            project?: string | null;
         };
         PatchedUserRequest: {
             /** Format: date-time */
@@ -10401,8 +10233,6 @@ export interface components {
             updated_by?: string | null;
         };
         PatchedWorkSpaceRequest: {
-            /** Format: date-time */
-            deleted_at?: string | null;
             /** Workspace Name */
             name?: string;
             logo?: string | null;
@@ -10420,26 +10250,14 @@ export interface components {
             sort_order?: number;
         };
         PatchedWorkspaceMemberAdminRequest: {
-            /** Format: date-time */
-            deleted_at?: string | null;
             role?: components["schemas"]["RoleEnum"];
             company_role?: string | null;
             view_props?: unknown;
             default_props?: unknown;
             issue_props?: unknown;
-            is_active?: boolean;
             getting_started_checklist?: unknown;
             tips?: unknown;
             explored_features?: unknown;
-            /** Format: uuid */
-            created_by?: string | null;
-            /**
-             * Last Modified By
-             * Format: uuid
-             */
-            updated_by?: string | null;
-            /** Format: uuid */
-            workspace?: string;
         };
         PatchedWorkspaceThemeRequest: {
             /** Format: date-time */
@@ -10746,7 +10564,7 @@ export interface components {
             /** State Color */
             color: string;
             group: components["schemas"]["ProjectStateGroupEnum"];
-            default: boolean;
+            readonly default: boolean;
             /** State Description */
             description: string;
             /** Format: double */
@@ -10814,7 +10632,6 @@ export interface components {
             /** State Color */
             color: string;
             group?: components["schemas"]["Group272Enum"];
-            default?: boolean;
             /** State Description */
             description?: string;
             /** Format: double */
@@ -11451,25 +11268,25 @@ export interface components {
              */
             readonly updated_at: string;
             /** Format: date-time */
-            deleted_at: string | null;
+            readonly deleted_at: string | null;
             property_change: boolean;
             state_change: boolean;
             comment: boolean;
             mention: boolean;
             issue_completed: boolean;
             /** Format: uuid */
-            created_by: string | null;
+            readonly created_by: string | null;
             /**
              * Last Modified By
              * Format: uuid
              */
-            updated_by: string | null;
+            readonly updated_by: string | null;
             /** Format: uuid */
-            user: string;
+            readonly user: string;
             /** Format: uuid */
-            workspace: string | null;
+            readonly workspace: string | null;
             /** Format: uuid */
-            project: string | null;
+            readonly project: string | null;
         };
         UserRequest: {
             /** Format: date-time */
@@ -11953,7 +11770,7 @@ export interface components {
              */
             readonly updated_at: string;
             /** Format: date-time */
-            deleted_at: string | null;
+            readonly deleted_at: string | null;
             /** Workspace Name */
             name: string;
             logo: string | null;
@@ -12016,8 +11833,6 @@ export interface components {
             updated_by?: string | null;
         };
         WorkSpaceRequest: {
-            /** Format: date-time */
-            deleted_at?: string | null;
             /** Workspace Name */
             name: string;
             logo?: string | null;
@@ -12054,47 +11869,35 @@ export interface components {
              */
             readonly updated_at: string;
             /** Format: date-time */
-            deleted_at: string | null;
+            readonly deleted_at: string | null;
             role: components["schemas"]["RoleEnum"];
             company_role: string | null;
             view_props: unknown;
             default_props: unknown;
             issue_props: unknown;
-            is_active: boolean;
+            readonly is_active: boolean;
             getting_started_checklist: unknown;
             tips: unknown;
             explored_features: unknown;
             /** Format: uuid */
-            created_by: string | null;
+            readonly created_by: string | null;
             /**
              * Last Modified By
              * Format: uuid
              */
-            updated_by: string | null;
+            readonly updated_by: string | null;
             /** Format: uuid */
-            workspace: string;
+            readonly workspace: string;
         };
         WorkspaceMemberAdminRequest: {
-            /** Format: date-time */
-            deleted_at?: string | null;
             role?: components["schemas"]["RoleEnum"];
             company_role?: string | null;
             view_props?: unknown;
             default_props?: unknown;
             issue_props?: unknown;
-            is_active?: boolean;
             getting_started_checklist?: unknown;
             tips?: unknown;
             explored_features?: unknown;
-            /** Format: uuid */
-            created_by?: string | null;
-            /**
-             * Last Modified By
-             * Format: uuid
-             */
-            updated_by?: string | null;
-            /** Format: uuid */
-            workspace: string;
         };
         WorkspaceRecentVisit: {
             /** Format: uuid */
@@ -17010,7 +16813,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
                 "application/json": components["schemas"]["WorkspaceMemberAdminRequest"];
                 "application/x-www-form-urlencoded": components["schemas"]["WorkspaceMemberAdminRequest"];
