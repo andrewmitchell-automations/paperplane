@@ -187,6 +187,10 @@
           "**/project/delete-project-modal.tsx"
         ],
         "rules": ["react-doctor/duplicate-jsx-subtree"]
+      },
+      {
+        "files": ["**/lib/drain-server.ts"],
+        "rules": ["react-doctor/async-await-in-loop"]
       }
     ]
   }
