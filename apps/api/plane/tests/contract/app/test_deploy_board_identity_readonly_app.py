@@ -179,7 +179,7 @@ class TestPublicBoardProjectScope:
     Requests are authenticated so the anonymous rate limit does not apply.
     """
 
-    @pytest.mark.parametrize("suffix", ["meta/", "settings/", "states/", "members/", f"issues/{uuid4()}/comments/"])
+    @pytest.mark.parametrize("suffix", ["meta/", "settings/", "states/", "members/", "issues/00000000-0000-4000-8000-000000000001/comments/"])
     def test_mismatched_board_is_not_found(self, session_client, other_project, board, suffix):
         DeployBoard.objects.filter(pk=board.pk).update(entity_identifier=other_project.id)
 
