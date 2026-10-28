@@ -6,7 +6,7 @@
 from django.utils import timezone
 from django.apps import apps
 from django.conf import settings
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.db.models.fields.related import OneToOneRel
 
 
@@ -27,6 +27,12 @@ def soft_delete_related_objects(app_label, model_name, instance_pk, using=None):
         instance = model_class.all_objects.get(pk=instance_pk)
     except model_class.DoesNotExist:
         return
+
+    # Restored before this task ran: nothing to cascade.
+    if instance.deleted_at is None:
+        return
+    # Rows deleted by this cascade share the instance's timestamp, so a restore can find them.
+    stamp = instance.deleted_at
 
     # Get all related fields that are reverse relationships
     all_related = [
@@ -70,7 +76,7 @@ def soft_delete_related_objects(app_label, model_name, instance_pk, using=None):
                     if related_obj:
                         if hasattr(related_obj, "deleted_at"):
                             if not related_obj.deleted_at:
-                                related_obj.deleted_at = timezone.now()
+                                related_obj.deleted_at = stamp
                                 related_obj.save()
                                 # Recursively handle related objects
                                 soft_delete_related_objects(
@@ -86,7 +92,7 @@ def soft_delete_related_objects(app_label, model_name, instance_pk, using=None):
                     for related_obj in related_queryset:
                         if hasattr(related_obj, "deleted_at"):
                             if not related_obj.deleted_at:
-                                related_obj.deleted_at = timezone.now()
+                                related_obj.deleted_at = stamp
                                 related_obj.save()
                                 # Recursively handle related objects
                                 soft_delete_related_objects(
@@ -100,15 +106,101 @@ def soft_delete_related_objects(app_label, model_name, instance_pk, using=None):
                 print(f"Error handling relation {related_name}: {str(e)}")
                 continue
 
-    # Finally, soft delete the instance itself if it hasn't been deleted yet
-    if hasattr(instance, "deleted_at") and not instance.deleted_at:
-        instance.deleted_at = timezone.now()
-        instance.save()
+
+def purge_issues(issues):
+    """Hard delete soft-deleted issues with the sub-items deleted along with them.
+
+    Activities reference issues without a database cascade, so they go first.
+    Sub-items that are live, or were deleted on their own before the parent,
+    are detached instead.
+    """
+    from plane.db.models import Issue, IssueActivity
+    from plane.utils.derived_properties import schedule_derived_refresh
+
+    roots = list(issues.filter(deleted_at__isnull=False).values_list("id", "deleted_at", "project_id"))
+    frontier = {issue_id: deleted_at for issue_id, deleted_at, _ in roots}
+    ids = set(frontier)
+    while frontier:
+        children = (
+            Issue.all_objects.filter(parent_id__in=frontier, deleted_at__isnull=False)
+            .exclude(id__in=ids)
+            .values_list("id", "parent_id", "deleted_at")
+        )
+        frontier = {child: deleted_at for child, parent, deleted_at in children if deleted_at >= frontier[parent]}
+        ids |= set(frontier)
+    with transaction.atomic():
+        Issue.all_objects.filter(parent_id__in=ids).exclude(id__in=ids).update(parent=None)
+        IssueActivity.all_objects.filter(issue_id__in=ids).delete()
+        Issue.all_objects.filter(id__in=ids).delete()
+    for project_id in {project_id for _, _, project_id in roots}:
+        schedule_derived_refresh(project_id)
 
 
-# @shared_task
-def restore_related_objects(app_label, model_name, instance_pk, using=None):
-    pass
+def restore_related_objects(model, pks, since):
+    """Restore the rows that the soft delete cascade of the given rows removed.
+
+    The cascade stamps rows with the deleted_at of the row it started from, so
+    rows deleted earlier on their own stay deleted. A row only comes back when
+    every soft-deletable row it points to exists.
+    """
+    for relation in _cascading_relations(model):
+        related = relation.related_model
+        if not hasattr(related, "all_objects"):
+            continue
+        rows = related.all_objects.filter(**{f"{relation.remote_field.name}__in": pks, "deleted_at__gte": since})
+        for field in _soft_deletable_targets(related):
+            rows = rows.exclude(**{f"{field.name}__deleted_at__isnull": False})
+        restored = _undelete_rows(related, list(rows.values_list("pk", flat=True)))
+        if restored:
+            restore_related_objects(related, restored, since)
+
+
+def undelete(row, **changes):
+    """Clear deleted_at on row. False if a live row now takes its unique slot."""
+    model = type(row)
+    changes["deleted_at"] = None
+    if any(field.name == "updated_at" for field in model._meta.concrete_fields):
+        changes["updated_at"] = timezone.now()
+    try:
+        with transaction.atomic():
+            model.all_objects.filter(pk=row.pk).update(**changes)
+    except IntegrityError:
+        return False
+    return True
+
+
+def _undelete_rows(model, pks):
+    if not pks:
+        return []
+    try:
+        with transaction.atomic():
+            model.all_objects.filter(pk__in=pks).update(deleted_at=None)
+    except IntegrityError:
+        return [pk for pk in pks if undelete(model(pk=pk))]
+    if any(field.name == "updated_at" for field in model._meta.concrete_fields):
+        model.all_objects.filter(pk__in=pks).update(updated_at=timezone.now())
+    return pks
+
+
+def _cascading_relations(model):
+    return [
+        f
+        for f in model._meta.get_fields()
+        if (f.one_to_many or f.one_to_one)
+        and f.auto_created
+        and not f.concrete
+        and getattr(f.on_delete, "__name__", "") not in ("DO_NOTHING", "RESTRICT", "SET_NULL")
+    ]
+
+
+def _soft_deletable_targets(model):
+    return [
+        field
+        for field in model._meta.concrete_fields
+        if field.is_relation
+        and field.name not in ("created_by", "updated_by")
+        and hasattr(field.related_model, "all_objects")
+    ]
 
 
 @shared_task
@@ -148,7 +240,7 @@ def hard_delete():
     _ = Module.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days)).delete()
 
     # check delete issue
-    _ = Issue.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days)).delete()
+    purge_issues(Issue.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days)))
 
     # check delete page
     _ = Page.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days)).delete()
@@ -164,7 +256,9 @@ def hard_delete():
 
     _ = IssueActivity.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days)).delete()
 
-    _ = IssueComment.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days)).delete()
+    old_comments = IssueComment.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days))
+    IssueActivity.all_objects.filter(issue_comment__in=old_comments).update(issue_comment=None)
+    _ = old_comments.delete()
 
     _ = IssueLink.all_objects.filter(deleted_at__lt=timezone.now() - timezone.timedelta(days=days)).delete()
 
