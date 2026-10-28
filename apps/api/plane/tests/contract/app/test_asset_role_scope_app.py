@@ -160,15 +160,21 @@ class TestAssetUploaderAndLegacyRouteScope:
         other = _client(_user(workspace, project, workspace_role=MEMBER))
         url = _legacy_url(workspace, attachment)
 
-        assert other.delete(url).status_code == status.HTTP_403_FORBIDDEN
+        response = other.delete(url)
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
         attachment.refresh_from_db()
         assert attachment.is_deleted is False
-        assert _client(uploader).delete(url).status_code == status.HTTP_204_NO_CONTENT
+        response = _client(uploader).delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
 
-        assert other.post(f"{url}restore/").status_code == status.HTTP_403_FORBIDDEN
+        response = other.post(f"{url}restore/")
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
         attachment.refresh_from_db()
         assert attachment.is_deleted is True
-        assert _client(uploader).post(f"{url}restore/").status_code == status.HTTP_204_NO_CONTENT
+        response = _client(uploader).post(f"{url}restore/")
+        assert response.status_code == status.HTTP_204_NO_CONTENT
         attachment.refresh_from_db()
         assert attachment.is_deleted is False
 
@@ -180,13 +186,17 @@ class TestAssetUploaderAndLegacyRouteScope:
         legacy_url = _legacy_url(workspace, attachment)
 
         for url in (legacy_url, _workspace_url(workspace, attachment)):
-            assert client.delete(url).status_code == status.HTTP_403_FORBIDDEN
+            response = client.delete(url)
+            assert response.status_code == status.HTTP_403_FORBIDDEN
         attachment.refresh_from_db()
         assert attachment.is_deleted is False
 
-        assert session_client.delete(legacy_url).status_code == status.HTTP_204_NO_CONTENT
+        response = session_client.delete(legacy_url)
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
         for url in (f"{legacy_url}restore/", _restore_url(workspace, attachment)):
-            assert client.post(url).status_code == status.HTTP_403_FORBIDDEN
+            response = client.post(url)
+            assert response.status_code == status.HTTP_403_FORBIDDEN
         attachment.refresh_from_db()
         assert attachment.is_deleted is True
 
