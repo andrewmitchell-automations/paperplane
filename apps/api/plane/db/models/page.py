@@ -98,6 +98,11 @@ class PageLog(BaseModel):
     entity_name = models.CharField(max_length=30, verbose_name="Transaction Type")
     entity_type = models.CharField(max_length=30, verbose_name="Entity Type", null=True, blank=True)
     workspace = models.ForeignKey("db.Workspace", on_delete=models.CASCADE, related_name="workspace_page_log")
+    triggered_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="page_logs_triggered"
+    )
+    # Pending user mentions keep this empty until the debounced notification is sent.
+    notified_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ["page", "transaction"]
@@ -111,6 +116,9 @@ class PageLog(BaseModel):
             models.Index(fields=["entity_name"], name="pagelog_entity_name_idx"),
             models.Index(fields=["entity_type", "entity_identifier"], name="pagelog_type_id_idx"),
             models.Index(fields=["entity_name", "entity_identifier"], name="pagelog_name_id_idx"),
+            models.Index(
+                fields=["created_at"], name="pagelog_pending_mention_idx", condition=models.Q(notified_at__isnull=True)
+            ),
         ]
 
     def __str__(self):

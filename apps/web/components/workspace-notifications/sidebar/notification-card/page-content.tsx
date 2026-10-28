@@ -14,7 +14,7 @@ export function PageNotificationContent({ notification }: { notification: TNotif
   return (
     <>
       <span className="font-medium text-primary">{actorName} </span>
-      <span className="text-tertiary">mentioned you in a comment</span>
+      <span className="text-tertiary">mentioned you{notification.data?.comment ? " in a comment" : ""}</span>
       {preview ? <span className="text-tertiary">: {preview}</span> : "."}
     </>
   );
