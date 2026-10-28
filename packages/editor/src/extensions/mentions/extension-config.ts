@@ -35,6 +35,11 @@ export const CustomMentionExtensionConfig = Mention.extend<TMentionExtensionOpti
       [EMentionComponentAttributeNames.AUTHOR]: {
         default: null,
       },
+      // Backspace after a mention puts this character back in its place.
+      mentionSuggestionChar: {
+        default: "@",
+        rendered: false,
+      },
     };
   },
 
