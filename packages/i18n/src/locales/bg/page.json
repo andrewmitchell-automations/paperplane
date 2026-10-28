@@ -66,9 +66,9 @@
         "reply": "Отговори",
         "reply_placeholder": "Отговор...",
         "composer_placeholder": "Добавете коментар...",
-        "resolve": "Разреши",
+        "resolve": "Маркирай като решен",
         "unresolve": "Отвори отново",
-        "resolved": "Разрешени",
+        "resolved": "Решени",
         "unresolved": "Отворени",
         "edited": "редактиран"
       }

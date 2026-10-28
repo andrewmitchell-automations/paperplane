@@ -124,7 +124,7 @@
           "url_label": "URL",
           "url_placeholder": "https://example.com/hooks/plane",
           "method_label": "Метод",
-          "payload_label": "Данни",
+          "payload_label": "Тяло на заявката",
           "payload_placeholder": "Оставете празно, за да изпратите данните по подразбиране."
         },
         "archive_work_item": {
