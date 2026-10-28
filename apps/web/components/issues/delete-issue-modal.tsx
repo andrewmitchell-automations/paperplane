@@ -114,18 +114,9 @@ export const DeleteIssueModal = observer(function DeleteIssueModal(props: Props)
       isSubmitting={isDeleting}
       isOpen={isOpen}
       title={t("entity.delete.label", { entity: t("common.work_item") })}
-      content={
-        <>
-          {/* TODO: Translate here */}
-          {`Are you sure you want to delete work item `}
-          <span className="font-medium break-words text-primary">
-            {projectDetails?.identifier}-{issue?.sequence_id}
-          </span>
-          {canDeleteAnyWorkItem
-            ? `? You can restore it from the project's archives until it is removed permanently.`
-            : `? Project members can restore it from the project's archives until it is removed permanently.`}
-        </>
-      }
+      content={t(canDeleteAnyWorkItem ? "issue.trash.delete_confirm" : "issue.trash.delete_confirm_guest", {
+        identifier: `${projectDetails?.identifier ?? ""}-${issue?.sequence_id ?? ""}`,
+      })}
     />
   );
 });
