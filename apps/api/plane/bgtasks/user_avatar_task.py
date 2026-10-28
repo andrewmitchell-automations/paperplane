@@ -141,6 +141,10 @@ def sync_user_avatar(user_id, provider, avatar_url, fallback_url=""):
     user = User.objects.filter(id=user_id).select_related("avatar_asset").first()
     if not user or not avatar_url:
         return
+    if user.avatar_asset and user.avatar_asset.user_id != user.id:
+        # A link to someone else's asset is dropped, never deleted.
+        user.avatar_asset = None
+        user.save(update_fields=["avatar_asset"])
 
     fetched = fetch_avatar_bytes(avatar_url, avatar_download_headers(user_id, provider, avatar_url))
     if fetched is None:
@@ -162,6 +166,5 @@ def sync_user_avatar(user_id, provider, avatar_url, fallback_url=""):
 
     user.avatar_asset = new_asset
     user.save(update_fields=["avatar_asset"])
-    # Only the user's own asset: a link to someone else's must not delete it.
-    if old_asset and old_asset.user_id == user.id:
+    if old_asset:
         delete_avatar_asset(old_asset)

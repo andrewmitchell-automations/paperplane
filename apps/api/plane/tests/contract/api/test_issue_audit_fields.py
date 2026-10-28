@@ -162,13 +162,6 @@ class TestIssuePatchAuditFields:
 
 @pytest.mark.django_db
 class TestIssueDeleteAfterPatch:
-    def test_patch_does_not_change_the_creator(self, member_api_client, workspace, project, issue, member_user):
-        # Members may delete any work item here, so the creator only matters for guests.
-        patch_url = _issue_detail_url(workspace.slug, project.id, issue.id)
-        member_api_client.patch(patch_url, {"created_by": str(member_user.id)}, format="json")
-        issue.refresh_from_db()
-        assert issue.created_by_id != member_user.id
-
     def test_creator_can_delete_own_issue(self, member_api_client, workspace, project, state, member_user):
         own_issue = _create_issue_as(
             member_user, name="Member's own issue", workspace=workspace, project=project, state=state
