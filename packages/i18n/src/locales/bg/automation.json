@@ -72,7 +72,11 @@
       "handler_name": {
         "add_comment": "Добави коментар",
         "change_property": "Промени свойство",
-        "run_script": "Изпълни скрипт"
+        "run_script": "Изпълни скрипт",
+        "send_notification": "Изпрати известие",
+        "create_work_item": "Създай работен елемент",
+        "archive_work_item": "Архивирай работния елемент",
+        "call_webhook": "Извикай уебхук"
       },
       "configuration": {
         "label": "Конфигурация",
@@ -88,6 +92,49 @@
             "change_type_required": "Типът на промяната е задължителен",
             "property_value_required": "Стойността на свойството е задължителна"
           }
+        },
+        "add_comment": {
+          "placeholder": "Напишете коментара, който тази автоматизация да публикува."
+        },
+        "send_notification": {
+          "recipients_label": "Получатели",
+          "members_placeholder": "Изберете членове",
+          "title_label": "Заглавие",
+          "title_placeholder": "Кратко резюме",
+          "message_label": "Съобщение",
+          "message_placeholder": "Какво трябва да знаят получателите?"
+        },
+        "create_work_item": {
+          "name_label": "Заглавие",
+          "name_placeholder": "Дайте име на работния елемент, който тази автоматизация създава",
+          "description_label": "Описание",
+          "description_placeholder": "Опишете работния елемент",
+          "type_label": "Тип",
+          "type_hint": "Изберете проект, за да изберете типа.",
+          "state_label": "Състояние",
+          "priority_label": "Приоритет",
+          "assignees_label": "Изпълнители",
+          "labels_label": "Етикети",
+          "due_in_days_label": "Краен срок (дни след изпълнението)",
+          "link_to_trigger_label": "Направи го подчинен работен елемент на този, който е задействал автоматизацията",
+          "project_label": "Проект",
+          "project_hint": "Оставете празно, за да създадете работния елемент в проекта, за който е изпълнението."
+        },
+        "call_webhook": {
+          "url_label": "URL",
+          "url_placeholder": "https://example.com/hooks/plane",
+          "method_label": "Метод",
+          "payload_label": "Данни",
+          "payload_placeholder": "Оставете празно, за да изпратите данните по подразбиране."
+        },
+        "archive_work_item": {
+          "description": "Това действие не изисква конфигурация."
+        },
+        "relative_date": {
+          "mode_label": "Дата",
+          "mode_absolute": "Конкретна дата",
+          "mode_relative": "Спрямо изпълнението",
+          "days_label": "Дни след изпълнението"
         }
       },
       "comment_block": {
@@ -227,6 +274,16 @@
             "message": "Действието не можа да бъде обновено. Опитайте отново!"
           }
         }
+      },
+      "run_now": {
+        "success": {
+          "title": "В опашката",
+          "message": "Автоматизацията ще се изпълни във фонов режим."
+        },
+        "error": {
+          "title": "Грешка!",
+          "message": "Изпълнението не можа да бъде добавено в опашката. Опитайте отново."
+        }
       }
     },
     "empty_state": {
@@ -268,6 +325,156 @@
           }
         }
       }
+    },
+    "triggers": {
+      "work_item_created": "Работен елемент е създаден",
+      "work_item_updated": "Работен елемент е обновен",
+      "work_item_deleted": "Работен елемент е изтрит",
+      "work_item_state_changed": "Състоянието се промени",
+      "work_item_priority_changed": "Приоритетът се промени",
+      "work_item_assignees_changed": "Изпълнителите се промениха",
+      "work_item_labels_changed": "Етикетите се промениха",
+      "work_item_target_date_changed": "Крайният срок се промени",
+      "work_item_parent_changed": "Родителят се промени",
+      "work_item_comment_created": "Добавен е коментар",
+      "work_item_added_to_cycle": "Работен елемент е добавен към цикъл",
+      "work_item_added_to_module": "Работен елемент е добавен към модул",
+      "schedule": "По график"
+    },
+    "properties": {
+      "state": "Състояние",
+      "state_group": "Група състояния",
+      "priority": "Приоритет",
+      "assignees": "Изпълнители",
+      "labels": "Етикети",
+      "modules": "Модули",
+      "cycle": "Цикъл",
+      "work_item_type": "Тип работен елемент",
+      "created_by": "Създадено от",
+      "triggered_by": "Задействано от",
+      "project": "Проект",
+      "name": "Заглавие",
+      "description": "Описание",
+      "target_date": "Краен срок",
+      "start_date": "Начална дата",
+      "created_at": "Създадено на",
+      "updated_at": "Последна промяна на",
+      "estimate": "Оценка",
+      "parent": "Родител",
+      "is_archived": "Архивирано",
+      "sub_work_item_count": "Брой подчинени работни елементи"
+    },
+    "operators": {
+      "eq": "е",
+      "neq": "не е",
+      "in": "е някое от",
+      "not_in": "не е нито едно от",
+      "contains": "съдържа",
+      "not_contains": "не съдържа",
+      "is_empty": "е празно",
+      "is_not_empty": "не е празно",
+      "gt": "е след",
+      "gte": "е на или след",
+      "lt": "е преди",
+      "lte": "е на или преди",
+      "changed": "е променено",
+      "changed_to": "е променено на",
+      "changed_from": "е променено от",
+      "due_in_days": "е с краен срок до",
+      "overdue_by_days": "е просрочено с поне",
+      "older_than_days": "е по-старо от"
+    },
+    "operator_suffix": {
+      "days": "дни"
+    },
+    "change_types": {
+      "set": "Задай на",
+      "add": "Добави",
+      "remove": "Премахни",
+      "clear": "Изчисти",
+      "shift_days": "Измести с"
+    },
+    "recipients": {
+      "assignees": "Изпълнители",
+      "created_by": "Създател",
+      "actor": "Този, който я е задействал",
+      "subscribers": "Абонати",
+      "project_admins": "Администратори на проекта",
+      "specific_members": "Конкретни членове"
+    },
+    "state_groups": {
+      "backlog": "Бъклог",
+      "unstarted": "За изпълнение",
+      "started": "В процес",
+      "completed": "Готово",
+      "cancelled": "Отменено"
+    },
+    "priorities": {
+      "urgent": "Спешен",
+      "high": "Висок",
+      "medium": "Среден",
+      "low": "Нисък",
+      "none": "Няма"
+    },
+    "designer": {
+      "back_to_list": "Обратно към автоматизациите",
+      "run_now": "Изпълни сега",
+      "enable": "Активирай",
+      "disable": "Деактивирай",
+      "enabled": "Активирана",
+      "disabled": "Деактивирана",
+      "not_found": "Тази автоматизация не беше намерена.",
+      "select_property": "Изберете свойство",
+      "select_operator": "Изберете условие",
+      "select_value": "Изберете стойност",
+      "enter_value": "Въведете стойност",
+      "add_condition_group": "Добави вложена група",
+      "remove_condition": "Премахни условието",
+      "remove_group": "Премахни групата",
+      "remove_action": "Премахни действието",
+      "no_conditions": "Тази автоматизация се изпълнява всеки път, когато тригерът се задейства.",
+      "owner": "Собственик",
+      "template_variables_label": "Променливи, които можете да използвате",
+      "template_variables_hint": "Оградете името на променлива с двойни фигурни скоби, за да вмъкнете стойността ѝ.",
+      "scheduled_target_label": "Изпълнение върху",
+      "scheduled_target_project": "Проекта, веднъж при всяко изпълнение",
+      "scheduled_target_work_items": "Всеки работен елемент, който отговаря на условията",
+      "workspace_scope_note": "Автоматизация на ниво работно пространство се изпълнява в няколко проекта, затова състоянията, етикетите, модулите и циклите не са налични тук — те съществуват за всеки проект поотделно."
+    },
+    "run_history": {
+      "title": "История на изпълненията",
+      "empty": "Тази автоматизация все още не е изпълнявана.",
+      "started_at": "Начало",
+      "duration": "Продължителност",
+      "status": "Статус",
+      "trigger_source": "Задействано от",
+      "processed_count": "Работни елементи",
+      "step_error": "Грешка",
+      "source_event": "Събитие",
+      "source_schedule": "График",
+      "source_manual": "Ръчно",
+      "status_success": "Успешно",
+      "status_failed": "Неуспешно",
+      "status_partial": "Частично успешно",
+      "status_skipped": "Пропуснато"
+    },
+    "days_of_week": {
+      "sunday": "Неделя",
+      "monday": "Понеделник",
+      "tuesday": "Вторник",
+      "wednesday": "Сряда",
+      "thursday": "Четвъртък",
+      "friday": "Петък",
+      "saturday": "Събота"
+    },
+    "days_of_week_initial": {
+      "sunday": "Н",
+      "monday": "П",
+      "tuesday": "В",
+      "wednesday": "С",
+      "thursday": "Ч",
+      "friday": "П",
+      "saturday": "С"
     }
   }
 }
