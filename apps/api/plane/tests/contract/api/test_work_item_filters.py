@@ -449,6 +449,78 @@ class TestPlaceholders:
 
 
 @pytest.mark.contract
+class TestWorkItemId:
+    @staticmethod
+    def identifier(item):
+        return f"{item.project.identifier}-{item.sequence_id}"
+
+    def get(self, client, workspace, project, pql):
+        return client.get(project_list_url(workspace.slug, project.id), {"pql": pql})
+
+    @pytest.mark.django_db
+    def test_id_matches_one_work_item(self, api_key_client, workspace, project, work_items, child_item):
+        for identifier in (self.identifier(child_item), self.identifier(child_item).lower()):
+            response = self.get(api_key_client, workspace, project, f'id = "{identifier}"')
+            assert response.status_code == status.HTTP_200_OK, identifier
+            assert result_names(response) == {"Child item"}, identifier
+
+    @pytest.mark.django_db
+    def test_id_in_matches_each_work_item(
+        self, api_key_client, workspace, project, work_items, parent_item, child_item
+    ):
+        identifiers = ", ".join(f'"{self.identifier(item)}"' for item in (parent_item, child_item))
+        response = self.get(api_key_client, workspace, project, f"id in ({identifiers})")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert result_names(response) == {"Parent item", "Child item"}
+
+    @pytest.mark.django_db
+    def test_id_combines_with_child_of(
+        self, api_key_client, workspace, project, work_items, parent_item, teammate_item
+    ):
+        pql = f'childOf("{self.identifier(parent_item)}") OR id in ("{self.identifier(teammate_item)}")'
+        response = self.get(api_key_client, workspace, project, pql)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert result_names(response) == {"Child item", "Teammate item"}
+
+    @pytest.mark.django_db
+    def test_id_contains_matches_identifiers(self, api_key_client, workspace, project, work_items, child_item):
+        response = self.get(api_key_client, workspace, project, f'id ~ "{project.identifier.lower()}"')
+        assert response.status_code == status.HTTP_200_OK
+        assert result_names(response) == {"Parent item", "Child item", "Teammate item"}
+
+        response = self.get(api_key_client, workspace, project, f'id ~ "-{child_item.sequence_id}"')
+        assert response.status_code == status.HTTP_200_OK
+        assert "Child item" in result_names(response)
+
+    @pytest.mark.django_db
+    def test_id_contains_without_a_match_returns_nothing(self, api_key_client, workspace, project, work_items):
+        response = self.get(api_key_client, workspace, project, 'id ~ "ZZZ"')
+
+        assert response.status_code == status.HTTP_200_OK
+        assert result_names(response) == set()
+
+    @pytest.mark.django_db
+    def test_id_contains_never_matches_a_hidden_work_item(
+        self, api_key_client, workspace, project, work_items, hidden_item
+    ):
+        response = api_key_client.get(workspace_list_url(workspace.slug), {"pql": 'id ~ "HID"'})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert result_names(response) == set()
+
+    @pytest.mark.django_db
+    def test_id_of_a_hidden_work_item_is_rejected(self, api_key_client, workspace, project, work_items, hidden_item):
+        identifier = self.identifier(hidden_item)
+        response = self.get(api_key_client, workspace, project, f'id = "{identifier}"')
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert f"No work item '{identifier}' is visible to you" in response.content.decode()
+        assert "Hidden item" not in response.content.decode()
+
+
+@pytest.mark.contract
 class TestWorkspaceList:
     @pytest.mark.django_db
     def test_lists_work_items_across_projects(self, api_key_client, workspace, project, work_items):

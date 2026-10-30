@@ -79,6 +79,11 @@ FIELD_NAME_CASES = [
     ("createdAt < today()", {"created_at__lt": {NOW_PLACEHOLDER: {"seconds": 0}}}),
     ("completedAt is null", {"completed_at__isnull": True}),
     ("createdBy = currentUser()", {"created_by": CURRENT_USER}),
+    # Work items by identifier.
+    ('id = "PROJ-12"', {"id": "PROJ-12"}),
+    ('ID IN ("PROJ-3", "PROJ-4")', {"id__in": ["PROJ-3", "PROJ-4"]}),
+    ('id ~ "PROJ"', {"id__icontains": "PROJ"}),
+    ('id != "PROJ-1"', {"not": [{"id": "PROJ-1"}]}),
 ]
 
 FUNCTION_CASES = [
@@ -293,6 +298,7 @@ ERROR_CASES = [
     ("openStates()", 0, "openStates() is a list, not a condition"),
     ("stateGroup in openStates(1)", 14, "openStates() takes no arguments, got 1"),
     ('isTopLevel("X")', 0, "isTopLevel() takes no arguments, got 1"),
+    ('id > "PROJ-1"', 3, "operator '>' is not supported on field 'id'"),
     ("isOverdue(1, 2)", 0, "isOverdue() takes no arguments, got 2"),
     ("priority = isOverdue()", 11, "isOverdue() is a condition, not a value"),
     ("stateGroup in isTopLevel()", 14, "isTopLevel() is not a list"),
