@@ -94,6 +94,11 @@ class WorkItemQueryValidateEndpoint(BaseAPIView):
         return Response({"valid": True, "expression": expression}, status=status.HTTP_200_OK)
 
 
+def _function_entry(name):
+    kind, arguments = function_signature(name)
+    return {"name": name, "kind": kind, "arguments": arguments}
+
+
 class WorkItemQueryFieldsEndpoint(BaseAPIView):
     """The vocabulary of PQL, for the query bar's hints and completion."""
 
@@ -116,10 +121,7 @@ class WorkItemQueryFieldsEndpoint(BaseAPIView):
             {
                 "fields": fields,
                 "unsupported": UNSUPPORTED_FIELDS,
-                "functions": [
-                    dict(zip(("name", "kind", "arguments"), (name, *function_signature(name))))
-                    for name in sorted(set(FUNCTIONS.values()))
-                ],
+                "functions": [_function_entry(name) for name in sorted(set(FUNCTIONS.values()))],
                 "custom_property_syntax": 'cf["<property id or name>"]',
             },
             status=status.HTTP_200_OK,

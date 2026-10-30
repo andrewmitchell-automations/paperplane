@@ -71,7 +71,7 @@ FIELD_NAME_CASES = [
     ('module = "' + STATE_ID + '"', {"issue_module__module_id": STATE_ID}),
     # Plane's camelCase names.
     ("stateGroup = started", {"state__group": "started"}),
-    ("STATEGROUP = triage", {"state__group": "triage"}),
+    ("STATEGROUP = started", {"state__group": "started"}),
     ('dueDate <= "2026-11-15"', {"target_date__lte": "2026-11-15"}),
     ('targetDate <= "2026-11-15"', {"target_date__lte": "2026-11-15"}),
     ('startDate >= "2026-01-01"', {"start_date__gte": "2026-01-01"}),
@@ -192,7 +192,7 @@ IN_CASES = [
     ("state__group not in (backlog)", {"not": [{"state__group__in": ["backlog"]}]}),
 ]
 
-OPEN_STATES = ["backlog", "unstarted", "started", "triage"]
+OPEN_STATES = ["backlog", "unstarted", "started"]
 
 LIST_FUNCTION_CASES = [
     ("stateGroup IN openStates()", {"state__group__in": OPEN_STATES}),

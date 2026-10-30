@@ -24,7 +24,7 @@ class FieldCollector extends PQLListener {
   };
 }
 
-export function tagFor(token: Token, fieldTokens: Set<number>, tokens: Token[] = []): Tag | null {
+export function tagFor(token: Token, fieldTokens: Set<number>, tokens: Token[]): Tag | null {
   const type = token.type;
   if (type === Token.EOF) return null;
   if (KEYWORD_TOKENS.has(type) || type === P.CF) return tags.keyword;

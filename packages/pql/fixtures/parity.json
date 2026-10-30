@@ -9,7 +9,7 @@
     "NOT isOverdue()",
     "NOT priority = urgent AND state__group = started",
     "NOT priority = urgent OR state__group = started",
-    "STATEGROUP = triage",
+    "STATEGROUP = started",
     "TARGET_DATE IS NULL",
     "ancestor = \"CUST-1\"",
     "ancestor in (\"CUST-1\", \"CUST-2\")",

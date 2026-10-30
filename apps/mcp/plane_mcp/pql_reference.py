@@ -23,7 +23,7 @@ Plane Query Language (PQL) filter string for work items. Output ONLY valid PQL.
 
 FIELDS (a name or a UUID; names match case-insensitively within the project)
   state (alias status)     "Paid" or a state UUID
-  state_group              "backlog" | "unstarted" | "started" | "completed" | "cancelled" | "triage"
+  state_group              "backlog" | "unstarted" | "started" | "completed" | "cancelled"
   priority                 "urgent" | "high" | "medium" | "low" | "none"
   project                  "SALES" (identifier), a name, or a project UUID
   type                     "Invoice" or a type UUID
@@ -60,7 +60,7 @@ FUNCTIONS
   descendantOf("PROJ-12")          everything below it, at any depth
   isTopLevel()                     work items without a parent
   isOverdue()                      open work items due before today
-  state_group in openStates()      backlog, unstarted, started, triage;
+  state_group in openStates()      backlog, unstarted, started;
                                    also activeStates() (unstarted, started), closedStates()
 
 EXAMPLES
@@ -87,7 +87,7 @@ unknown name is refused with the field named.
 | Field | Aliases | Values |
 |---|---|---|
 | state | status | state name or UUID |
-| state_group | stateGroup | backlog, unstarted, started, completed, cancelled, triage |
+| state_group | stateGroup | backlog, unstarted, started, completed, cancelled |
 | priority | | urgent, high, medium, low, none |
 | project | | project identifier (SALES), name or UUID |
 | type | | work item type name or UUID |
@@ -136,7 +136,7 @@ childOf("PROJ-12")         direct children of that work item
 descendantOf("PROJ-12")    every work item below it, at any depth
 isTopLevel()               work items without a parent
 isOverdue()                open work items whose due date is before today
-openStates()               after `state_group in`: backlog, unstarted, started, triage
+openStates()               after `state_group in`: backlog, unstarted, started
 activeStates()             after `state_group in`: unstarted, started
 closedStates()             after `state_group in`: completed, cancelled
 ```

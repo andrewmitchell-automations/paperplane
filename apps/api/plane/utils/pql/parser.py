@@ -91,7 +91,7 @@ DESCENDANT_OF_PLACEHOLDER = "$descendantOf"
 MAX_PQL_DEPTH = 25
 
 # Short names the SDK and the MCP server advertise, resolved onto the allowlist.
-FIELD_ALIASES = {
+JQL_FIELD_ALIASES = {
     **SDK_FIELD_ALIASES,
     "ancestor": "ancestor_id",
     "assignee": "assignees__id",
@@ -125,14 +125,11 @@ PLANE_FIELD_ALIASES = {
     "targetDate": "target_date",
     "updatedAt": "updated_at",
 }
-# Names are matched case-insensitively, so the lookup keys are lowercase.
-FIELD_ALIASES.update({alias.lower(): target for alias, target in PLANE_FIELD_ALIASES.items()})
 
-# The aliases besides Plane's, which the query bar lists apart.
-JQL_FIELD_ALIASES = {
-    alias: target
-    for alias, target in FIELD_ALIASES.items()
-    if alias not in {name.lower() for name in PLANE_FIELD_ALIASES}
+# Names are matched case-insensitively, so the lookup keys are lowercase.
+FIELD_ALIASES = {
+    **JQL_FIELD_ALIASES,
+    **{alias.lower(): target for alias, target in PLANE_FIELD_ALIASES.items()},
 }
 
 KNOWN_FIELD_NAMES = sorted(set(FILTER_FIELDS) | set(JQL_FIELD_ALIASES) | set(PLANE_FIELD_ALIASES))
@@ -167,7 +164,7 @@ DAY_FUNCTIONS = {"daysAgo": -1, "daysFromNow": 1}
 DAY_SECONDS = 86400
 # Functions standing for a list of state groups, valid only as `stateGroup in <function>()`.
 LIST_FUNCTIONS = {
-    "openStates": ("backlog", "unstarted", "started", "triage"),
+    "openStates": ("backlog", "unstarted", "started"),
     "activeStates": ("unstarted", "started"),
     "closedStates": ("completed", "cancelled"),
 }
