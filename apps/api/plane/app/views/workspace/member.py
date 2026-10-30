@@ -19,6 +19,7 @@ from plane.app.serializers import (
     ProjectMemberRoleSerializer,
     WorkspaceMemberAdminSerializer,
     WorkspaceMemberMeSerializer,
+    WorkspaceMemberDialectSerializer,
     WorkSpaceMemberSerializer,
 )
 from plane.app.views.base import BaseAPIView
@@ -245,6 +246,19 @@ class WorkspaceMemberUserEndpoint(BaseAPIView):
         )
         serializer = WorkspaceMemberMeSerializer(workspace_member)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @allow_permission(allowed_roles=[ROLE.ADMIN, ROLE.MEMBER, ROLE.GUEST], level="WORKSPACE")
+    def patch(self, request, slug):
+        # Only the member's own PQL dialect is writable here; a role change goes through admins.
+        if not isinstance(request.data, dict) or set(request.data) != {"pql_dialect"}:
+            return Response({"error": "Only the PQL dialect can be updated here"}, status=status.HTTP_400_BAD_REQUEST)
+        workspace_member = WorkspaceMember.objects.get(member=request.user, workspace__slug=slug, is_active=True)
+        serializer = WorkspaceMemberDialectSerializer(workspace_member, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        workspace_member.pql_dialect = serializer.validated_data["pql_dialect"]
+        workspace_member.save(update_fields=["pql_dialect", "updated_at", "updated_by"])
+        return Response(WorkspaceMemberMeSerializer(workspace_member).data, status=status.HTTP_200_OK)
 
 
 class WorkspaceProjectMemberEndpoint(BaseAPIView):

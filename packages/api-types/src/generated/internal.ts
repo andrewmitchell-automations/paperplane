@@ -7246,7 +7246,11 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /**
+         * @description This enables timezone conversion according
+         *     to the user set timezone
+         */
+        patch: operations["workspaces_workspace_members_me_partial_update"];
         trace?: never;
     };
     "/api/workspaces/{slug}/workspace-themes/": {
@@ -25517,6 +25521,26 @@ export interface operations {
         };
     };
     workspaces_workspace_members_me_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    workspaces_workspace_members_me_partial_update: {
         parameters: {
             query?: never;
             header?: never;

@@ -17895,6 +17895,24 @@ paths:
       responses:
         '200':
           description: No response body
+    patch:
+      operationId: workspaces_workspace_members_me_partial_update
+      description: |-
+        This enables timezone conversion according
+        to the user set timezone
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - workspaces
+      security:
+      - sessionAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/workspaces/{slug}/workspace-themes/:
     get:
       operationId: workspaces_workspace_themes_list
