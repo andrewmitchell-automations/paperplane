@@ -26,7 +26,6 @@ from plane.db.models import (
     Sticky,
     WorkspaceUserPreference,
 )
-from plane.db.models.workspace import PQL_DIALECT_CHOICES
 from plane.utils.constants import RESTRICTED_WORKSPACE_SLUGS
 from plane.utils.url import contains_url
 from plane.utils.content_validator import (
@@ -118,9 +117,6 @@ class WorkspaceMemberMeSerializer(BaseSerializer):
 
 class WorkspaceMemberDialectSerializer(BaseSerializer):
     """The one field a member may change on their own row."""
-
-    # Null follows the workspace; a blank string is not a dialect.
-    pql_dialect = serializers.ChoiceField(choices=PQL_DIALECT_CHOICES, allow_null=True)
 
     class Meta:
         model = WorkspaceMember

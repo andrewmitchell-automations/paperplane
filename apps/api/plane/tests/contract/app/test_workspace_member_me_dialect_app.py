@@ -7,10 +7,13 @@ Every member may pick their own dialect, or clear it to follow the workspace's,
 but the endpoint writes nothing else: a role or any other key is refused.
 """
 
+import json
+
 import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from plane.db.management.commands.generate_openapi import generate_schema
 from plane.db.models import WorkspaceMember
 from plane.tests.factories import UserFactory, WorkspaceMemberFactory
 
@@ -44,6 +47,7 @@ class TestWorkspaceMemberDialect:
         response = client.patch(_url(workspace), {"pql_dialect": "plane"}, format="json")
         assert response.status_code == status.HTTP_200_OK, response.data
         assert response.data["pql_dialect"] == "plane"
+        assert response.data["draft_issue_count"] == 0
         member.refresh_from_db()
         assert member.pql_dialect == "plane"
 
@@ -85,3 +89,21 @@ class TestWorkspaceMemberDialect:
         assert response.status_code != status.HTTP_200_OK
         member.refresh_from_db()
         assert member.pql_dialect is None
+
+
+@pytest.mark.contract
+class TestWorkspaceMemberDialectSchema:
+    def test_patch_documents_its_request_and_response(self):
+        schema, _ = generate_schema("internal")
+        patch = schema["paths"]["/api/workspaces/{slug}/workspace-members/me/"]["patch"]
+        request_ref = patch["requestBody"]["content"]["application/json"]["schema"]["$ref"]
+        request_schema = schema["components"]["schemas"][request_ref.rsplit("/", 1)[1]]
+        assert set(request_schema["properties"]) == {"pql_dialect"}
+        assert patch["responses"]["200"]["content"]["application/json"]["schema"]["$ref"].endswith("/WorkspaceMemberMe")
+        assert "400" in patch["responses"]
+
+    def test_blank_is_not_a_member_dialect(self):
+        # A blank string is not a dialect; null is how a member follows the workspace.
+        assert WorkspaceMember._meta.get_field("pql_dialect").blank is False
+        schema, _ = generate_schema("internal")
+        assert "BlankEnum" not in json.dumps(schema["components"]["schemas"]["WorkspaceMemberMe"])

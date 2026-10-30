@@ -215,7 +215,7 @@ class WorkspaceMember(BaseModel):
     tips = models.JSONField(default=dict)
     explored_features = models.JSONField(default=dict)
     # The member's own PQL dialect; null follows the workspace's.
-    pql_dialect = models.CharField(max_length=8, choices=PQL_DIALECT_CHOICES, null=True, blank=True, default=None)
+    pql_dialect = models.CharField(max_length=8, choices=PQL_DIALECT_CHOICES, null=True, default=None)
 
     class Meta:
         unique_together = ["workspace", "member", "deleted_at"]

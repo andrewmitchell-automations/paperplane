@@ -17908,11 +17908,28 @@ paths:
         required: true
       tags:
       - workspaces
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceMemberDialectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceMemberDialectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWorkspaceMemberDialectRequest'
       security:
       - sessionAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMemberMe'
+          description: ''
+        '400':
+          description: A key other than pql_dialect, or an unknown dialect
   /api/workspaces/{slug}/workspace-themes/:
     get:
       operationId: workspaces_workspace_themes_list
@@ -24376,7 +24393,15 @@ components:
           nullable: true
           oneOf:
           - $ref: '#/components/schemas/PqlDialectEnum'
-          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+    PatchedWorkspaceMemberDialectRequest:
+      type: object
+      description: The one field a member may change on their own row.
+      properties:
+        pql_dialect:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/PqlDialectEnum'
           - $ref: '#/components/schemas/NullEnum'
     PatchedWorkspaceThemeRequest:
       type: object
@@ -27876,7 +27901,6 @@ components:
           nullable: true
           oneOf:
           - $ref: '#/components/schemas/PqlDialectEnum'
-          - $ref: '#/components/schemas/BlankEnum'
           - $ref: '#/components/schemas/NullEnum'
         created_by:
           type: string
@@ -27933,8 +27957,85 @@ components:
           nullable: true
           oneOf:
           - $ref: '#/components/schemas/PqlDialectEnum'
-          - $ref: '#/components/schemas/BlankEnum'
           - $ref: '#/components/schemas/NullEnum'
+    WorkspaceMemberMe:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        draft_issue_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Last Modified At
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          minimum: 0
+          maximum: 32767
+        company_role:
+          type: string
+          nullable: true
+        view_props: {}
+        default_props: {}
+        issue_props: {}
+        is_active:
+          type: boolean
+        getting_started_checklist: {}
+        tips: {}
+        explored_features: {}
+        pql_dialect:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/PqlDialectEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          title: Last Modified By
+        workspace:
+          type: string
+          format: uuid
+        member:
+          type: string
+          format: uuid
+      required:
+      - id
+      - created_at
+      - updated_at
+      - deleted_at
+      - role
+      - company_role
+      - view_props
+      - default_props
+      - issue_props
+      - is_active
+      - getting_started_checklist
+      - tips
+      - explored_features
+      - pql_dialect
+      - created_by
+      - updated_by
+      - workspace
+      - member
     WorkspaceRecentVisit:
       type: object
       properties:

@@ -18,8 +18,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="workspacemember",
             name="pql_dialect",
-            field=models.CharField(
-                blank=True, choices=[("jql", "JQL"), ("plane", "Plane")], default=None, max_length=8, null=True
-            ),
+            field=models.CharField(choices=[("jql", "JQL"), ("plane", "Plane")], default=None, max_length=8, null=True),
         ),
     ]
