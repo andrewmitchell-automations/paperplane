@@ -8,7 +8,14 @@ import { WorkspaceDetails } from "./workspace-details";
 const updateWorkspace = vi.fn();
 let isAdmin = true;
 // One object across renders, as the store gives; a fresh one would re-run the form's reset effect forever.
-const currentWorkspace = { slug: "ws", name: "Workspace", url: "", logo_url: null, timezone: "UTC", pql_dialect: "jql" };
+const currentWorkspace = {
+  slug: "ws",
+  name: "Workspace",
+  url: "",
+  logo_url: null,
+  timezone: "UTC",
+  pql_dialect: "jql",
+};
 
 vi.mock("@plane/i18n", () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock("@plane/blocks/toast", () => ({ setToast: vi.fn() }));
