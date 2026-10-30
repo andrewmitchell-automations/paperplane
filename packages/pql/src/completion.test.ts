@@ -139,6 +139,13 @@ describe("candidatesAt", () => {
 });
 
 describe("subjectAt", () => {
+  it("reads the field before an operator is typed", () => {
+    expect(subjectAt("priority ", positionAt("priority ").caretTokenIndex)).toEqual({
+      field: "priority",
+      property: null,
+    });
+  });
+
   it("reads the field or property reference the caret belongs to", () => {
     expect(subjectAt("priority = ", positionAt("priority = ").caretTokenIndex)).toEqual({
       field: "priority",

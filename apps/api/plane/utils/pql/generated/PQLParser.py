@@ -9,7 +9,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,30,165,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,26,165,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
         2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
         7,20,1,0,1,0,1,0,1,1,1,1,1,2,1,2,1,2,5,2,51,8,2,10,2,12,2,54,9,2,
@@ -23,46 +23,46 @@ def serializedATN():
         17,3,17,144,8,17,1,17,1,17,1,17,1,17,5,17,150,8,17,10,17,12,17,153,
         9,17,3,17,155,8,17,1,18,1,18,1,18,1,19,1,19,1,19,1,20,1,20,1,20,
         0,0,21,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,
-        0,3,1,0,8,11,1,0,12,18,1,0,24,25,162,0,42,1,0,0,0,2,45,1,0,0,0,4,
-        47,1,0,0,0,6,55,1,0,0,0,8,66,1,0,0,0,10,74,1,0,0,0,12,80,1,0,0,0,
-        14,82,1,0,0,0,16,84,1,0,0,0,18,90,1,0,0,0,20,92,1,0,0,0,22,95,1,
-        0,0,0,24,97,1,0,0,0,26,116,1,0,0,0,28,118,1,0,0,0,30,120,1,0,0,0,
-        32,133,1,0,0,0,34,154,1,0,0,0,36,156,1,0,0,0,38,159,1,0,0,0,40,162,
-        1,0,0,0,42,43,3,2,1,0,43,44,5,0,0,1,44,1,1,0,0,0,45,46,3,4,2,0,46,
-        3,1,0,0,0,47,52,3,6,3,0,48,49,5,2,0,0,49,51,3,6,3,0,50,48,1,0,0,
-        0,51,54,1,0,0,0,52,50,1,0,0,0,52,53,1,0,0,0,53,5,1,0,0,0,54,52,1,
-        0,0,0,55,60,3,8,4,0,56,57,5,1,0,0,57,59,3,8,4,0,58,56,1,0,0,0,59,
-        62,1,0,0,0,60,58,1,0,0,0,60,61,1,0,0,0,61,7,1,0,0,0,62,60,1,0,0,
-        0,63,64,5,3,0,0,64,67,3,8,4,0,65,67,3,10,5,0,66,63,1,0,0,0,66,65,
-        1,0,0,0,67,9,1,0,0,0,68,69,5,19,0,0,69,70,3,2,1,0,70,71,5,20,0,0,
-        71,75,1,0,0,0,72,75,3,12,6,0,73,75,3,16,8,0,74,68,1,0,0,0,74,72,
-        1,0,0,0,74,73,1,0,0,0,75,11,1,0,0,0,76,77,3,14,7,0,77,78,3,26,13,
-        0,78,81,1,0,0,0,79,81,3,20,10,0,80,76,1,0,0,0,80,79,1,0,0,0,81,13,
-        1,0,0,0,82,83,5,29,0,0,83,15,1,0,0,0,84,85,5,7,0,0,85,86,5,21,0,
-        0,86,87,3,18,9,0,87,88,5,22,0,0,88,89,3,26,13,0,89,17,1,0,0,0,90,
-        91,5,26,0,0,91,19,1,0,0,0,92,93,3,22,11,0,93,94,3,24,12,0,94,21,
-        1,0,0,0,95,96,7,0,0,0,96,23,1,0,0,0,97,99,5,19,0,0,98,100,3,32,16,
-        0,99,98,1,0,0,0,99,100,1,0,0,0,100,101,1,0,0,0,101,102,5,20,0,0,
-        102,25,1,0,0,0,103,104,3,28,14,0,104,105,3,34,17,0,105,117,1,0,0,
-        0,106,107,5,4,0,0,107,117,3,30,15,0,108,109,5,3,0,0,109,110,5,4,
-        0,0,110,117,3,30,15,0,111,113,5,5,0,0,112,114,5,3,0,0,113,112,1,
-        0,0,0,113,114,1,0,0,0,114,115,1,0,0,0,115,117,5,6,0,0,116,103,1,
-        0,0,0,116,106,1,0,0,0,116,108,1,0,0,0,116,111,1,0,0,0,117,27,1,0,
-        0,0,118,119,7,1,0,0,119,29,1,0,0,0,120,129,5,19,0,0,121,126,3,34,
-        17,0,122,123,5,23,0,0,123,125,3,34,17,0,124,122,1,0,0,0,125,128,
-        1,0,0,0,126,124,1,0,0,0,126,127,1,0,0,0,127,130,1,0,0,0,128,126,
-        1,0,0,0,129,121,1,0,0,0,129,130,1,0,0,0,130,131,1,0,0,0,131,132,
-        5,20,0,0,132,31,1,0,0,0,133,138,3,34,17,0,134,135,5,23,0,0,135,137,
-        3,34,17,0,136,134,1,0,0,0,137,140,1,0,0,0,138,136,1,0,0,0,138,139,
-        1,0,0,0,139,33,1,0,0,0,140,138,1,0,0,0,141,155,5,26,0,0,142,144,
-        5,25,0,0,143,142,1,0,0,0,143,144,1,0,0,0,144,145,1,0,0,0,145,155,
-        5,28,0,0,146,155,5,29,0,0,147,151,3,36,18,0,148,150,3,38,19,0,149,
-        148,1,0,0,0,150,153,1,0,0,0,151,149,1,0,0,0,151,152,1,0,0,0,152,
-        155,1,0,0,0,153,151,1,0,0,0,154,141,1,0,0,0,154,143,1,0,0,0,154,
-        146,1,0,0,0,154,147,1,0,0,0,155,35,1,0,0,0,156,157,3,22,11,0,157,
-        158,3,24,12,0,158,37,1,0,0,0,159,160,3,40,20,0,160,161,5,27,0,0,
-        161,39,1,0,0,0,162,163,7,2,0,0,163,41,1,0,0,0,14,52,60,66,74,80,
-        99,113,116,126,129,138,143,151,154
+        0,2,1,0,8,14,1,0,20,21,162,0,42,1,0,0,0,2,45,1,0,0,0,4,47,1,0,0,
+        0,6,55,1,0,0,0,8,66,1,0,0,0,10,74,1,0,0,0,12,80,1,0,0,0,14,82,1,
+        0,0,0,16,84,1,0,0,0,18,90,1,0,0,0,20,92,1,0,0,0,22,95,1,0,0,0,24,
+        97,1,0,0,0,26,116,1,0,0,0,28,118,1,0,0,0,30,120,1,0,0,0,32,133,1,
+        0,0,0,34,154,1,0,0,0,36,156,1,0,0,0,38,159,1,0,0,0,40,162,1,0,0,
+        0,42,43,3,2,1,0,43,44,5,0,0,1,44,1,1,0,0,0,45,46,3,4,2,0,46,3,1,
+        0,0,0,47,52,3,6,3,0,48,49,5,2,0,0,49,51,3,6,3,0,50,48,1,0,0,0,51,
+        54,1,0,0,0,52,50,1,0,0,0,52,53,1,0,0,0,53,5,1,0,0,0,54,52,1,0,0,
+        0,55,60,3,8,4,0,56,57,5,1,0,0,57,59,3,8,4,0,58,56,1,0,0,0,59,62,
+        1,0,0,0,60,58,1,0,0,0,60,61,1,0,0,0,61,7,1,0,0,0,62,60,1,0,0,0,63,
+        64,5,3,0,0,64,67,3,8,4,0,65,67,3,10,5,0,66,63,1,0,0,0,66,65,1,0,
+        0,0,67,9,1,0,0,0,68,69,5,15,0,0,69,70,3,2,1,0,70,71,5,16,0,0,71,
+        75,1,0,0,0,72,75,3,12,6,0,73,75,3,16,8,0,74,68,1,0,0,0,74,72,1,0,
+        0,0,74,73,1,0,0,0,75,11,1,0,0,0,76,77,3,14,7,0,77,78,3,26,13,0,78,
+        81,1,0,0,0,79,81,3,20,10,0,80,76,1,0,0,0,80,79,1,0,0,0,81,13,1,0,
+        0,0,82,83,5,25,0,0,83,15,1,0,0,0,84,85,5,7,0,0,85,86,5,17,0,0,86,
+        87,3,18,9,0,87,88,5,18,0,0,88,89,3,26,13,0,89,17,1,0,0,0,90,91,5,
+        22,0,0,91,19,1,0,0,0,92,93,3,22,11,0,93,94,3,24,12,0,94,21,1,0,0,
+        0,95,96,5,25,0,0,96,23,1,0,0,0,97,99,5,15,0,0,98,100,3,32,16,0,99,
+        98,1,0,0,0,99,100,1,0,0,0,100,101,1,0,0,0,101,102,5,16,0,0,102,25,
+        1,0,0,0,103,104,3,28,14,0,104,105,3,34,17,0,105,117,1,0,0,0,106,
+        107,5,4,0,0,107,117,3,30,15,0,108,109,5,3,0,0,109,110,5,4,0,0,110,
+        117,3,30,15,0,111,113,5,5,0,0,112,114,5,3,0,0,113,112,1,0,0,0,113,
+        114,1,0,0,0,114,115,1,0,0,0,115,117,5,6,0,0,116,103,1,0,0,0,116,
+        106,1,0,0,0,116,108,1,0,0,0,116,111,1,0,0,0,117,27,1,0,0,0,118,119,
+        7,0,0,0,119,29,1,0,0,0,120,129,5,15,0,0,121,126,3,34,17,0,122,123,
+        5,19,0,0,123,125,3,34,17,0,124,122,1,0,0,0,125,128,1,0,0,0,126,124,
+        1,0,0,0,126,127,1,0,0,0,127,130,1,0,0,0,128,126,1,0,0,0,129,121,
+        1,0,0,0,129,130,1,0,0,0,130,131,1,0,0,0,131,132,5,16,0,0,132,31,
+        1,0,0,0,133,138,3,34,17,0,134,135,5,19,0,0,135,137,3,34,17,0,136,
+        134,1,0,0,0,137,140,1,0,0,0,138,136,1,0,0,0,138,139,1,0,0,0,139,
+        33,1,0,0,0,140,138,1,0,0,0,141,155,5,22,0,0,142,144,5,21,0,0,143,
+        142,1,0,0,0,143,144,1,0,0,0,144,145,1,0,0,0,145,155,5,24,0,0,146,
+        155,5,25,0,0,147,151,3,36,18,0,148,150,3,38,19,0,149,148,1,0,0,0,
+        150,153,1,0,0,0,151,149,1,0,0,0,151,152,1,0,0,0,152,155,1,0,0,0,
+        153,151,1,0,0,0,154,141,1,0,0,0,154,143,1,0,0,0,154,146,1,0,0,0,
+        154,147,1,0,0,0,155,35,1,0,0,0,156,157,3,22,11,0,157,158,3,24,12,
+        0,158,37,1,0,0,0,159,160,3,40,20,0,160,161,5,23,0,0,161,39,1,0,0,
+        0,162,163,7,1,0,0,163,41,1,0,0,0,14,52,60,66,74,80,99,113,116,126,
+        129,138,143,151,154
     ]
 
 class PQLParser ( Parser ):
@@ -76,16 +76,14 @@ class PQLParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'and'", "'or'", "'not'", "'in'", "'is'", 
-                     "'null'", "'cf'", "'currentuser'", "'now'", "'childof'", 
-                     "'descendantof'", "'!='", "'>='", "'<='", "'='", "'>'", 
+                     "'null'", "'cf'", "'!='", "'>='", "'<='", "'='", "'>'", 
                      "'<'", "'~'", "'('", "')'", "'['", "']'", "','", "'+'", 
                      "'-'" ]
 
     symbolicNames = [ "<INVALID>", "AND", "OR", "NOT", "IN", "IS", "NULL", 
-                      "CF", "CURRENTUSER", "NOW", "CHILDOF", "DESCENDANTOF", 
-                      "NEQ", "GTE", "LTE", "EQ", "GT", "LT", "TILDE", "LPAREN", 
-                      "RPAREN", "LBRACKET", "RBRACKET", "COMMA", "PLUS", 
-                      "MINUS", "STRING", "DURATION", "NUMBER", "IDENT", 
+                      "CF", "NEQ", "GTE", "LTE", "EQ", "GT", "LT", "TILDE", 
+                      "LPAREN", "RPAREN", "LBRACKET", "RBRACKET", "COMMA", 
+                      "PLUS", "MINUS", "STRING", "DURATION", "NUMBER", "IDENT", 
                       "WS" ]
 
     RULE_query = 0
@@ -125,29 +123,25 @@ class PQLParser ( Parser ):
     IS=5
     NULL=6
     CF=7
-    CURRENTUSER=8
-    NOW=9
-    CHILDOF=10
-    DESCENDANTOF=11
-    NEQ=12
-    GTE=13
-    LTE=14
-    EQ=15
-    GT=16
-    LT=17
-    TILDE=18
-    LPAREN=19
-    RPAREN=20
-    LBRACKET=21
-    RBRACKET=22
-    COMMA=23
-    PLUS=24
-    MINUS=25
-    STRING=26
-    DURATION=27
-    NUMBER=28
-    IDENT=29
-    WS=30
+    NEQ=8
+    GTE=9
+    LTE=10
+    EQ=11
+    GT=12
+    LT=13
+    TILDE=14
+    LPAREN=15
+    RPAREN=16
+    LBRACKET=17
+    RBRACKET=18
+    COMMA=19
+    PLUS=20
+    MINUS=21
+    STRING=22
+    DURATION=23
+    NUMBER=24
+    IDENT=25
+    WS=26
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -452,7 +446,7 @@ class PQLParser ( Parser ):
                 self.state = 64
                 self.notExpr()
                 pass
-            elif token in [7, 8, 9, 10, 11, 19, 29]:
+            elif token in [7, 15, 25]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 65
                 self.primary()
@@ -522,7 +516,7 @@ class PQLParser ( Parser ):
             self.state = 74
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [19]:
+            if token in [15]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 68
                 self.match(PQLParser.LPAREN)
@@ -531,7 +525,7 @@ class PQLParser ( Parser ):
                 self.state = 70
                 self.match(PQLParser.RPAREN)
                 pass
-            elif token in [8, 9, 10, 11, 29]:
+            elif token in [25]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 72
                 self.predicate()
@@ -599,21 +593,21 @@ class PQLParser ( Parser ):
         try:
             self.state = 80
             self._errHandler.sync(self)
-            token = self._input.LA(1)
-            if token in [29]:
+            la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
+            if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 76
                 self.fieldName()
                 self.state = 77
                 self.comparison()
                 pass
-            elif token in [8, 9, 10, 11]:
+
+            elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 79
                 self.conditionFunction()
                 pass
-            else:
-                raise NoViableAltException(self)
+
 
         except RecognitionException as re:
             localctx.exception = re
@@ -848,17 +842,8 @@ class PQLParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def CHILDOF(self):
-            return self.getToken(PQLParser.CHILDOF, 0)
-
-        def DESCENDANTOF(self):
-            return self.getToken(PQLParser.DESCENDANTOF, 0)
-
-        def CURRENTUSER(self):
-            return self.getToken(PQLParser.CURRENTUSER, 0)
-
-        def NOW(self):
-            return self.getToken(PQLParser.NOW, 0)
+        def IDENT(self):
+            return self.getToken(PQLParser.IDENT, 0)
 
         def getRuleIndex(self):
             return PQLParser.RULE_functionName
@@ -884,16 +869,10 @@ class PQLParser ( Parser ):
 
         localctx = PQLParser.FunctionNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 22, self.RULE_functionName)
-        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 95
-            _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 3840) != 0)):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
+            self.match(PQLParser.IDENT)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -952,7 +931,7 @@ class PQLParser ( Parser ):
             self.state = 99
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 905973504) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 56623104) != 0):
                 self.state = 98
                 self.arguments()
 
@@ -1107,7 +1086,7 @@ class PQLParser ( Parser ):
             self.state = 116
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [12, 13, 14, 15, 16, 17, 18]:
+            if token in [8, 9, 10, 11, 12, 13, 14]:
                 localctx = PQLParser.CompareOperatorContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 103
@@ -1218,7 +1197,7 @@ class PQLParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 118
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 520192) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 32512) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1290,13 +1269,13 @@ class PQLParser ( Parser ):
             self.state = 129
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 905973504) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 56623104) != 0):
                 self.state = 121
                 self.value()
                 self.state = 126
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while _la==23:
+                while _la==19:
                     self.state = 122
                     self.match(PQLParser.COMMA)
                     self.state = 123
@@ -1370,7 +1349,7 @@ class PQLParser ( Parser ):
             self.state = 138
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==23:
+            while _la==19:
                 self.state = 134
                 self.match(PQLParser.COMMA)
                 self.state = 135
@@ -1519,20 +1498,21 @@ class PQLParser ( Parser ):
         try:
             self.state = 154
             self._errHandler.sync(self)
-            token = self._input.LA(1)
-            if token in [26]:
+            la_ = self._interp.adaptivePredict(self._input,13,self._ctx)
+            if la_ == 1:
                 localctx = PQLParser.StringValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 141
                 self.match(PQLParser.STRING)
                 pass
-            elif token in [25, 28]:
+
+            elif la_ == 2:
                 localctx = PQLParser.NumberValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 143
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==25:
+                if _la==21:
                     self.state = 142
                     self.match(PQLParser.MINUS)
 
@@ -1540,13 +1520,15 @@ class PQLParser ( Parser ):
                 self.state = 145
                 self.match(PQLParser.NUMBER)
                 pass
-            elif token in [29]:
+
+            elif la_ == 3:
                 localctx = PQLParser.IdentValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
                 self.state = 146
                 self.match(PQLParser.IDENT)
                 pass
-            elif token in [8, 9, 10, 11]:
+
+            elif la_ == 4:
                 localctx = PQLParser.FunctionValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
                 self.state = 147
@@ -1554,7 +1536,7 @@ class PQLParser ( Parser ):
                 self.state = 151
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while _la==24 or _la==25:
+                while _la==20 or _la==21:
                     self.state = 148
                     self.durationOffset()
                     self.state = 153
@@ -1562,8 +1544,7 @@ class PQLParser ( Parser ):
                     _la = self._input.LA(1)
 
                 pass
-            else:
-                raise NoViableAltException(self)
+
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1723,7 +1704,7 @@ class PQLParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 162
             _la = self._input.LA(1)
-            if not(_la==24 or _la==25):
+            if not(_la==20 or _la==21):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)

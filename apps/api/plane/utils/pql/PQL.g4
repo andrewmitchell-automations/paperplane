@@ -58,11 +58,9 @@ conditionFunction
     : functionName callArguments
     ;
 
+// Function names are identifiers, not reserved words; parser.py checks them.
 functionName
-    : CHILDOF
-    | DESCENDANTOF
-    | CURRENTUSER
-    | NOW
+    : IDENT
     ;
 
 callArguments
@@ -114,10 +112,6 @@ IN: 'in';
 IS: 'is';
 NULL: 'null';
 CF: 'cf';
-CURRENTUSER: 'currentuser';
-NOW: 'now';
-CHILDOF: 'childof';
-DESCENDANTOF: 'descendantof';
 
 NEQ: '!=';
 GTE: '>=';

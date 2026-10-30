@@ -8,7 +8,7 @@ import { CharStream, CommonTokenStream, type ParserRuleContext, ParseTreeWalker,
 import { PQLLexer } from "./generated/PQLLexer.js";
 import { PQLListener } from "./generated/PQLListener.js";
 import { type CustomPropertyPredicateContext, PQLParser, type PredicateContext } from "./generated/PQLParser.js";
-import { FUNCTION_TOKENS, KEYWORD_TOKENS, OPERATOR_TOKENS, parseQuery } from "./parse.js";
+import { KEYWORD_TOKENS, OPERATOR_TOKENS, parseQuery } from "./parse.js";
 import { type FieldInfo, type Vocabulary, findField } from "./vocabulary.js";
 
 const P = PQLParser;
@@ -43,9 +43,7 @@ const WORD_RE = /^[\p{L}_][\p{L}\p{N}_]*$/u;
 const DURATION_EXAMPLES = ["1d", "7d", "2w", "12h"];
 
 function isWordLike(token: Token): boolean {
-  return (
-    token.type === P.IDENT || KEYWORD_TOKENS.has(token.type) || token.type === P.CF || FUNCTION_TOKENS.has(token.type)
-  );
+  return token.type === P.IDENT || KEYWORD_TOKENS.has(token.type) || token.type === P.CF;
 }
 
 // The token c3 is asked about: the one containing the caret when the caret
@@ -102,7 +100,12 @@ export function subjectAt(source: string, tokenIndex: number): Subject {
   ParseTreeWalker.DEFAULT.walk(finder, parseQuery(source).tree);
   const found = finder.found;
   if (!found) return { field: null, property: null };
-  if ("fieldName" in found) return { field: found.fieldName()?.getText() ?? null, property: null };
+  if ("fieldName" in found) {
+    // Before an operator is typed the parser cannot tell a field from a function
+    // name yet, so the predicate holds only its leading identifier.
+    const leading = found.start?.type === P.IDENT && !found.conditionFunction() ? (found.start.text ?? null) : null;
+    return { field: found.fieldName()?.getText() ?? leading, property: null };
+  }
   const reference = found.propertyReference().getText();
   return { field: null, property: reference.slice(1, -1) };
 }

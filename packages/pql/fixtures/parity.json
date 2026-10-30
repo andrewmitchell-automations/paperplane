@@ -163,16 +163,6 @@
       "token": "urgent"
     },
     {
-      "query": "assignee = whoAmI()",
-      "position": 17,
-      "token": "("
-    },
-    {
-      "query": "whoAmI()",
-      "position": 6,
-      "token": "("
-    },
-    {
       "query": "priority in (urgent,)",
       "position": 20,
       "token": ")"
@@ -243,21 +233,6 @@
       "token": "2"
     },
     {
-      "query": "now = 1",
-      "position": 4,
-      "token": "="
-    },
-    {
-      "query": "priority = now",
-      "position": 14,
-      "token": null
-    },
-    {
-      "query": "priority = currentUser",
-      "position": 22,
-      "token": null
-    },
-    {
       "query": "priority = cf",
       "position": 11,
       "token": "cf"
@@ -271,11 +246,6 @@
       "query": "is = 1",
       "position": 0,
       "token": "is"
-    },
-    {
-      "query": "childOf = 1",
-      "position": 8,
-      "token": "="
     }
   ],
   "semantic": [
@@ -292,11 +262,17 @@
     "target_date = now(1)",
     "currentUser()",
     "assignee = childOf(\"PROJ-12\")",
+    "assignee = whoAmI()",
+    "whoAmI()",
     "priority in ()",
     "target_date > now() - 7y",
     "cf[\"\"] = 2",
     "descendantOf()",
     "descendantOf(PROJ)",
-    "assignee = descendantOf(\"PROJ-12\")"
+    "assignee = descendantOf(\"PROJ-12\")",
+    "now = 1",
+    "childOf = 1",
+    "foo()",
+    "priority = foo()"
   ]
 }

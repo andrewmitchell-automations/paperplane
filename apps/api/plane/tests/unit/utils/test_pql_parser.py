@@ -384,13 +384,15 @@ def test_unknown_field_is_reported_before_what_follows_it():
 
 
 RESERVED_WORD_CASES = [
-    ("now = 1", 4, "expected '(' after the reserved function name 'now'"),
-    ("priority = now", 14, "expected '(' after the reserved function name 'now'"),
-    ("priority = currentUser", 22, "expected '(' after the reserved function name 'currentUser'"),
     ("priority = cf", 11, "'cf' is a keyword, not a value"),
     ("priority = in", 11, "'in' is a keyword, not a value"),
     ("is = 1", 0, "'is' is a keyword, not a field name"),
-    ("childOf = 1", 8, "expected '(' after the reserved function name 'childOf'"),
+    # Function names are identifiers, not reserved words: without '(' they are
+    # an ordinary field name or bare value.
+    ("now = 1", 0, "unknown field 'now'"),
+    ("childOf = 1", 0, "unknown field 'childOf'"),
+    ("foo()", 0, "unknown function 'foo'"),
+    ("priority = foo()", 11, "unknown function 'foo'"),
 ]
 
 
@@ -403,6 +405,14 @@ def test_reserved_words_are_rejected_clearly(query, position, detail):
 
 
 RESERVED_WORDS = sorted(PQLParser.literalNames[token].strip("'") for token in RESERVED_TOKENS)
+
+
+@pytest.mark.parametrize("word", ["now", "currentUser", "childOf", "descendantOf"])
+def test_function_names_without_parentheses_are_bare_values(word):
+    assert parse_pql(f"priority = {word}") == {"priority": word}
+    with pytest.raises(FilterCompileError) as excinfo:
+        compile_filters(parse_pql(f"priority = {word}"))
+    assert "Invalid value for 'priority'" in str(excinfo.value)
 
 
 @pytest.mark.parametrize("word", RESERVED_WORDS)
@@ -441,7 +451,7 @@ def test_lexer_token_types():
         PQLLexer.AND,
         PQLLexer.IDENT,
         PQLLexer.GT,
-        PQLLexer.NOW,
+        PQLLexer.IDENT,
         PQLLexer.LPAREN,
         PQLLexer.RPAREN,
         PQLLexer.MINUS,

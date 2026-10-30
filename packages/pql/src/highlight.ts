@@ -9,7 +9,7 @@ import { ParseTreeWalker, Token } from "antlr4ng";
 
 import { PQLListener } from "./generated/PQLListener.js";
 import { type FieldNameContext, PQLParser } from "./generated/PQLParser.js";
-import { FUNCTION_TOKENS, KEYWORD_TOKENS, OPERATOR_TOKENS, type ParseResult, parseQuery } from "./parse.js";
+import { KEYWORD_TOKENS, OPERATOR_TOKENS, type ParseResult, isFunctionCall, parseQuery } from "./parse.js";
 import { parseField, parsed } from "./state.js";
 
 const P = PQLParser;
@@ -24,11 +24,11 @@ class FieldCollector extends PQLListener {
   };
 }
 
-export function tagFor(token: Token, fieldTokens: Set<number>): Tag | null {
+export function tagFor(token: Token, fieldTokens: Set<number>, tokens: Token[] = []): Tag | null {
   const type = token.type;
   if (type === Token.EOF) return null;
   if (KEYWORD_TOKENS.has(type) || type === P.CF) return tags.keyword;
-  if (FUNCTION_TOKENS.has(type)) return tags.function(tags.variableName);
+  if (isFunctionCall(tokens, token.tokenIndex)) return tags.function(tags.variableName);
   if (OPERATOR_TOKENS.has(type) || type === P.PLUS || type === P.MINUS) return tags.operator;
   if (type === P.STRING) return tags.string;
   if (type === P.NUMBER || type === P.DURATION) return tags.number;
@@ -43,7 +43,7 @@ export function highlightTokens(result: ParseResult | string): { token: Token; t
   ParseTreeWalker.DEFAULT.walk(collector, tree);
   const tagged: { token: Token; tag: Tag }[] = [];
   for (const token of tokens) {
-    const tag = tagFor(token, collector.fields);
+    const tag = tagFor(token, collector.fields, tokens);
     if (tag) tagged.push({ token, tag });
   }
   return tagged;

@@ -41,9 +41,11 @@ others are whole nodes, because the field they resolve to needs the identifier
 looked up first. `compile_filters` rejects all of them unsubstituted, which is
 the intended failure mode: substitution is not optional.
 
-Keywords (`and`, `or`, `not`, `in`, `is`, `null`), `cf` and the function names
-are reserved words: they cannot be used as a bare value or a field name. Quote
-them to use them as a value.
+Keywords (`and`, `or`, `not`, `in`, `is`, `null`) and `cf` are reserved words:
+they cannot be used as a bare value or a field name. Quote them to use them as
+a value. Function names are not reserved: a name followed by `(` is a function
+call, checked against `FUNCTIONS`, and without `(` it is an ordinary field name
+or bare value.
 """
 
 from dataclasses import dataclass
@@ -51,6 +53,7 @@ from typing import Any
 
 from antlr4 import CommonTokenStream, InputStream, Token
 from antlr4.error.ErrorListener import ErrorListener
+from antlr4.error.Errors import NoViableAltException
 
 from plane.utils.pql.errors import PQLSyntaxError
 from plane.utils.pql.fields import (
@@ -134,9 +137,23 @@ ESCAPES = {"\\": "\\", '"': '"', "'": "'", "n": "\n", "r": "\r", "t": "\t"}
 # Durations only need whole units; a work item query is never sub-hour precise.
 DURATION_UNITS = {"h": 3600, "d": 86400, "w": 604800}
 
-FUNCTION_TOKENS = frozenset({PQLParser.CURRENTUSER, PQLParser.NOW, PQLParser.CHILDOF, PQLParser.DESCENDANTOF})
 KEYWORD_TOKENS = frozenset({PQLParser.AND, PQLParser.OR, PQLParser.NOT, PQLParser.IN, PQLParser.IS, PQLParser.NULL})
-RESERVED_TOKENS = KEYWORD_TOKENS | {PQLParser.CF} | FUNCTION_TOKENS
+RESERVED_TOKENS = KEYWORD_TOKENS | {PQLParser.CF}
+# The tokens that can follow a field name.
+COMPARISON_TOKENS = frozenset(
+    {
+        PQLParser.EQ,
+        PQLParser.NEQ,
+        PQLParser.GT,
+        PQLParser.GTE,
+        PQLParser.LT,
+        PQLParser.LTE,
+        PQLParser.TILDE,
+        PQLParser.IN,
+        PQLParser.NOT,
+        PQLParser.IS,
+    }
+)
 
 # PQL operator strings in display order; the lookup each one needs and whether it negates.
 PQL_OPERATORS = (
@@ -265,8 +282,17 @@ class _ParserErrors(ErrorListener):
         if offending.type == Token.EOF and offending.tokenIndex == 0:
             raise _error(self.source, offending, "empty query", "a filter expression")
         expected = set(e.getExpectedTokens() if e is not None else recognizer.getExpectedTokens())
-        previous = recognizer.getTokenStream().get(offending.tokenIndex - 1) if offending.tokenIndex > 0 else None
         detail = f"unexpected {_describe(offending)}"
+        if (
+            isinstance(e, NoViableAltException)
+            and isinstance(recognizer._ctx, PQLParser.PredicateContext)
+            and e.startToken.tokenIndex < offending.tokenIndex
+        ):
+            # A name opens either a comparison or, with `(`, a function call,
+            # so the parser needs the token after it to choose and reports
+            # that token before the field listener has seen the name.
+            _check_field(self.source, e.startToken)
+            expected = set(COMPARISON_TOKENS)
         field_position = PQLParser.IDENT in expected and PQLParser.NOT in expected
         value_position = PQLParser.IDENT in expected and PQLParser.NOT not in expected
         if offending.type in RESERVED_TOKENS and field_position:
@@ -285,8 +311,6 @@ class _ParserErrors(ErrorListener):
             raise _error(self.source, offending, detail, "a field name, 'not' or '('")
         if value_position:
             raise _error(self.source, offending, detail, "a value")
-        if expected == {PQLParser.LPAREN} and previous is not None and previous.type in FUNCTION_TOKENS:
-            raise _error(self.source, offending, detail, f"'(' after the reserved function name '{previous.text}'")
         names = [_display(token_type) for token_type in sorted(expected, key=lambda t: (t < PQLParser.NEQ, t))]
         if isinstance(recognizer._ctx, (PQLParser.QueryContext, PQLParser.PrimaryContext)):
             names = ["'and'", "'or'", *names]
@@ -315,12 +339,10 @@ class _SyntaxChecks(PQLListener):
         self.depth -= 1
 
     def exitFieldName(self, ctx):
-        if self.parser.getCurrentToken().type == PQLParser.LPAREN:
-            raise _unknown_function(self.source, ctx.start)
         _check_field(self.source, ctx.start)
 
-    def exitIdentValue(self, ctx):
-        if self.parser.getCurrentToken().type == PQLParser.LPAREN:
+    def exitFunctionName(self, ctx):
+        if ctx.start.text.lower() not in FUNCTIONS:
             raise _unknown_function(self.source, ctx.start)
 
 

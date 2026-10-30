@@ -25,7 +25,7 @@ describe("tokenize", () => {
       "AND:and",
       "IDENT:due_date",
       "LT:<",
-      "NOW:now",
+      "IDENT:now",
       "LPAREN:(",
       "RPAREN:)",
       "MINUS:-",
@@ -35,7 +35,7 @@ describe("tokenize", () => {
   });
 
   it("is case-insensitive for keywords and function names", () => {
-    expect(kinds("NOT CurrentUser()").slice(0, 2)).toEqual(["NOT:NOT", "CURRENTUSER:CurrentUser"]);
+    expect(kinds("NOT CurrentUser()").slice(0, 2)).toEqual(["NOT:NOT", "IDENT:CurrentUser"]);
   });
 
   it("keeps Unicode identifiers whole and skips Unicode whitespace", () => {
@@ -84,6 +84,17 @@ describe("highlightTokens", () => {
     expect(byText["urgent"]).toBe(byText["a"]);
     expect(byText["priority"]).not.toBe(byText["urgent"]);
     expect(byText["and"]).toBe(byText["in"]);
+  });
+
+  it("tags a name followed by '(' as a function, and the same name without it as a value", () => {
+    const tagged = highlightTokens("assignee = currentUser() and priority = now");
+    const byText = Object.fromEntries(tagged.map(({ token, tag }) => [token.text, tag.toString()]));
+    const values = highlightTokens("priority = urgent")
+      .find(({ token }) => token.text === "urgent")!
+      .tag.toString();
+    expect(byText["currentUser"]).not.toBe(values);
+    expect(byText["currentUser"]).not.toBe(byText["assignee"]);
+    expect(byText["now"]).toBe(values);
   });
 
   it("tags an incomplete query while it is typed", () => {
