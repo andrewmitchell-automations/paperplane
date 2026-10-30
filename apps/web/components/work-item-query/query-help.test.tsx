@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // See the LICENSE file for details.
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { TPqlDialect, TWorkItemQueryFields } from "@plane/types";
 import { WorkItemQueryHelp } from "./query-help";
@@ -31,6 +31,13 @@ const fields: TWorkItemQueryFields = {
     { name: "today", kind: "value", arguments: 0 },
   ],
   custom_property_syntax: 'cf["<property id or name>"]',
+};
+
+/** Base UI commits a mouse pick only when the press started on the option. */
+const pick = async (name: string) => {
+  const option = await screen.findByRole("option", { name });
+  fireEvent.pointerDown(option, { pointerType: "mouse" });
+  fireEvent.click(option);
 };
 
 const renderHelp = (dialect: TPqlDialect, memberDialect: TPqlDialect | null = null) => {
@@ -67,20 +74,22 @@ describe("WorkItemQueryHelp", () => {
     expect(screen.getByText(/stateGroup in activeStates\(\)/)).toBeTruthy();
   });
 
-  it("sets the member's own dialect, or clears it to follow the workspace", () => {
+  it("sets the member's own dialect, or clears it to follow the workspace", async () => {
     const { onDialectChange } = renderHelp("jql");
-    const select = screen.getByRole("combobox", { name: "work_item_query.dialect" });
-    expect(screen.getByRole("option", { name: "work_item_query.dialect_default:JQL" })).toBeTruthy();
+    const trigger = screen.getByRole("combobox", { name: "work_item_query.dialect" });
+    expect(trigger.textContent).toContain("work_item_query.dialect_default:JQL");
 
-    fireEvent.change(select, { target: { value: "plane" } });
-    expect(onDialectChange).toHaveBeenLastCalledWith("plane");
+    fireEvent.click(trigger);
+    await pick("Plane");
+    await waitFor(() => expect(onDialectChange).toHaveBeenLastCalledWith("plane"));
 
-    fireEvent.change(select, { target: { value: "" } });
-    expect(onDialectChange).toHaveBeenLastCalledWith(null);
+    fireEvent.click(trigger);
+    await pick("work_item_query.dialect_default:JQL");
+    await waitFor(() => expect(onDialectChange).toHaveBeenLastCalledWith(null));
   });
 
   it("shows the member's own choice as selected", () => {
     renderHelp("plane", "plane");
-    expect(screen.getByRole<HTMLSelectElement>("combobox", { name: "work_item_query.dialect" }).value).toBe("plane");
+    expect(screen.getByRole("combobox", { name: "work_item_query.dialect" }).textContent).toContain("Plane");
   });
 });

@@ -27,8 +27,14 @@ vi.mock("@/hooks/store/use-workspace", () => ({
 }));
 vi.mock("@/hooks/store/user", () => ({ useUserPermissions: () => ({ allowPermissions: () => isAdmin }) }));
 
-const dialectSelect = () =>
-  screen.getByRole<HTMLSelectElement>("combobox", { name: "workspace_settings.settings.general.pql_dialect" });
+/** Base UI commits a mouse pick only when the press started on the option. */
+const pick = async (name: string) => {
+  const option = await screen.findByRole("option", { name });
+  fireEvent.pointerDown(option, { pointerType: "mouse" });
+  fireEvent.click(option);
+};
+
+const dialectSelect = () => screen.getByRole("combobox", { name: "workspace_settings.settings.general.pql_dialect" });
 
 describe("WorkspaceDetails PQL dialect", () => {
   beforeEach(() => {
@@ -38,9 +44,10 @@ describe("WorkspaceDetails PQL dialect", () => {
 
   it("saves the dialect an admin picks", async () => {
     render(<WorkspaceDetails />);
-    expect(dialectSelect().value).toBe("jql");
+    expect(dialectSelect().textContent).toContain("JQL");
 
-    fireEvent.change(dialectSelect(), { target: { value: "plane" } });
+    fireEvent.click(dialectSelect());
+    await pick("Plane");
     fireEvent.click(screen.getByRole("button", { name: "workspace_settings.settings.general.update_workspace" }));
 
     await waitFor(() =>
@@ -51,6 +58,6 @@ describe("WorkspaceDetails PQL dialect", () => {
   it("shows the dialect to members without letting them change it", () => {
     isAdmin = false;
     render(<WorkspaceDetails />);
-    expect(dialectSelect().disabled).toBe(true);
+    expect(dialectSelect().hasAttribute("data-disabled")).toBe(true);
   });
 });

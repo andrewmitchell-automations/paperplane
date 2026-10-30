@@ -12,9 +12,8 @@ import { CircleHelp, Play, X } from "lucide-react";
 import { useTranslation } from "@plane/i18n";
 import { Button } from "@makeplane/propel/components/button";
 import type { SemanticError } from "@plane/pql";
-import type { TWorkItemQueryValidation } from "@plane/types";
+import type { TPqlDialect, TWorkItemQueryValidation } from "@plane/types";
 import { setToast } from "@plane/blocks/toast";
-import type { TPqlDialect } from "@plane/types";
 import { cn } from "@plane/utils";
 // services
 import { WorkItemQueryService } from "@/services/issue";

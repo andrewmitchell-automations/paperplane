@@ -4,9 +4,11 @@
  * See the LICENSE file for details.
  */
 
+import { useId } from "react";
 import { X } from "lucide-react";
 // plane imports
 import { useTranslation } from "@plane/i18n";
+import { Select, SelectContent, SelectItem, SelectList, SelectTrigger } from "@makeplane/propel/components/select";
 import type { TPqlDialect, TWorkItemQueryField, TWorkItemQueryFields } from "@plane/types";
 
 type Props = {
@@ -21,6 +23,9 @@ type Props = {
 };
 
 const DIALECT_NAMES: Record<TPqlDialect, string> = { jql: "JQL", plane: "Plane" };
+
+/** The member's choice in the select; "default" follows the workspace. */
+type TDialectChoice = TPqlDialect | "default";
 
 const EXAMPLES: { labelKey: string; query: Record<TPqlDialect, string> }[] = [
   {
@@ -58,6 +63,12 @@ const displayName = (field: TWorkItemQueryField, dialect: TPqlDialect) =>
 export function WorkItemQueryHelp(props: Props) {
   const { fields, dialect, workspaceDialect, memberDialect, onDialectChange, onClose } = props;
   const { t } = useTranslation();
+  const dialectLabelId = useId();
+  const dialectChoices: { value: TDialectChoice; label: string }[] = [
+    { value: "default", label: t("work_item_query.dialect_default", { dialect: DIALECT_NAMES[workspaceDialect] }) },
+    { value: "jql", label: DIALECT_NAMES.jql },
+    { value: "plane", label: DIALECT_NAMES.plane },
+  ];
 
   return (
     <div className="relative mt-1 grid gap-4 rounded-md border border-subtle-1 bg-layer-1 p-4 text-12 text-secondary md:grid-cols-2">
@@ -73,20 +84,23 @@ export function WorkItemQueryHelp(props: Props) {
         <h4 className="text-13 font-medium text-primary">{t("work_item_query.help_title")}</h4>
         <p>{t("work_item_query.help_intro")}</p>
         <p className="font-code text-11">{t("work_item_query.help_operators")}</p>
-        <label className="flex items-center gap-2">
-          <span>{t("work_item_query.dialect")}</span>
-          <select
-            value={memberDialect ?? ""}
-            onChange={(event) => onDialectChange((event.target.value || null) as TPqlDialect | null)}
-            className="rounded-sm border border-subtle-1 bg-layer-2 px-1.5 py-0.5 text-12 text-primary"
+        <div className="flex items-center gap-2">
+          <span id={dialectLabelId}>{t("work_item_query.dialect")}</span>
+          <Select<TDialectChoice>
+            items={dialectChoices}
+            value={memberDialect ?? "default"}
+            onValueChange={(choice) => onDialectChange(choice === "default" || choice === null ? null : choice)}
           >
-            <option value="">
-              {t("work_item_query.dialect_default", { dialect: DIALECT_NAMES[workspaceDialect] })}
-            </option>
-            <option value="jql">{DIALECT_NAMES.jql}</option>
-            <option value="plane">{DIALECT_NAMES.plane}</option>
-          </select>
-        </label>
+            <SelectTrigger size="md" aria-labelledby={dialectLabelId} />
+            <SelectContent>
+              <SelectList>
+                {dialectChoices.map((choice) => (
+                  <SelectItem key={choice.value} value={choice.value} size="md" label={choice.label} />
+                ))}
+              </SelectList>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <div className="flex flex-col gap-1.5">
         <h5 className="font-medium text-primary">{t("work_item_query.help_examples")}</h5>
