@@ -9,60 +9,62 @@ else:
 
 def serializedATN():
     return [
-        4,1,26,165,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,26,171,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
         2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
-        7,20,1,0,1,0,1,0,1,1,1,1,1,2,1,2,1,2,5,2,51,8,2,10,2,12,2,54,9,2,
-        1,3,1,3,1,3,5,3,59,8,3,10,3,12,3,62,9,3,1,4,1,4,1,4,3,4,67,8,4,1,
-        5,1,5,1,5,1,5,1,5,1,5,3,5,75,8,5,1,6,1,6,1,6,1,6,3,6,81,8,6,1,7,
-        1,7,1,8,1,8,1,8,1,8,1,8,1,8,1,9,1,9,1,10,1,10,1,10,1,11,1,11,1,12,
-        1,12,3,12,100,8,12,1,12,1,12,1,13,1,13,1,13,1,13,1,13,1,13,1,13,
-        1,13,1,13,1,13,3,13,114,8,13,1,13,3,13,117,8,13,1,14,1,14,1,15,1,
-        15,1,15,1,15,5,15,125,8,15,10,15,12,15,128,9,15,3,15,130,8,15,1,
-        15,1,15,1,16,1,16,1,16,5,16,137,8,16,10,16,12,16,140,9,16,1,17,1,
-        17,3,17,144,8,17,1,17,1,17,1,17,1,17,5,17,150,8,17,10,17,12,17,153,
-        9,17,3,17,155,8,17,1,18,1,18,1,18,1,19,1,19,1,19,1,20,1,20,1,20,
-        0,0,21,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,
-        0,2,1,0,8,14,1,0,20,21,162,0,42,1,0,0,0,2,45,1,0,0,0,4,47,1,0,0,
-        0,6,55,1,0,0,0,8,66,1,0,0,0,10,74,1,0,0,0,12,80,1,0,0,0,14,82,1,
-        0,0,0,16,84,1,0,0,0,18,90,1,0,0,0,20,92,1,0,0,0,22,95,1,0,0,0,24,
-        97,1,0,0,0,26,116,1,0,0,0,28,118,1,0,0,0,30,120,1,0,0,0,32,133,1,
-        0,0,0,34,154,1,0,0,0,36,156,1,0,0,0,38,159,1,0,0,0,40,162,1,0,0,
-        0,42,43,3,2,1,0,43,44,5,0,0,1,44,1,1,0,0,0,45,46,3,4,2,0,46,3,1,
-        0,0,0,47,52,3,6,3,0,48,49,5,2,0,0,49,51,3,6,3,0,50,48,1,0,0,0,51,
-        54,1,0,0,0,52,50,1,0,0,0,52,53,1,0,0,0,53,5,1,0,0,0,54,52,1,0,0,
-        0,55,60,3,8,4,0,56,57,5,1,0,0,57,59,3,8,4,0,58,56,1,0,0,0,59,62,
-        1,0,0,0,60,58,1,0,0,0,60,61,1,0,0,0,61,7,1,0,0,0,62,60,1,0,0,0,63,
-        64,5,3,0,0,64,67,3,8,4,0,65,67,3,10,5,0,66,63,1,0,0,0,66,65,1,0,
-        0,0,67,9,1,0,0,0,68,69,5,15,0,0,69,70,3,2,1,0,70,71,5,16,0,0,71,
-        75,1,0,0,0,72,75,3,12,6,0,73,75,3,16,8,0,74,68,1,0,0,0,74,72,1,0,
-        0,0,74,73,1,0,0,0,75,11,1,0,0,0,76,77,3,14,7,0,77,78,3,26,13,0,78,
-        81,1,0,0,0,79,81,3,20,10,0,80,76,1,0,0,0,80,79,1,0,0,0,81,13,1,0,
-        0,0,82,83,5,25,0,0,83,15,1,0,0,0,84,85,5,7,0,0,85,86,5,17,0,0,86,
-        87,3,18,9,0,87,88,5,18,0,0,88,89,3,26,13,0,89,17,1,0,0,0,90,91,5,
-        22,0,0,91,19,1,0,0,0,92,93,3,22,11,0,93,94,3,24,12,0,94,21,1,0,0,
-        0,95,96,5,25,0,0,96,23,1,0,0,0,97,99,5,15,0,0,98,100,3,32,16,0,99,
-        98,1,0,0,0,99,100,1,0,0,0,100,101,1,0,0,0,101,102,5,16,0,0,102,25,
-        1,0,0,0,103,104,3,28,14,0,104,105,3,34,17,0,105,117,1,0,0,0,106,
-        107,5,4,0,0,107,117,3,30,15,0,108,109,5,3,0,0,109,110,5,4,0,0,110,
-        117,3,30,15,0,111,113,5,5,0,0,112,114,5,3,0,0,113,112,1,0,0,0,113,
-        114,1,0,0,0,114,115,1,0,0,0,115,117,5,6,0,0,116,103,1,0,0,0,116,
-        106,1,0,0,0,116,108,1,0,0,0,116,111,1,0,0,0,117,27,1,0,0,0,118,119,
-        7,0,0,0,119,29,1,0,0,0,120,129,5,15,0,0,121,126,3,34,17,0,122,123,
-        5,19,0,0,123,125,3,34,17,0,124,122,1,0,0,0,125,128,1,0,0,0,126,124,
-        1,0,0,0,126,127,1,0,0,0,127,130,1,0,0,0,128,126,1,0,0,0,129,121,
-        1,0,0,0,129,130,1,0,0,0,130,131,1,0,0,0,131,132,5,16,0,0,132,31,
-        1,0,0,0,133,138,3,34,17,0,134,135,5,19,0,0,135,137,3,34,17,0,136,
-        134,1,0,0,0,137,140,1,0,0,0,138,136,1,0,0,0,138,139,1,0,0,0,139,
-        33,1,0,0,0,140,138,1,0,0,0,141,155,5,22,0,0,142,144,5,21,0,0,143,
-        142,1,0,0,0,143,144,1,0,0,0,144,145,1,0,0,0,145,155,5,24,0,0,146,
-        155,5,25,0,0,147,151,3,36,18,0,148,150,3,38,19,0,149,148,1,0,0,0,
-        150,153,1,0,0,0,151,149,1,0,0,0,151,152,1,0,0,0,152,155,1,0,0,0,
-        153,151,1,0,0,0,154,141,1,0,0,0,154,143,1,0,0,0,154,146,1,0,0,0,
-        154,147,1,0,0,0,155,35,1,0,0,0,156,157,3,22,11,0,157,158,3,24,12,
-        0,158,37,1,0,0,0,159,160,3,40,20,0,160,161,5,23,0,0,161,39,1,0,0,
-        0,162,163,7,1,0,0,163,41,1,0,0,0,14,52,60,66,74,80,99,113,116,126,
-        129,138,143,151,154
+        7,20,2,21,7,21,1,0,1,0,1,0,1,1,1,1,1,2,1,2,1,2,5,2,53,8,2,10,2,12,
+        2,56,9,2,1,3,1,3,1,3,5,3,61,8,3,10,3,12,3,64,9,3,1,4,1,4,1,4,3,4,
+        69,8,4,1,5,1,5,1,5,1,5,1,5,1,5,3,5,77,8,5,1,6,1,6,1,6,1,6,3,6,83,
+        8,6,1,7,1,7,1,8,1,8,1,8,1,8,1,8,1,8,1,9,1,9,1,10,1,10,1,10,1,11,
+        1,11,1,12,1,12,3,12,102,8,12,1,12,1,12,1,13,1,13,1,13,1,13,1,13,
+        1,13,1,13,1,13,1,13,1,13,3,13,116,8,13,1,13,3,13,119,8,13,1,14,1,
+        14,3,14,123,8,14,1,15,1,15,1,16,1,16,1,16,1,16,5,16,131,8,16,10,
+        16,12,16,134,9,16,3,16,136,8,16,1,16,1,16,1,17,1,17,1,17,5,17,143,
+        8,17,10,17,12,17,146,9,17,1,18,1,18,3,18,150,8,18,1,18,1,18,1,18,
+        1,18,5,18,156,8,18,10,18,12,18,159,9,18,3,18,161,8,18,1,19,1,19,
+        1,19,1,20,1,20,1,20,1,21,1,21,1,21,0,0,22,0,2,4,6,8,10,12,14,16,
+        18,20,22,24,26,28,30,32,34,36,38,40,42,0,2,1,0,8,14,1,0,20,21,168,
+        0,44,1,0,0,0,2,47,1,0,0,0,4,49,1,0,0,0,6,57,1,0,0,0,8,68,1,0,0,0,
+        10,76,1,0,0,0,12,82,1,0,0,0,14,84,1,0,0,0,16,86,1,0,0,0,18,92,1,
+        0,0,0,20,94,1,0,0,0,22,97,1,0,0,0,24,99,1,0,0,0,26,118,1,0,0,0,28,
+        122,1,0,0,0,30,124,1,0,0,0,32,126,1,0,0,0,34,139,1,0,0,0,36,160,
+        1,0,0,0,38,162,1,0,0,0,40,165,1,0,0,0,42,168,1,0,0,0,44,45,3,2,1,
+        0,45,46,5,0,0,1,46,1,1,0,0,0,47,48,3,4,2,0,48,3,1,0,0,0,49,54,3,
+        6,3,0,50,51,5,2,0,0,51,53,3,6,3,0,52,50,1,0,0,0,53,56,1,0,0,0,54,
+        52,1,0,0,0,54,55,1,0,0,0,55,5,1,0,0,0,56,54,1,0,0,0,57,62,3,8,4,
+        0,58,59,5,1,0,0,59,61,3,8,4,0,60,58,1,0,0,0,61,64,1,0,0,0,62,60,
+        1,0,0,0,62,63,1,0,0,0,63,7,1,0,0,0,64,62,1,0,0,0,65,66,5,3,0,0,66,
+        69,3,8,4,0,67,69,3,10,5,0,68,65,1,0,0,0,68,67,1,0,0,0,69,9,1,0,0,
+        0,70,71,5,15,0,0,71,72,3,2,1,0,72,73,5,16,0,0,73,77,1,0,0,0,74,77,
+        3,12,6,0,75,77,3,16,8,0,76,70,1,0,0,0,76,74,1,0,0,0,76,75,1,0,0,
+        0,77,11,1,0,0,0,78,79,3,14,7,0,79,80,3,26,13,0,80,83,1,0,0,0,81,
+        83,3,20,10,0,82,78,1,0,0,0,82,81,1,0,0,0,83,13,1,0,0,0,84,85,5,25,
+        0,0,85,15,1,0,0,0,86,87,5,7,0,0,87,88,5,17,0,0,88,89,3,18,9,0,89,
+        90,5,18,0,0,90,91,3,26,13,0,91,17,1,0,0,0,92,93,5,22,0,0,93,19,1,
+        0,0,0,94,95,3,22,11,0,95,96,3,24,12,0,96,21,1,0,0,0,97,98,5,25,0,
+        0,98,23,1,0,0,0,99,101,5,15,0,0,100,102,3,34,17,0,101,100,1,0,0,
+        0,101,102,1,0,0,0,102,103,1,0,0,0,103,104,5,16,0,0,104,25,1,0,0,
+        0,105,106,3,30,15,0,106,107,3,36,18,0,107,119,1,0,0,0,108,109,5,
+        4,0,0,109,119,3,28,14,0,110,111,5,3,0,0,111,112,5,4,0,0,112,119,
+        3,28,14,0,113,115,5,5,0,0,114,116,5,3,0,0,115,114,1,0,0,0,115,116,
+        1,0,0,0,116,117,1,0,0,0,117,119,5,6,0,0,118,105,1,0,0,0,118,108,
+        1,0,0,0,118,110,1,0,0,0,118,113,1,0,0,0,119,27,1,0,0,0,120,123,3,
+        32,16,0,121,123,3,38,19,0,122,120,1,0,0,0,122,121,1,0,0,0,123,29,
+        1,0,0,0,124,125,7,0,0,0,125,31,1,0,0,0,126,135,5,15,0,0,127,132,
+        3,36,18,0,128,129,5,19,0,0,129,131,3,36,18,0,130,128,1,0,0,0,131,
+        134,1,0,0,0,132,130,1,0,0,0,132,133,1,0,0,0,133,136,1,0,0,0,134,
+        132,1,0,0,0,135,127,1,0,0,0,135,136,1,0,0,0,136,137,1,0,0,0,137,
+        138,5,16,0,0,138,33,1,0,0,0,139,144,3,36,18,0,140,141,5,19,0,0,141,
+        143,3,36,18,0,142,140,1,0,0,0,143,146,1,0,0,0,144,142,1,0,0,0,144,
+        145,1,0,0,0,145,35,1,0,0,0,146,144,1,0,0,0,147,161,5,22,0,0,148,
+        150,5,21,0,0,149,148,1,0,0,0,149,150,1,0,0,0,150,151,1,0,0,0,151,
+        161,5,24,0,0,152,161,5,25,0,0,153,157,3,38,19,0,154,156,3,40,20,
+        0,155,154,1,0,0,0,156,159,1,0,0,0,157,155,1,0,0,0,157,158,1,0,0,
+        0,158,161,1,0,0,0,159,157,1,0,0,0,160,147,1,0,0,0,160,149,1,0,0,
+        0,160,152,1,0,0,0,160,153,1,0,0,0,161,37,1,0,0,0,162,163,3,22,11,
+        0,163,164,3,24,12,0,164,39,1,0,0,0,165,166,3,42,21,0,166,167,5,23,
+        0,0,167,41,1,0,0,0,168,169,7,1,0,0,169,43,1,0,0,0,15,54,62,68,76,
+        82,101,115,118,122,132,135,144,149,157,160
     ]
 
 class PQLParser ( Parser ):
@@ -100,19 +102,20 @@ class PQLParser ( Parser ):
     RULE_functionName = 11
     RULE_callArguments = 12
     RULE_comparison = 13
-    RULE_operator = 14
-    RULE_valueList = 15
-    RULE_arguments = 16
-    RULE_value = 17
-    RULE_valueFunction = 18
-    RULE_durationOffset = 19
-    RULE_sign = 20
+    RULE_listOperand = 14
+    RULE_operator = 15
+    RULE_valueList = 16
+    RULE_arguments = 17
+    RULE_value = 18
+    RULE_valueFunction = 19
+    RULE_durationOffset = 20
+    RULE_sign = 21
 
     ruleNames =  [ "query", "expression", "orExpr", "andExpr", "notExpr", 
                    "primary", "predicate", "fieldName", "customPropertyPredicate", 
                    "propertyReference", "conditionFunction", "functionName", 
-                   "callArguments", "comparison", "operator", "valueList", 
-                   "arguments", "value", "valueFunction", "durationOffset", 
+                   "callArguments", "comparison", "listOperand", "operator", 
+                   "valueList", "arguments", "value", "valueFunction", "durationOffset", 
                    "sign" ]
 
     EOF = Token.EOF
@@ -192,9 +195,9 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_query)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 42
+            self.state = 44
             self.expression()
-            self.state = 43
+            self.state = 45
             self.match(PQLParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
@@ -242,7 +245,7 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 2, self.RULE_expression)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 45
+            self.state = 47
             self.orExpr()
         except RecognitionException as re:
             localctx.exception = re
@@ -300,17 +303,17 @@ class PQLParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 47
+            self.state = 49
             self.andExpr()
-            self.state = 52
+            self.state = 54
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==2:
-                self.state = 48
+                self.state = 50
                 self.match(PQLParser.OR)
-                self.state = 49
+                self.state = 51
                 self.andExpr()
-                self.state = 54
+                self.state = 56
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -370,17 +373,17 @@ class PQLParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 55
+            self.state = 57
             self.notExpr()
-            self.state = 60
+            self.state = 62
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==1:
-                self.state = 56
+                self.state = 58
                 self.match(PQLParser.AND)
-                self.state = 57
+                self.state = 59
                 self.notExpr()
-                self.state = 62
+                self.state = 64
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -436,19 +439,19 @@ class PQLParser ( Parser ):
         localctx = PQLParser.NotExprContext(self, self._ctx, self.state)
         self.enterRule(localctx, 8, self.RULE_notExpr)
         try:
-            self.state = 66
+            self.state = 68
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [3]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 63
+                self.state = 65
                 self.match(PQLParser.NOT)
-                self.state = 64
+                self.state = 66
                 self.notExpr()
                 pass
             elif token in [7, 15, 25]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 65
+                self.state = 67
                 self.primary()
                 pass
             else:
@@ -513,26 +516,26 @@ class PQLParser ( Parser ):
         localctx = PQLParser.PrimaryContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_primary)
         try:
-            self.state = 74
+            self.state = 76
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [15]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 68
-                self.match(PQLParser.LPAREN)
-                self.state = 69
-                self.expression()
                 self.state = 70
+                self.match(PQLParser.LPAREN)
+                self.state = 71
+                self.expression()
+                self.state = 72
                 self.match(PQLParser.RPAREN)
                 pass
             elif token in [25]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 72
+                self.state = 74
                 self.predicate()
                 pass
             elif token in [7]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 73
+                self.state = 75
                 self.customPropertyPredicate()
                 pass
             else:
@@ -591,20 +594,20 @@ class PQLParser ( Parser ):
         localctx = PQLParser.PredicateContext(self, self._ctx, self.state)
         self.enterRule(localctx, 12, self.RULE_predicate)
         try:
-            self.state = 80
+            self.state = 82
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 76
+                self.state = 78
                 self.fieldName()
-                self.state = 77
+                self.state = 79
                 self.comparison()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 79
+                self.state = 81
                 self.conditionFunction()
                 pass
 
@@ -654,7 +657,7 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 14, self.RULE_fieldName)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 82
+            self.state = 84
             self.match(PQLParser.IDENT)
         except RecognitionException as re:
             localctx.exception = re
@@ -715,15 +718,15 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 16, self.RULE_customPropertyPredicate)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 84
-            self.match(PQLParser.CF)
-            self.state = 85
-            self.match(PQLParser.LBRACKET)
             self.state = 86
-            self.propertyReference()
+            self.match(PQLParser.CF)
             self.state = 87
-            self.match(PQLParser.RBRACKET)
+            self.match(PQLParser.LBRACKET)
             self.state = 88
+            self.propertyReference()
+            self.state = 89
+            self.match(PQLParser.RBRACKET)
+            self.state = 90
             self.comparison()
         except RecognitionException as re:
             localctx.exception = re
@@ -770,7 +773,7 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_propertyReference)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 90
+            self.state = 92
             self.match(PQLParser.STRING)
         except RecognitionException as re:
             localctx.exception = re
@@ -822,9 +825,9 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 20, self.RULE_conditionFunction)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 92
+            self.state = 94
             self.functionName()
-            self.state = 93
+            self.state = 95
             self.callArguments()
         except RecognitionException as re:
             localctx.exception = re
@@ -871,7 +874,7 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 22, self.RULE_functionName)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 95
+            self.state = 97
             self.match(PQLParser.IDENT)
         except RecognitionException as re:
             localctx.exception = re
@@ -926,17 +929,17 @@ class PQLParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 97
-            self.match(PQLParser.LPAREN)
             self.state = 99
+            self.match(PQLParser.LPAREN)
+            self.state = 101
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if (((_la) & ~0x3f) == 0 and ((1 << _la) & 56623104) != 0):
-                self.state = 98
+                self.state = 100
                 self.arguments()
 
 
-            self.state = 101
+            self.state = 103
             self.match(PQLParser.RPAREN)
         except RecognitionException as re:
             localctx.exception = re
@@ -1000,8 +1003,8 @@ class PQLParser ( Parser ):
 
         def IN(self):
             return self.getToken(PQLParser.IN, 0)
-        def valueList(self):
-            return self.getTypedRuleContext(PQLParser.ValueListContext,0)
+        def listOperand(self):
+            return self.getTypedRuleContext(PQLParser.ListOperandContext,0)
 
 
         def enterRule(self, listener:ParseTreeListener):
@@ -1029,8 +1032,8 @@ class PQLParser ( Parser ):
             return self.getToken(PQLParser.NOT, 0)
         def IN(self):
             return self.getToken(PQLParser.IN, 0)
-        def valueList(self):
-            return self.getTypedRuleContext(PQLParser.ValueListContext,0)
+        def listOperand(self):
+            return self.getTypedRuleContext(PQLParser.ListOperandContext,0)
 
 
         def enterRule(self, listener:ParseTreeListener):
@@ -1083,50 +1086,115 @@ class PQLParser ( Parser ):
         self.enterRule(localctx, 26, self.RULE_comparison)
         self._la = 0 # Token type
         try:
-            self.state = 116
+            self.state = 118
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [8, 9, 10, 11, 12, 13, 14]:
                 localctx = PQLParser.CompareOperatorContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 103
+                self.state = 105
                 self.operator()
-                self.state = 104
+                self.state = 106
                 self.value()
                 pass
             elif token in [4]:
                 localctx = PQLParser.InListContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 106
+                self.state = 108
                 self.match(PQLParser.IN)
-                self.state = 107
-                self.valueList()
+                self.state = 109
+                self.listOperand()
                 pass
             elif token in [3]:
                 localctx = PQLParser.NotInListContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 108
-                self.match(PQLParser.NOT)
-                self.state = 109
-                self.match(PQLParser.IN)
                 self.state = 110
-                self.valueList()
+                self.match(PQLParser.NOT)
+                self.state = 111
+                self.match(PQLParser.IN)
+                self.state = 112
+                self.listOperand()
                 pass
             elif token in [5]:
                 localctx = PQLParser.IsNullContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
-                self.state = 111
-                self.match(PQLParser.IS)
                 self.state = 113
+                self.match(PQLParser.IS)
+                self.state = 115
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==3:
-                    self.state = 112
+                    self.state = 114
                     self.match(PQLParser.NOT)
 
 
-                self.state = 115
+                self.state = 117
                 self.match(PQLParser.NULL)
+                pass
+            else:
+                raise NoViableAltException(self)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class ListOperandContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def valueList(self):
+            return self.getTypedRuleContext(PQLParser.ValueListContext,0)
+
+
+        def valueFunction(self):
+            return self.getTypedRuleContext(PQLParser.ValueFunctionContext,0)
+
+
+        def getRuleIndex(self):
+            return PQLParser.RULE_listOperand
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterListOperand" ):
+                listener.enterListOperand(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitListOperand" ):
+                listener.exitListOperand(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitListOperand" ):
+                return visitor.visitListOperand(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def listOperand(self):
+
+        localctx = PQLParser.ListOperandContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 28, self.RULE_listOperand)
+        try:
+            self.state = 122
+            self._errHandler.sync(self)
+            token = self._input.LA(1)
+            if token in [15]:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 120
+                self.valueList()
+                pass
+            elif token in [25]:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 121
+                self.valueFunction()
                 pass
             else:
                 raise NoViableAltException(self)
@@ -1191,11 +1259,11 @@ class PQLParser ( Parser ):
     def operator(self):
 
         localctx = PQLParser.OperatorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 28, self.RULE_operator)
+        self.enterRule(localctx, 30, self.RULE_operator)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 118
+            self.state = 124
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 32512) != 0)):
                 self._errHandler.recoverInline(self)
@@ -1260,33 +1328,33 @@ class PQLParser ( Parser ):
     def valueList(self):
 
         localctx = PQLParser.ValueListContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 30, self.RULE_valueList)
+        self.enterRule(localctx, 32, self.RULE_valueList)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 120
+            self.state = 126
             self.match(PQLParser.LPAREN)
-            self.state = 129
+            self.state = 135
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if (((_la) & ~0x3f) == 0 and ((1 << _la) & 56623104) != 0):
-                self.state = 121
+                self.state = 127
                 self.value()
-                self.state = 126
+                self.state = 132
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while _la==19:
-                    self.state = 122
-                    self.match(PQLParser.COMMA)
-                    self.state = 123
-                    self.value()
                     self.state = 128
+                    self.match(PQLParser.COMMA)
+                    self.state = 129
+                    self.value()
+                    self.state = 134
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
 
 
-            self.state = 131
+            self.state = 137
             self.match(PQLParser.RPAREN)
         except RecognitionException as re:
             localctx.exception = re
@@ -1340,21 +1408,21 @@ class PQLParser ( Parser ):
     def arguments(self):
 
         localctx = PQLParser.ArgumentsContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 32, self.RULE_arguments)
+        self.enterRule(localctx, 34, self.RULE_arguments)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 133
+            self.state = 139
             self.value()
-            self.state = 138
+            self.state = 144
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==19:
-                self.state = 134
-                self.match(PQLParser.COMMA)
-                self.state = 135
-                self.value()
                 self.state = 140
+                self.match(PQLParser.COMMA)
+                self.state = 141
+                self.value()
+                self.state = 146
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1493,53 +1561,53 @@ class PQLParser ( Parser ):
     def value(self):
 
         localctx = PQLParser.ValueContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 34, self.RULE_value)
+        self.enterRule(localctx, 36, self.RULE_value)
         self._la = 0 # Token type
         try:
-            self.state = 154
+            self.state = 160
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,13,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,14,self._ctx)
             if la_ == 1:
                 localctx = PQLParser.StringValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 141
+                self.state = 147
                 self.match(PQLParser.STRING)
                 pass
 
             elif la_ == 2:
                 localctx = PQLParser.NumberValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 143
+                self.state = 149
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==21:
-                    self.state = 142
+                    self.state = 148
                     self.match(PQLParser.MINUS)
 
 
-                self.state = 145
+                self.state = 151
                 self.match(PQLParser.NUMBER)
                 pass
 
             elif la_ == 3:
                 localctx = PQLParser.IdentValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 146
+                self.state = 152
                 self.match(PQLParser.IDENT)
                 pass
 
             elif la_ == 4:
                 localctx = PQLParser.FunctionValueContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
-                self.state = 147
+                self.state = 153
                 self.valueFunction()
-                self.state = 151
+                self.state = 157
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while _la==20 or _la==21:
-                    self.state = 148
+                    self.state = 154
                     self.durationOffset()
-                    self.state = 153
+                    self.state = 159
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
@@ -1593,12 +1661,12 @@ class PQLParser ( Parser ):
     def valueFunction(self):
 
         localctx = PQLParser.ValueFunctionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 36, self.RULE_valueFunction)
+        self.enterRule(localctx, 38, self.RULE_valueFunction)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 156
+            self.state = 162
             self.functionName()
-            self.state = 157
+            self.state = 163
             self.callArguments()
         except RecognitionException as re:
             localctx.exception = re
@@ -1646,12 +1714,12 @@ class PQLParser ( Parser ):
     def durationOffset(self):
 
         localctx = PQLParser.DurationOffsetContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 38, self.RULE_durationOffset)
+        self.enterRule(localctx, 40, self.RULE_durationOffset)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 159
+            self.state = 165
             self.sign()
-            self.state = 160
+            self.state = 166
             self.match(PQLParser.DURATION)
         except RecognitionException as re:
             localctx.exception = re
@@ -1698,11 +1766,11 @@ class PQLParser ( Parser ):
     def sign(self):
 
         localctx = PQLParser.SignContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 40, self.RULE_sign)
+        self.enterRule(localctx, 42, self.RULE_sign)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 162
+            self.state = 168
             _la = self._input.LA(1)
             if not(_la==20 or _la==21):
                 self._errHandler.recoverInline(self)

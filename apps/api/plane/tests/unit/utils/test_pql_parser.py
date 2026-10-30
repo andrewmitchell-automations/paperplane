@@ -187,6 +187,19 @@ IN_CASES = [
     ("state__group not in (backlog)", {"not": [{"state__group__in": ["backlog"]}]}),
 ]
 
+OPEN_STATES = ["backlog", "unstarted", "started", "triage"]
+
+LIST_FUNCTION_CASES = [
+    ("stateGroup IN openStates()", {"state__group__in": OPEN_STATES}),
+    ("state_group in activeStates()", {"state__group__in": ["unstarted", "started"]}),
+    ("stateGroup NOT IN closedStates()", {"not": [{"state__group__in": ["completed", "cancelled"]}]}),
+    ("state__group in OPENSTATES()", {"state__group__in": OPEN_STATES}),
+    (
+        "stateGroup IN openStates() AND assignee = currentUser()",
+        {"and": [{"state__group__in": OPEN_STATES}, {"assignees__id": CURRENT_USER}]},
+    ),
+]
+
 CUSTOM_PROPERTY_CASES = [
     (f'cf["{PROPERTY_ID}"] = "{OPTION_ID}"', {f"property__{PROPERTY_ID}": OPTION_ID}),
     (f'cf["{PROPERTY_ID}"] > 5', {f"property__{PROPERTY_ID}__gt": 5}),
@@ -254,6 +267,16 @@ ERROR_CASES = [
     ("target_date < daysAgo(1, 2)", 25, "daysAgo() takes one whole number of days"),
     ("target_date < daysFromNow(x)", 26, "daysFromNow() takes one whole number of days"),
     ("daysAgo(1)", 0, "daysAgo() is a value, not a condition"),
+    ("stateGroup = openStates()", 13, "openStates() is a list; use it after 'in'"),
+    ("stateGroup in (openStates())", 15, "openStates() is a list; use it after 'in'"),
+    ("priority in openStates()", 12, "openStates() only applies to stateGroup"),
+    ('cf["p"] in openStates()', 11, "openStates() only applies to stateGroup"),
+    ("openStates()", 0, "openStates() is a list, not a condition"),
+    ("stateGroup in openStates(1)", 14, "openStates() takes no arguments, got 1"),
+    ("stateGroup in openStates", 24, "unexpected end of input; expected '('"),
+    ("priority in urgent", 12, "expected '(' or a list function"),
+    ("stateGroup in now()", 14, "now() is not a list"),
+    ('stateGroup in childOf("A")', 14, "childOf() is not a list"),
     ("currentUser()", 0, "currentUser() is a value, not a condition"),
     ('assignee = childOf("PROJ-12")', 11, "childOf() is a condition, not a value"),
     ("assignee = whoAmI()", 11, "unknown function 'whoAmI'"),
@@ -317,6 +340,7 @@ COMPILE_CASES = [
     + NAME_CASES
     + PRECEDENCE_CASES
     + IN_CASES
+    + LIST_FUNCTION_CASES
     + CUSTOM_PROPERTY_CASES
     + DOCUMENTED_CASES,
 )

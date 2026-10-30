@@ -143,11 +143,22 @@ FUNCTIONS = {
     "daysfromnow": "daysFromNow",
     "childof": "childOf",
     "descendantof": "descendantOf",
+    "openstates": "openStates",
+    "activestates": "activeStates",
+    "closedstates": "closedStates",
 }
 VALUE_FUNCTIONS = ("currentUser", "now", "today", "daysAgo", "daysFromNow")
 # Value functions taking one whole number of days, and the direction each counts in from now.
 DAY_FUNCTIONS = {"daysAgo": -1, "daysFromNow": 1}
 DAY_SECONDS = 86400
+# Functions standing for a list of state groups, valid only as `stateGroup in <function>()`.
+LIST_FUNCTIONS = {
+    "openStates": ("backlog", "unstarted", "started", "triage"),
+    "activeStates": ("unstarted", "started"),
+    "closedStates": ("completed", "cancelled"),
+}
+LIST_FUNCTION_FIELD = "state__group"
+LIST_OPERAND_EXPECTED = "'(' or a list function such as openStates()"
 # Condition functions taking one quoted work item identifier, and the
 # placeholder node each one emits.
 IDENTIFIER_FUNCTIONS = {"childOf": CHILD_OF_PLACEHOLDER, "descendantOf": DESCENDANT_OF_PLACEHOLDER}
@@ -315,6 +326,8 @@ class _ParserErrors(ErrorListener):
             # that token before the field listener has seen the name.
             _check_field(self.source, e.startToken)
             expected = set(COMPARISON_TOKENS)
+        if isinstance(recognizer._ctx, PQLParser.ListOperandContext):
+            raise _error(self.source, offending, detail, LIST_OPERAND_EXPECTED)
         field_position = PQLParser.IDENT in expected and PQLParser.NOT in expected
         value_position = PQLParser.IDENT in expected and PQLParser.NOT not in expected
         if offending.type in RESERVED_TOKENS and field_position:
@@ -364,6 +377,12 @@ class _SyntaxChecks(PQLListener):
         _check_field(self.source, ctx.start)
 
     def exitFunctionName(self, ctx):
+        following = self.parser.getCurrentToken()
+        if following.type != PQLParser.LPAREN:
+            # Only after `in` does a bare name parse as a function name.
+            if ctx.start.text.lower() in FUNCTIONS:
+                raise _error(self.source, following, f"unexpected {_describe(following)}", "'('")
+            raise _error(self.source, ctx.start, f"unexpected {_describe(ctx.start)}", LIST_OPERAND_EXPECTED)
         if ctx.start.text.lower() not in FUNCTIONS:
             raise _unknown_function(self.source, ctx.start)
 
@@ -422,10 +441,10 @@ class _AstBuilder(PQLVisitor):
             return {"not": [leaf]} if negated else leaf
         if isinstance(ctx, PQLParser.InListContext):
             self._check_lookup(field, name, IN, ctx.start)
-            return {_leaf_key(name, IN): self._value_list(name, ctx.valueList())}
+            return {_leaf_key(name, IN): self._list_operand(name, ctx.listOperand())}
         if isinstance(ctx, PQLParser.NotInListContext):
             self._check_lookup(field, name, IN, ctx.start)
-            return {"not": [{_leaf_key(name, IN): self._value_list(name, ctx.valueList())}]}
+            return {"not": [{_leaf_key(name, IN): self._list_operand(name, ctx.listOperand())}]}
         self._check_lookup(field, name, ISNULL, ctx.start)
         return {_leaf_key(name, ISNULL): ctx.NOT() is None}
 
@@ -434,6 +453,25 @@ class _AstBuilder(PQLVisitor):
         if not values:
             raise self._error(ctx.RPAREN().symbol, "empty value list", "at least one value")
         return [self._located(name, value) for value in values]
+
+    def _list_operand(self, name, ctx):
+        if ctx.valueList() is not None:
+            return self._value_list(name, ctx.valueList())
+        return self._list_function(name, ctx.valueFunction())
+
+    def _list_function(self, name, call):
+        token = call.functionName().start
+        function = FUNCTIONS[token.text.lower()]
+        if function not in LIST_FUNCTIONS:
+            raise self._error(token, f"{function}() is not a list", "one of " + ", ".join(LIST_FUNCTIONS))
+        if name != LIST_FUNCTION_FIELD:
+            raise self._error(token, f"{function}() only applies to stateGroup", "a list of values in parentheses")
+        arguments = self._arguments(call.callArguments())
+        if arguments:
+            raise self._error(token, f"{function}() takes no arguments, got {len(arguments)}", f"{function}()")
+        groups = list(LIST_FUNCTIONS[function])
+        self._span(name, call, groups, is_value=True)
+        return groups
 
     def _span(self, name, ctx, value=None, is_value=False):
         start, stop = ctx.start.start, ctx.stop.stop + 1
@@ -450,6 +488,8 @@ class _AstBuilder(PQLVisitor):
     def visitConditionFunction(self, ctx):
         token = ctx.functionName().start
         name = FUNCTIONS[token.text.lower()]
+        if name in LIST_FUNCTIONS:
+            raise self._error(token, f"{name}() is a list, not a condition", f"stateGroup in {name}()")
         if name not in IDENTIFIER_FUNCTIONS:
             raise self._error(token, f"{name}() is a value, not a condition", "a field name before it")
         arguments = self._arguments(ctx.callArguments())
@@ -480,6 +520,8 @@ class _AstBuilder(PQLVisitor):
         call = ctx.valueFunction()
         token = call.functionName().start
         name = FUNCTIONS[token.text.lower()]
+        if name in LIST_FUNCTIONS:
+            raise self._error(token, f"{name}() is a list; use it after 'in'", f"stateGroup in {name}()")
         if name not in VALUE_FUNCTIONS:
             raise self._error(token, f"{name}() is a condition, not a value", "one of " + ", ".join(VALUE_FUNCTIONS))
         arguments = self._arguments(call.callArguments())

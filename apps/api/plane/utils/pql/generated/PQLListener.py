@@ -160,6 +160,15 @@ class PQLListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PQLParser#listOperand.
+    def enterListOperand(self, ctx:PQLParser.ListOperandContext):
+        pass
+
+    # Exit a parse tree produced by PQLParser#listOperand.
+    def exitListOperand(self, ctx:PQLParser.ListOperandContext):
+        pass
+
+
     # Enter a parse tree produced by PQLParser#operator.
     def enterOperator(self, ctx:PQLParser.OperatorContext):
         pass

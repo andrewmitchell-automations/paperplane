@@ -69,9 +69,15 @@ callArguments
 
 comparison
     : operator value                 # compareOperator
-    | IN valueList                   # inList
-    | NOT IN valueList               # notInList
+    | IN listOperand                 # inList
+    | NOT IN listOperand             # notInList
     | IS NOT? NULL                   # isNull
+    ;
+
+// A list function such as openStates() stands for a value list.
+listOperand
+    : valueList
+    | valueFunction
     ;
 
 operator

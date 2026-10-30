@@ -52,6 +52,7 @@ def main():
             + cases.PRECEDENCE_CASES
             + cases.QUOTING_CASES
             + cases.IN_CASES
+            + cases.LIST_FUNCTION_CASES
             + cases.CUSTOM_PROPERTY_CASES
             + cases.DOCUMENTED_CASES
         }
