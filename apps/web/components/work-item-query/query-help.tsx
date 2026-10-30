@@ -58,8 +58,6 @@ const displayName = (field: TWorkItemQueryField, dialect: TPqlDialect) =>
 export function WorkItemQueryHelp(props: Props) {
   const { fields, dialect, workspaceDialect, memberDialect, onDialectChange, onClose } = props;
   const { t } = useTranslation();
-  // List functions are Plane's spelling; JQL writes the list out.
-  const functions = (fields?.functions ?? []).filter(({ kind }) => dialect === "plane" || kind !== "list");
 
   return (
     <div className="relative mt-1 grid gap-4 rounded-md border border-subtle-1 bg-layer-1 p-4 text-12 text-secondary md:grid-cols-2">
@@ -123,7 +121,7 @@ export function WorkItemQueryHelp(props: Props) {
             </ul>
             <h5 className="mt-2 font-medium text-primary">{t("work_item_query.help_functions")}</h5>
             <ul className="flex flex-wrap gap-1">
-              {functions.map(({ name }) => (
+              {fields.functions.map(({ name }) => (
                 <li key={name} className="rounded-sm bg-layer-2 px-1.5 py-0.5 font-code text-11 text-primary">
                   {name}()
                 </li>

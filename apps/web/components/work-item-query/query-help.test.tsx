@@ -49,12 +49,13 @@ const renderHelp = (dialect: TPqlDialect, memberDialect: TPqlDialect | null = nu
 };
 
 describe("WorkItemQueryHelp", () => {
-  it("lists JQL names and no list functions in the jql dialect", () => {
+  it("lists JQL names and every function in the jql dialect", () => {
     renderHelp("jql");
     expect(screen.getByText("due_date")).toBeTruthy();
     expect(screen.queryByText("dueDate")).toBeNull();
     expect(screen.getByText("today()")).toBeTruthy();
-    expect(screen.queryByText("openStates()")).toBeNull();
+    // The parser takes list functions in both dialects, and the help listed them before the setting existed.
+    expect(screen.getByText("openStates()")).toBeTruthy();
     expect(screen.getByText(/state_group in \(unstarted, started\)/)).toBeTruthy();
   });
 
