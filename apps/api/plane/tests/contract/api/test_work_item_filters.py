@@ -32,6 +32,7 @@ from plane.db.models import (
     WorkspaceMember,
 )
 from plane.utils.issue_type import link_starter_type
+from plane.utils.pql.resolve import compile_query
 
 
 @pytest.fixture
@@ -441,6 +442,16 @@ class TestPlaceholders:
         assert result_names(response) == {"Parent item"}
 
     @pytest.mark.django_db
+    def test_a_date_offset_out_of_range_is_rejected(self, api_key_client, workspace, project, work_items):
+        for pql in (
+            "created_at > daysAgo(1000000)",
+            "created_at > daysAgo(99999999999999)",
+            "created_at > now() - 99999999w",
+        ):
+            response = api_key_client.get(project_list_url(workspace.slug, project.id), {"pql": pql})
+            assert response.status_code == status.HTTP_400_BAD_REQUEST, pql
+
+    @pytest.mark.django_db
     def test_is_top_level_excludes_children(self, api_key_client, workspace, project, work_items):
         response = api_key_client.get(project_list_url(workspace.slug, project.id), {"pql": "isTopLevel()"})
 
@@ -509,6 +520,30 @@ class TestWorkItemId:
 
         assert response.status_code == status.HTTP_200_OK
         assert result_names(response) == set()
+
+    @pytest.mark.django_db
+    def test_id_contains_needs_text(self, api_key_client, workspace, project, work_items):
+        response = self.get(api_key_client, workspace, project, 'id ~ " "')
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    @pytest.mark.django_db
+    def test_id_contains_refuses_too_many_matches(self, api_key_client, workspace, project, work_items, monkeypatch):
+        monkeypatch.setattr("plane.utils.pql.resolve.MAX_IDENTIFIER_MATCHES", 2)
+        response = self.get(api_key_client, workspace, project, f'id ~ "{project.identifier}"')
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "more than 2 work items" in response.content.decode()
+
+    @pytest.mark.django_db
+    def test_id_contains_resolves_only_visible_work_items(
+        self, create_user, workspace, project, work_items, hidden_item
+    ):
+        compiled = compile_query({"id__icontains": "-"}, create_user, workspace.slug)
+        ids = {str(work_item_id) for work_item_id in Issue.objects.filter(compiled.q).values_list("id", flat=True)}
+
+        assert str(hidden_item.id) not in ids
+        assert ids == {str(item.id) for item in work_items}
 
     @pytest.mark.django_db
     def test_id_of_a_hidden_work_item_is_rejected(self, api_key_client, workspace, project, work_items, hidden_item):

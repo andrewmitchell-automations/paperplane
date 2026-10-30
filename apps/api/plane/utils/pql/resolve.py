@@ -72,6 +72,8 @@ WORK_ITEM_FIELD = "id"
 
 # Matches no work item; stands in for an empty id list, which `compile_filters` rejects.
 NIL_UUID = "00000000-0000-0000-0000-000000000000"
+# `id ~ "<text>"` resolves to an id list; past this many matches the text is too broad.
+MAX_IDENTIFIER_MATCHES = 1000
 
 WORK_ITEM_IDENTIFIER_RE = re.compile(r"^([A-Za-z0-9]+)-(\d+)$")
 
@@ -213,7 +215,10 @@ def _substitute(node, context):
         if key == CURRENT_USER_PLACEHOLDER and value is True:
             return str(context.user.id)
         if key == NOW_PLACEHOLDER and isinstance(value, dict):
-            return context.now + timedelta(seconds=value.get("seconds", 0))
+            try:
+                return context.now + timedelta(seconds=value.get("seconds", 0))
+            except OverflowError as exc:
+                raise WorkItemFilterError({"error": "date offset is out of range"}) from exc
     return {key: _substitute(value, context) for key, value in node.items()}
 
 
@@ -246,17 +251,21 @@ def _resolve_work_item_identifier(identifier, context):
 
 def _resolve_identifier_contains(text, context):
     """The ids of the visible work items whose identifier contains `text`, ignoring case."""
-    if isinstance(text, bool) or not isinstance(text, str):
+    if isinstance(text, bool) or not isinstance(text, str) or not text.strip():
         raise WorkItemFilterError({"error": f"expected text to match work item identifiers, got {text!r}"})
     ids = [
         str(work_item_id)
         for work_item_id in _visible_work_items(context)
         .filter(**_project_scope(context))
         .annotate(identifier=Concat("project__identifier", Value("-"), Cast("sequence_id", CharField())))
-        .filter(identifier__icontains=text)
+        .filter(identifier__icontains=text.strip())
         .values_list("id", flat=True)
-        .distinct()
+        .distinct()[: MAX_IDENTIFIER_MATCHES + 1]
     ]
+    if len(ids) > MAX_IDENTIFIER_MATCHES:
+        raise WorkItemFilterError(
+            {"error": f"'{text}' matches more than {MAX_IDENTIFIER_MATCHES} work items; use a longer identifier"}
+        )
     return ids or [NIL_UUID]
 
 

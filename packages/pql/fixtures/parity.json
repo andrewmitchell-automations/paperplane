@@ -195,13 +195,13 @@
     },
     {
       "query": "stateGroup in openStates",
-      "position": 24,
-      "token": null
+      "position": 14,
+      "token": "openStates"
     },
     {
-      "query": "priority in urgent",
+      "query": "stateGroup not in foo",
       "position": 18,
-      "token": null
+      "token": "foo"
     },
     {
       "query": "priority in (urgent,)",
@@ -210,8 +210,8 @@
     },
     {
       "query": "priority in urgent",
-      "position": 18,
-      "token": null
+      "position": 12,
+      "token": "urgent"
     },
     {
       "query": "priority not urgent",

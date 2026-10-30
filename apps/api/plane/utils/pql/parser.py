@@ -331,6 +331,14 @@ class _LexerErrors(ErrorListener):
         )
 
 
+def _bare_name_after_in(ctx):
+    """The name token when `ctx` is the missing `(...)` of a name after `in`, else None."""
+    call = ctx.parentCtx if isinstance(ctx, PQLParser.CallArgumentsContext) else None
+    if isinstance(call, PQLParser.ValueFunctionContext) and isinstance(call.parentCtx, PQLParser.ListOperandContext):
+        return call.start
+    return None
+
+
 class _ParserErrors(ErrorListener):
     def __init__(self, source):
         self.source = source
@@ -352,6 +360,10 @@ class _ParserErrors(ErrorListener):
             expected = set(COMPARISON_TOKENS)
         if isinstance(recognizer._ctx, PQLParser.ListOperandContext):
             raise _error(self.source, offending, detail, LIST_OPERAND_EXPECTED)
+        name = _bare_name_after_in(recognizer._ctx)
+        if name is not None:
+            # Only after `in` does a name parse as a function name without `(`.
+            raise _error(self.source, name, f"unexpected {_describe(name)}", LIST_OPERAND_EXPECTED)
         field_position = PQLParser.IDENT in expected and PQLParser.NOT in expected
         value_position = PQLParser.IDENT in expected and PQLParser.NOT not in expected
         if offending.type in RESERVED_TOKENS and field_position:
@@ -401,12 +413,9 @@ class _SyntaxChecks(PQLListener):
         _check_field(self.source, ctx.start)
 
     def exitFunctionName(self, ctx):
-        following = self.parser.getCurrentToken()
-        if following.type != PQLParser.LPAREN:
-            # Only after `in` does a bare name parse as a function name.
-            if ctx.start.text.lower() in FUNCTIONS:
-                raise _error(self.source, following, f"unexpected {_describe(following)}", "'('")
-            raise _error(self.source, ctx.start, f"unexpected {_describe(ctx.start)}", LIST_OPERAND_EXPECTED)
+        if self.parser.getCurrentToken().type != PQLParser.LPAREN:
+            # A bare name after `in`; the syntax error below reports it.
+            return
         if ctx.start.text.lower() not in FUNCTIONS:
             raise _unknown_function(self.source, ctx.start)
 

@@ -15,7 +15,14 @@ import {
 } from "antlr4ng";
 
 import { PQLLexer } from "./generated/PQLLexer.js";
-import { PQLParser, PredicateContext, type QueryContext } from "./generated/PQLParser.js";
+import {
+  CallArgumentsContext,
+  ListOperandContext,
+  PQLParser,
+  PredicateContext,
+  type QueryContext,
+  ValueFunctionContext,
+} from "./generated/PQLParser.js";
 
 export type PqlSyntaxError = {
   position: number;
@@ -76,6 +83,16 @@ function parserError(parser: Parser, offending: Token, e: RecognitionException |
   const token = offending.type === Token.EOF ? null : (offending.text ?? "");
   if (offending.type === Token.EOF && offending.tokenIndex === 0) {
     return { position: offending.start, token, message: "empty query" };
+  }
+  // After `in` a name parses as a function name even without "(", so point at the name.
+  const call = parser.context instanceof CallArgumentsContext ? parser.context.parent : null;
+  if (call instanceof ValueFunctionContext && call.parent instanceof ListOperandContext && call.start) {
+    const name = call.start;
+    return {
+      position: name.start,
+      token: name.text ?? "",
+      message: `unexpected ${describe(name)}; expected '(' or a list function such as openStates()`,
+    };
   }
   // A name opens either a comparison or, with "(", a function call, so the parser
   // needs the token after it to choose and fails on that token with nothing useful expected.
