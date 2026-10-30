@@ -31,6 +31,7 @@ const defaultValues: Partial<IWorkspace> = {
   url: "",
   logo_url: null,
   timezone: "UTC",
+  pql_dialect: "jql",
 };
 
 export const WorkspaceDetails = observer(function WorkspaceDetails() {
@@ -63,6 +64,7 @@ export const WorkspaceDetails = observer(function WorkspaceDetails() {
     const payload: Partial<IWorkspace> = {
       name: formData.name,
       timezone: formData.timezone,
+      pql_dialect: formData.pql_dialect,
     };
 
     try {
@@ -255,6 +257,30 @@ export const WorkspaceDetails = observer(function WorkspaceDetails() {
                   </>
                 )}
               />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="workspace-pql-dialect" className="text-body-sm-medium text-tertiary">
+                {t("workspace_settings.settings.general.pql_dialect")}
+              </label>
+              <Controller
+                name="pql_dialect"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <select
+                    id="workspace-pql-dialect"
+                    value={value}
+                    onChange={(event) => onChange(event.target.value)}
+                    disabled={!isAdmin}
+                    className="h-9 rounded-md border border-subtle-1 bg-layer-2 px-3 text-body-sm-regular text-primary disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <option value="jql">JQL</option>
+                    <option value="plane">Plane</option>
+                  </select>
+                )}
+              />
+              <p className="text-caption-sm-regular text-tertiary">
+                {t("workspace_settings.settings.general.pql_dialect_description")}
+              </p>
             </div>
           </div>
         </div>
