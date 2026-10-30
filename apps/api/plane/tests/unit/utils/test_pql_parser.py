@@ -40,6 +40,7 @@ OPTION_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
 
 CURRENT_USER = {CURRENT_USER_PLACEHOLDER: True}
 
+DAY = 86400
 WEEK = 604800
 
 OPERATOR_CASES = [
@@ -68,6 +69,21 @@ FIELD_NAME_CASES = [
     ('type = "' + TYPE_ID + '"', {"type_id": TYPE_ID}),
     ('cycle = "' + STATE_ID + '"', {"cycle_id": STATE_ID}),
     ('module = "' + STATE_ID + '"', {"issue_module__module_id": STATE_ID}),
+    # Plane's camelCase names.
+    ("stateGroup = started", {"state__group": "started"}),
+    ("STATEGROUP = started", {"state__group": "started"}),
+    ('dueDate <= "2026-11-15"', {"target_date__lte": "2026-11-15"}),
+    ('targetDate <= "2026-11-15"', {"target_date__lte": "2026-11-15"}),
+    ('startDate >= "2026-01-01"', {"start_date__gte": "2026-01-01"}),
+    ("updatedAt >= daysAgo(14)", {"updated_at__gte": {NOW_PLACEHOLDER: {"seconds": -14 * DAY}}}),
+    ("createdAt < today()", {"created_at__lt": {NOW_PLACEHOLDER: {"seconds": 0}}}),
+    ("completedAt is null", {"completed_at__isnull": True}),
+    ("createdBy = currentUser()", {"created_by": CURRENT_USER}),
+    # Work items by identifier.
+    ('id = "PROJ-12"', {"id": "PROJ-12"}),
+    ('ID IN ("PROJ-3", "PROJ-4")', {"id__in": ["PROJ-3", "PROJ-4"]}),
+    ('id ~ "PROJ"', {"id__icontains": "PROJ"}),
+    ('id != "PROJ-1"', {"not": [{"id": "PROJ-1"}]}),
 ]
 
 FUNCTION_CASES = [
@@ -79,6 +95,13 @@ FUNCTION_CASES = [
     ("target_date > now() - 7d", {"target_date__gt": {NOW_PLACEHOLDER: {"seconds": -WEEK}}}),
     ("target_date < now() + 1w", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": WEEK}}}),
     ("target_date < now() + 1w - 12h", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": WEEK - 43200}}}),
+    ("target_date < daysFromNow(3)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 3 * DAY}}}),
+    ("target_date < daysAgo(1)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": -DAY}}}),
+    ("target_date < DAYSAGO(1)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": -DAY}}}),
+    ("target_date < daysAgo(0)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 0}}}),
+    ("target_date > daysAgo(7) + 12h", {"target_date__gt": {NOW_PLACEHOLDER: {"seconds": -7 * DAY + 43200}}}),
+    ("target_date >= today() - 1d", {"target_date__gte": {NOW_PLACEHOLDER: {"seconds": -DAY}}}),
+    ("target_date = Today()", {"target_date": {NOW_PLACEHOLDER: {"seconds": 0}}}),
     ('childOf("PROJ-12")', {CHILD_OF_PLACEHOLDER: "PROJ-12"}),
     ('CHILDOF("PROJ-12")', {CHILD_OF_PLACEHOLDER: "PROJ-12"}),
     ('descendantOf("PROJ-12")', {DESCENDANT_OF_PLACEHOLDER: "PROJ-12"}),
@@ -169,6 +192,38 @@ IN_CASES = [
     ("state__group not in (backlog)", {"not": [{"state__group__in": ["backlog"]}]}),
 ]
 
+OPEN_STATES = ["backlog", "unstarted", "started"]
+
+LIST_FUNCTION_CASES = [
+    ("stateGroup IN openStates()", {"state__group__in": OPEN_STATES}),
+    ("state_group in activeStates()", {"state__group__in": ["unstarted", "started"]}),
+    ("stateGroup NOT IN closedStates()", {"not": [{"state__group__in": ["completed", "cancelled"]}]}),
+    ("state__group in OPENSTATES()", {"state__group__in": OPEN_STATES}),
+    (
+        "stateGroup IN openStates() AND assignee = currentUser()",
+        {"and": [{"state__group__in": OPEN_STATES}, {"assignees__id": CURRENT_USER}]},
+    ),
+]
+
+IS_OVERDUE = {
+    "and": [
+        {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 0}}},
+        {"state__group__in": OPEN_STATES},
+    ]
+}
+
+CONDITION_FUNCTION_CASES = [
+    ("isTopLevel()", {"parent_id__isnull": True}),
+    ("ISTOPLEVEL()", {"parent_id__isnull": True}),
+    (
+        "stateGroup = started AND isTopLevel()",
+        {"and": [{"state__group": "started"}, {"parent_id__isnull": True}]},
+    ),
+    ("isOverdue()", IS_OVERDUE),
+    ("isoverdue()", IS_OVERDUE),
+    ("NOT isOverdue()", {"not": [IS_OVERDUE]}),
+]
+
 CUSTOM_PROPERTY_CASES = [
     (f'cf["{PROPERTY_ID}"] = "{OPTION_ID}"', {f"property__{PROPERTY_ID}": OPTION_ID}),
     (f'cf["{PROPERTY_ID}"] > 5', {f"property__{PROPERTY_ID}__gt": 5}),
@@ -228,6 +283,29 @@ ERROR_CASES = [
     ("childOf(PROJ)", 8, "childOf() takes a quoted work item identifier"),
     ("assignee = currentUser(1)", 11, "currentUser() takes no arguments, got 1"),
     ("target_date = now(1)", 14, "now() takes no arguments, got 1"),
+    ("target_date = today(1)", 14, "today() takes no arguments, got 1"),
+    ("target_date < daysAgo()", 22, "daysAgo() takes one whole number of days"),
+    ("target_date < daysAgo(-1)", 22, "daysAgo() takes one whole number of days"),
+    ("target_date < daysAgo(1.5)", 22, "daysAgo() takes one whole number of days"),
+    ('target_date < daysAgo("7")', 22, "daysAgo() takes one whole number of days"),
+    ("target_date < daysAgo(1, 2)", 25, "daysAgo() takes one whole number of days"),
+    ("target_date < daysFromNow(x)", 26, "daysFromNow() takes one whole number of days"),
+    ("daysAgo(1)", 0, "daysAgo() is a value, not a condition"),
+    ("stateGroup = openStates()", 13, "openStates() is a list; use it after 'in'"),
+    ("stateGroup in (openStates())", 15, "openStates() is a list; use it after 'in'"),
+    ("priority in openStates()", 12, "openStates() only applies to stateGroup"),
+    ('cf["p"] in openStates()', 11, "openStates() only applies to stateGroup"),
+    ("openStates()", 0, "openStates() is a list, not a condition"),
+    ("stateGroup in openStates(1)", 14, "openStates() takes no arguments, got 1"),
+    ('isTopLevel("X")', 0, "isTopLevel() takes no arguments, got 1"),
+    ('id > "PROJ-1"', 3, "operator '>' is not supported on field 'id'"),
+    ("isOverdue(1, 2)", 0, "isOverdue() takes no arguments, got 2"),
+    ("priority = isOverdue()", 11, "isOverdue() is a condition, not a value"),
+    ("stateGroup in isTopLevel()", 14, "isTopLevel() is not a list"),
+    ("stateGroup in openStates", 14, "expected '(' or a list function"),
+    ("stateGroup not in foo", 18, "expected '(' or a list function"),
+    ("stateGroup in now()", 14, "now() is not a list"),
+    ('stateGroup in childOf("A")', 14, "childOf() is not a list"),
     ("currentUser()", 0, "currentUser() is a value, not a condition"),
     ('assignee = childOf("PROJ-12")', 11, "childOf() is a condition, not a value"),
     ("assignee = whoAmI()", 11, "unknown function 'whoAmI'"),
@@ -291,6 +369,8 @@ COMPILE_CASES = [
     + NAME_CASES
     + PRECEDENCE_CASES
     + IN_CASES
+    + LIST_FUNCTION_CASES
+    + CONDITION_FUNCTION_CASES
     + CUSTOM_PROPERTY_CASES
     + DOCUMENTED_CASES,
 )
@@ -384,13 +464,15 @@ def test_unknown_field_is_reported_before_what_follows_it():
 
 
 RESERVED_WORD_CASES = [
-    ("now = 1", 4, "expected '(' after the reserved function name 'now'"),
-    ("priority = now", 14, "expected '(' after the reserved function name 'now'"),
-    ("priority = currentUser", 22, "expected '(' after the reserved function name 'currentUser'"),
     ("priority = cf", 11, "'cf' is a keyword, not a value"),
     ("priority = in", 11, "'in' is a keyword, not a value"),
     ("is = 1", 0, "'is' is a keyword, not a field name"),
-    ("childOf = 1", 8, "expected '(' after the reserved function name 'childOf'"),
+    # Function names are identifiers, not reserved words: without '(' they are
+    # an ordinary field name or bare value.
+    ("now = 1", 0, "unknown field 'now'"),
+    ("childOf = 1", 0, "unknown field 'childOf'"),
+    ("foo()", 0, "unknown function 'foo'"),
+    ("priority = foo()", 11, "unknown function 'foo'"),
 ]
 
 
@@ -403,6 +485,14 @@ def test_reserved_words_are_rejected_clearly(query, position, detail):
 
 
 RESERVED_WORDS = sorted(PQLParser.literalNames[token].strip("'") for token in RESERVED_TOKENS)
+
+
+@pytest.mark.parametrize("word", ["now", "currentUser", "childOf", "descendantOf"])
+def test_function_names_without_parentheses_are_bare_values(word):
+    assert parse_pql(f"priority = {word}") == {"priority": word}
+    with pytest.raises(FilterCompileError) as excinfo:
+        compile_filters(parse_pql(f"priority = {word}"))
+    assert "Invalid value for 'priority'" in str(excinfo.value)
 
 
 @pytest.mark.parametrize("word", RESERVED_WORDS)
@@ -441,7 +531,7 @@ def test_lexer_token_types():
         PQLLexer.AND,
         PQLLexer.IDENT,
         PQLLexer.GT,
-        PQLLexer.NOW,
+        PQLLexer.IDENT,
         PQLLexer.LPAREN,
         PQLLexer.RPAREN,
         PQLLexer.MINUS,
@@ -501,6 +591,12 @@ def test_spans_locate_fields_and_values():
         ("property__Amount", 55, '"Amount"', None, False),
         ("property__Amount", 67, "5", 5, True),
     ]
+
+
+def test_condition_functions_return_independent_nodes():
+    first = parse_pql("isOverdue()")
+    first["and"][1]["state__group__in"].append("completed")
+    assert parse_pql("isOverdue()") == IS_OVERDUE
 
 
 def test_spans_locate_identifier_function_arguments():

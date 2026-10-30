@@ -33,24 +33,34 @@ objects for the endpoint wiring to substitute before calling `compile_filters`:
 
     currentUser()            {"$currentUser": True}       -> the request user's id
     now() - 7d               {"$now": {"seconds": -604800}} -> that offset from now
+    daysAgo(7)               {"$now": {"seconds": -604800}} -> the same; also today(), daysFromNow(n)
     childOf("PROJ-12")       {"$childOf": "PROJ-12"}      -> the parent work item id
     descendantOf("PROJ-12")  {"$descendantOf": "PROJ-12"} -> that item's id, as an ancestor
 
 The first two sit in value position inside an otherwise complete leaf; the
 others are whole nodes, because the field they resolve to needs the identifier
-looked up first. `compile_filters` rejects all of them unsubstituted, which is
+looked up first.
+
+Plane's PQL functions need no lookup of their own and expand in place:
+`stateGroup in openStates()` (also `activeStates()`, `closedStates()`) to a
+literal list of state groups, `isTopLevel()` to `{"parent_id__isnull": True}`
+and `isOverdue()` to a past due date on an open state. `compile_filters` rejects all of them unsubstituted, which is
 the intended failure mode: substitution is not optional.
 
-Keywords (`and`, `or`, `not`, `in`, `is`, `null`), `cf` and the function names
-are reserved words: they cannot be used as a bare value or a field name. Quote
-them to use them as a value.
+Keywords (`and`, `or`, `not`, `in`, `is`, `null`) and `cf` are reserved words:
+they cannot be used as a bare value or a field name. Quote them to use them as
+a value. Function names are not reserved: a name followed by `(` is a function
+call, checked against `FUNCTIONS`, and without `(` it is an ordinary field name
+or bare value.
 """
 
+import copy
 from dataclasses import dataclass
 from typing import Any
 
 from antlr4 import CommonTokenStream, InputStream, Token
 from antlr4.error.ErrorListener import ErrorListener
+from antlr4.error.Errors import NoViableAltException
 
 from plane.utils.pql.errors import PQLSyntaxError
 from plane.utils.pql.fields import (
@@ -81,7 +91,7 @@ DESCENDANT_OF_PLACEHOLDER = "$descendantOf"
 MAX_PQL_DEPTH = 25
 
 # Short names the SDK and the MCP server advertise, resolved onto the allowlist.
-FIELD_ALIASES = {
+JQL_FIELD_ALIASES = {
     **SDK_FIELD_ALIASES,
     "ancestor": "ancestor_id",
     "assignee": "assignees__id",
@@ -104,7 +114,25 @@ FIELD_ALIASES = {
     "updated": "updated_at",
 }
 
-KNOWN_FIELD_NAMES = sorted(set(FILTER_FIELDS) | set(FIELD_ALIASES))
+# The field names of Plane's own PQL, as Plane spells them.
+PLANE_FIELD_ALIASES = {
+    "completedAt": "completed_at",
+    "createdAt": "created_at",
+    "createdBy": "created_by",
+    "dueDate": "target_date",
+    "startDate": "start_date",
+    "stateGroup": "state__group",
+    "targetDate": "target_date",
+    "updatedAt": "updated_at",
+}
+
+# Names are matched case-insensitively, so the lookup keys are lowercase.
+FIELD_ALIASES = {
+    **JQL_FIELD_ALIASES,
+    **{alias.lower(): target for alias, target in PLANE_FIELD_ALIASES.items()},
+}
+
+KNOWN_FIELD_NAMES = sorted(set(FILTER_FIELDS) | set(JQL_FIELD_ALIASES) | set(PLANE_FIELD_ALIASES))
 
 OPERATOR_LOOKUPS = {
     "=": (EXACT, False),
@@ -119,10 +147,39 @@ OPERATOR_LOOKUPS = {
 FUNCTIONS = {
     "currentuser": "currentUser",
     "now": "now",
+    "today": "today",
+    "daysago": "daysAgo",
+    "daysfromnow": "daysFromNow",
     "childof": "childOf",
     "descendantof": "descendantOf",
+    "openstates": "openStates",
+    "activestates": "activeStates",
+    "closedstates": "closedStates",
+    "istoplevel": "isTopLevel",
+    "isoverdue": "isOverdue",
 }
-VALUE_FUNCTIONS = ("currentUser", "now")
+VALUE_FUNCTIONS = ("currentUser", "now", "today", "daysAgo", "daysFromNow")
+# Value functions taking one whole number of days, and the direction each counts in from now.
+DAY_FUNCTIONS = {"daysAgo": -1, "daysFromNow": 1}
+DAY_SECONDS = 86400
+# Functions standing for a list of state groups, valid only as `stateGroup in <function>()`.
+LIST_FUNCTIONS = {
+    "openStates": ("backlog", "unstarted", "started"),
+    "activeStates": ("unstarted", "started"),
+    "closedStates": ("completed", "cancelled"),
+}
+LIST_FUNCTION_FIELD = "state__group"
+LIST_OPERAND_EXPECTED = "'(' or a list function such as openStates()"
+# Condition functions without arguments, and the complete node each one stands for.
+CONDITION_FUNCTIONS = {
+    "isTopLevel": {"parent_id__isnull": True},
+    "isOverdue": {
+        "and": [
+            {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 0}}},
+            {"state__group__in": list(LIST_FUNCTIONS["openStates"])},
+        ]
+    },
+}
 # Condition functions taking one quoted work item identifier, and the
 # placeholder node each one emits.
 IDENTIFIER_FUNCTIONS = {"childOf": CHILD_OF_PLACEHOLDER, "descendantOf": DESCENDANT_OF_PLACEHOLDER}
@@ -134,9 +191,23 @@ ESCAPES = {"\\": "\\", '"': '"', "'": "'", "n": "\n", "r": "\r", "t": "\t"}
 # Durations only need whole units; a work item query is never sub-hour precise.
 DURATION_UNITS = {"h": 3600, "d": 86400, "w": 604800}
 
-FUNCTION_TOKENS = frozenset({PQLParser.CURRENTUSER, PQLParser.NOW, PQLParser.CHILDOF, PQLParser.DESCENDANTOF})
 KEYWORD_TOKENS = frozenset({PQLParser.AND, PQLParser.OR, PQLParser.NOT, PQLParser.IN, PQLParser.IS, PQLParser.NULL})
-RESERVED_TOKENS = KEYWORD_TOKENS | {PQLParser.CF} | FUNCTION_TOKENS
+RESERVED_TOKENS = KEYWORD_TOKENS | {PQLParser.CF}
+# The tokens that can follow a field name.
+COMPARISON_TOKENS = frozenset(
+    {
+        PQLParser.EQ,
+        PQLParser.NEQ,
+        PQLParser.GT,
+        PQLParser.GTE,
+        PQLParser.LT,
+        PQLParser.LTE,
+        PQLParser.TILDE,
+        PQLParser.IN,
+        PQLParser.NOT,
+        PQLParser.IS,
+    }
+)
 
 # PQL operator strings in display order; the lookup each one needs and whether it negates.
 PQL_OPERATORS = (
@@ -257,6 +328,14 @@ class _LexerErrors(ErrorListener):
         )
 
 
+def _bare_name_after_in(ctx):
+    """The name token when `ctx` is the missing `(...)` of a name after `in`, else None."""
+    call = ctx.parentCtx if isinstance(ctx, PQLParser.CallArgumentsContext) else None
+    if isinstance(call, PQLParser.ValueFunctionContext) and isinstance(call.parentCtx, PQLParser.ListOperandContext):
+        return call.start
+    return None
+
+
 class _ParserErrors(ErrorListener):
     def __init__(self, source):
         self.source = source
@@ -265,8 +344,23 @@ class _ParserErrors(ErrorListener):
         if offending.type == Token.EOF and offending.tokenIndex == 0:
             raise _error(self.source, offending, "empty query", "a filter expression")
         expected = set(e.getExpectedTokens() if e is not None else recognizer.getExpectedTokens())
-        previous = recognizer.getTokenStream().get(offending.tokenIndex - 1) if offending.tokenIndex > 0 else None
         detail = f"unexpected {_describe(offending)}"
+        if (
+            isinstance(e, NoViableAltException)
+            and isinstance(recognizer._ctx, PQLParser.PredicateContext)
+            and e.startToken.tokenIndex < offending.tokenIndex
+        ):
+            # A name opens either a comparison or, with `(`, a function call,
+            # so the parser needs the token after it to choose and reports
+            # that token before the field listener has seen the name.
+            _check_field(self.source, e.startToken)
+            expected = set(COMPARISON_TOKENS)
+        if isinstance(recognizer._ctx, PQLParser.ListOperandContext):
+            raise _error(self.source, offending, detail, LIST_OPERAND_EXPECTED)
+        name = _bare_name_after_in(recognizer._ctx)
+        if name is not None:
+            # Only after `in` does a name parse as a function name without `(`.
+            raise _error(self.source, name, f"unexpected {_describe(name)}", LIST_OPERAND_EXPECTED)
         field_position = PQLParser.IDENT in expected and PQLParser.NOT in expected
         value_position = PQLParser.IDENT in expected and PQLParser.NOT not in expected
         if offending.type in RESERVED_TOKENS and field_position:
@@ -285,8 +379,6 @@ class _ParserErrors(ErrorListener):
             raise _error(self.source, offending, detail, "a field name, 'not' or '('")
         if value_position:
             raise _error(self.source, offending, detail, "a value")
-        if expected == {PQLParser.LPAREN} and previous is not None and previous.type in FUNCTION_TOKENS:
-            raise _error(self.source, offending, detail, f"'(' after the reserved function name '{previous.text}'")
         names = [_display(token_type) for token_type in sorted(expected, key=lambda t: (t < PQLParser.NEQ, t))]
         if isinstance(recognizer._ctx, (PQLParser.QueryContext, PQLParser.PrimaryContext)):
             names = ["'and'", "'or'", *names]
@@ -315,12 +407,13 @@ class _SyntaxChecks(PQLListener):
         self.depth -= 1
 
     def exitFieldName(self, ctx):
-        if self.parser.getCurrentToken().type == PQLParser.LPAREN:
-            raise _unknown_function(self.source, ctx.start)
         _check_field(self.source, ctx.start)
 
-    def exitIdentValue(self, ctx):
-        if self.parser.getCurrentToken().type == PQLParser.LPAREN:
+    def exitFunctionName(self, ctx):
+        if self.parser.getCurrentToken().type != PQLParser.LPAREN:
+            # A bare name after `in`; the syntax error below reports it.
+            return
+        if ctx.start.text.lower() not in FUNCTIONS:
             raise _unknown_function(self.source, ctx.start)
 
 
@@ -378,10 +471,10 @@ class _AstBuilder(PQLVisitor):
             return {"not": [leaf]} if negated else leaf
         if isinstance(ctx, PQLParser.InListContext):
             self._check_lookup(field, name, IN, ctx.start)
-            return {_leaf_key(name, IN): self._value_list(name, ctx.valueList())}
+            return {_leaf_key(name, IN): self._list_operand(name, ctx.listOperand())}
         if isinstance(ctx, PQLParser.NotInListContext):
             self._check_lookup(field, name, IN, ctx.start)
-            return {"not": [{_leaf_key(name, IN): self._value_list(name, ctx.valueList())}]}
+            return {"not": [{_leaf_key(name, IN): self._list_operand(name, ctx.listOperand())}]}
         self._check_lookup(field, name, ISNULL, ctx.start)
         return {_leaf_key(name, ISNULL): ctx.NOT() is None}
 
@@ -390,6 +483,25 @@ class _AstBuilder(PQLVisitor):
         if not values:
             raise self._error(ctx.RPAREN().symbol, "empty value list", "at least one value")
         return [self._located(name, value) for value in values]
+
+    def _list_operand(self, name, ctx):
+        if ctx.valueList() is not None:
+            return self._value_list(name, ctx.valueList())
+        return self._list_function(name, ctx.valueFunction())
+
+    def _list_function(self, name, call):
+        token = call.functionName().start
+        function = FUNCTIONS[token.text.lower()]
+        if function not in LIST_FUNCTIONS:
+            raise self._error(token, f"{function}() is not a list", "one of " + ", ".join(LIST_FUNCTIONS))
+        if name != LIST_FUNCTION_FIELD:
+            raise self._error(token, f"{function}() only applies to stateGroup", "a list of values in parentheses")
+        arguments = self._arguments(call.callArguments())
+        if arguments:
+            raise self._error(token, f"{function}() takes no arguments, got {len(arguments)}", f"{function}()")
+        groups = list(LIST_FUNCTIONS[function])
+        self._span(name, call, groups, is_value=True)
+        return groups
 
     def _span(self, name, ctx, value=None, is_value=False):
         start, stop = ctx.start.start, ctx.stop.stop + 1
@@ -406,9 +518,17 @@ class _AstBuilder(PQLVisitor):
     def visitConditionFunction(self, ctx):
         token = ctx.functionName().start
         name = FUNCTIONS[token.text.lower()]
+        if name in LIST_FUNCTIONS:
+            raise self._error(token, f"{name}() is a list, not a condition", f"stateGroup in {name}()")
+        arguments = self._arguments(ctx.callArguments())
+        if name in CONDITION_FUNCTIONS:
+            for argument in arguments:
+                self.visit(argument)
+            if arguments:
+                raise self._error(token, f"{name}() takes no arguments, got {len(arguments)}", f"{name}()")
+            return copy.deepcopy(CONDITION_FUNCTIONS[name])
         if name not in IDENTIFIER_FUNCTIONS:
             raise self._error(token, f"{name}() is a value, not a condition", "a field name before it")
-        arguments = self._arguments(ctx.callArguments())
         values = [self.visit(argument) for argument in arguments]
         if len(values) != 1:
             raise self._error(
@@ -436,13 +556,18 @@ class _AstBuilder(PQLVisitor):
         call = ctx.valueFunction()
         token = call.functionName().start
         name = FUNCTIONS[token.text.lower()]
+        if name in LIST_FUNCTIONS:
+            raise self._error(token, f"{name}() is a list; use it after 'in'", f"stateGroup in {name}()")
         if name not in VALUE_FUNCTIONS:
             raise self._error(token, f"{name}() is a condition, not a value", "one of " + ", ".join(VALUE_FUNCTIONS))
         arguments = self._arguments(call.callArguments())
-        for argument in arguments:
-            self.visit(argument)
-        if arguments:
+        values = [self.visit(argument) for argument in arguments]
+        if name in DAY_FUNCTIONS:
+            seconds = DAY_FUNCTIONS[name] * self._days(name, call.callArguments(), arguments, values)
+        elif arguments:
             raise self._error(token, f"{name}() takes no arguments, got {len(arguments)}", f"{name}()")
+        else:
+            seconds = 0
         offsets = ctx.durationOffset()
         if name == "currentUser":
             if offsets:
@@ -450,11 +575,26 @@ class _AstBuilder(PQLVisitor):
                     offsets[0].start, f"unexpected {_describe(offsets[0].start)}", "one of 'and', 'or', end of input"
                 )
             return {CURRENT_USER_PLACEHOLDER: True}
-        seconds = 0
         for offset in offsets:
             sign = -1 if offset.sign().MINUS() is not None else 1
             seconds += sign * self._duration(offset.DURATION().symbol)
         return {NOW_PLACEHOLDER: {"seconds": seconds}}
+
+    def _days(self, name, call, arguments, values):
+        """The day count of `daysAgo(n)` or `daysFromNow(n)`: one non-negative integer literal."""
+        valid = (
+            len(arguments) == 1
+            and isinstance(arguments[0], PQLParser.NumberValueContext)
+            and isinstance(values[0], int)
+            and values[0] >= 0
+        )
+        if not valid:
+            if len(arguments) > 1:
+                token = arguments[1].start
+            else:
+                token = arguments[0].start if arguments else call.RPAREN().symbol
+            raise self._error(token, f"{name}() takes one whole number of days", f"a number such as {name}(7)")
+        return values[0] * DAY_SECONDS
 
     def _duration(self, token):
         digits = len(token.text) - len(token.text.lstrip("0123456789"))
@@ -506,6 +646,17 @@ class _AstBuilder(PQLVisitor):
 
 def _leaf_key(name, lookup):
     return name if lookup == EXACT else f"{name}__{lookup}"
+
+
+def function_signature(name):
+    """`(kind, arguments)` of a function: a "value", "condition" or "list", and how many arguments it takes."""
+    if name in LIST_FUNCTIONS:
+        kind = "list"
+    elif name in VALUE_FUNCTIONS:
+        kind = "value"
+    else:
+        kind = "condition"
+    return kind, 1 if name in DAY_FUNCTIONS or name in IDENTIFIER_FUNCTIONS else 0
 
 
 def operators_for(field):

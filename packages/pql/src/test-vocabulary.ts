@@ -33,6 +33,7 @@ export const vocabulary: Vocabulary = {
     {
       name: "target_date",
       aliases: ["due_date"],
+      planeAliases: ["dueDate", "targetDate"],
       type: "date",
       lookups: ["exact", "in", "gt", "gte", "lt", "lte", "isnull"],
       operators: ["=", "!=", ">", ">=", "<", "<=", "in", "not in", "is null", "is not null"],
@@ -40,10 +41,18 @@ export const vocabulary: Vocabulary = {
     },
   ],
   functions: [
-    { name: "childOf", kind: "condition" },
-    { name: "currentUser", kind: "value" },
-    { name: "descendantOf", kind: "condition" },
-    { name: "now", kind: "value" },
+    { name: "activeStates", kind: "list", arguments: 0 },
+    { name: "childOf", kind: "condition", arguments: 1 },
+    { name: "closedStates", kind: "list", arguments: 0 },
+    { name: "currentUser", kind: "value", arguments: 0 },
+    { name: "daysAgo", kind: "value", arguments: 1 },
+    { name: "daysFromNow", kind: "value", arguments: 1 },
+    { name: "descendantOf", kind: "condition", arguments: 1 },
+    { name: "isOverdue", kind: "condition", arguments: 0 },
+    { name: "isTopLevel", kind: "condition", arguments: 0 },
+    { name: "now", kind: "value", arguments: 0 },
+    { name: "openStates", kind: "list", arguments: 0 },
+    { name: "today", kind: "value", arguments: 0 },
   ],
   valuesFor: async (field, prefix) => {
     if (field === "cf")

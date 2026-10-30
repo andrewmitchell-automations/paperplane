@@ -16,6 +16,7 @@ export const toVocabulary = (fields: TWorkItemQueryFields | undefined, valuesFor
     operators: field.operators,
     choices: field.choices,
     people: field.people,
+    planeAliases: field.plane_aliases,
   })),
   functions: fields?.functions ?? [],
   valuesFor,

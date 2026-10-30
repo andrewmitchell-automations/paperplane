@@ -19,6 +19,7 @@ import { CompareOperatorContext } from "./PQLParser.js";
 import { InListContext } from "./PQLParser.js";
 import { NotInListContext } from "./PQLParser.js";
 import { IsNullContext } from "./PQLParser.js";
+import { ListOperandContext } from "./PQLParser.js";
 import { OperatorContext } from "./PQLParser.js";
 import { ValueListContext } from "./PQLParser.js";
 import { ArgumentsContext } from "./PQLParser.js";
@@ -214,6 +215,16 @@ export class PQLListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitIsNull?: (ctx: IsNullContext) => void;
+    /**
+     * Enter a parse tree produced by `PQLParser.listOperand`.
+     * @param ctx the parse tree
+     */
+    enterListOperand?: (ctx: ListOperandContext) => void;
+    /**
+     * Exit a parse tree produced by `PQLParser.listOperand`.
+     * @param ctx the parse tree
+     */
+    exitListOperand?: (ctx: ListOperandContext) => void;
     /**
      * Enter a parse tree produced by `PQLParser.operator`.
      * @param ctx the parse tree

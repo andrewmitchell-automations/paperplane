@@ -19,6 +19,7 @@ import { CompareOperatorContext } from "./PQLParser.js";
 import { InListContext } from "./PQLParser.js";
 import { NotInListContext } from "./PQLParser.js";
 import { IsNullContext } from "./PQLParser.js";
+import { ListOperandContext } from "./PQLParser.js";
 import { OperatorContext } from "./PQLParser.js";
 import { ValueListContext } from "./PQLParser.js";
 import { ArgumentsContext } from "./PQLParser.js";
@@ -145,6 +146,12 @@ export class PQLVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitIsNull?: (ctx: IsNullContext) => Result;
+    /**
+     * Visit a parse tree produced by `PQLParser.listOperand`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitListOperand?: (ctx: ListOperandContext) => Result;
     /**
      * Visit a parse tree produced by `PQLParser.operator`.
      * @param ctx the parse tree

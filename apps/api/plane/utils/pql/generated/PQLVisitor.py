@@ -93,6 +93,11 @@ class PQLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by PQLParser#listOperand.
+    def visitListOperand(self, ctx:PQLParser.ListOperandContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by PQLParser#operator.
     def visitOperator(self, ctx:PQLParser.OperatorContext):
         return self.visitChildren(ctx)

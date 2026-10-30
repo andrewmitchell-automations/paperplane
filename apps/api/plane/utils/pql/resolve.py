@@ -28,7 +28,8 @@ import json
 import re
 from datetime import timedelta
 
-from django.db.models import Q
+from django.db.models import CharField, Q, Value
+from django.db.models.functions import Cast, Concat
 from django.utils import timezone
 
 from plane.db.models import (
@@ -49,6 +50,7 @@ from plane.utils.pql.fields import (
     EXACT,
     FIELD_ALIASES,
     FILTER_FIELDS,
+    ICONTAINS,
     IN,
     UNSUPPORTED_FIELDS,
     UUID_TYPE,
@@ -66,6 +68,12 @@ from plane.utils.pql.parser import (
 )
 
 PARENT_FIELD = "parent_id"
+WORK_ITEM_FIELD = "id"
+
+# Matches no work item; stands in for an empty id list, which `compile_filters` rejects.
+NIL_UUID = "00000000-0000-0000-0000-000000000000"
+# `id ~ "<text>"` resolves to an id list; past this many matches the text is too broad.
+MAX_IDENTIFIER_MATCHES = 1000
 
 WORK_ITEM_IDENTIFIER_RE = re.compile(r"^([A-Za-z0-9]+)-(\d+)$")
 
@@ -207,7 +215,10 @@ def _substitute(node, context):
         if key == CURRENT_USER_PLACEHOLDER and value is True:
             return str(context.user.id)
         if key == NOW_PLACEHOLDER and isinstance(value, dict):
-            return context.now + timedelta(seconds=value.get("seconds", 0))
+            try:
+                return context.now + timedelta(seconds=value.get("seconds", 0))
+            except OverflowError as exc:
+                raise WorkItemFilterError({"error": "date offset is out of range"}) from exc
     return {key: _substitute(value, context) for key, value in node.items()}
 
 
@@ -238,6 +249,26 @@ def _resolve_work_item_identifier(identifier, context):
     return str(work_item_id)
 
 
+def _resolve_identifier_contains(text, context):
+    """The ids of the visible work items whose identifier contains `text`, ignoring case."""
+    if isinstance(text, bool) or not isinstance(text, str) or not text.strip():
+        raise WorkItemFilterError({"error": f"expected text to match work item identifiers, got {text!r}"})
+    ids = [
+        str(work_item_id)
+        for work_item_id in _visible_work_items(context)
+        .filter(**_project_scope(context))
+        .annotate(identifier=Concat("project__identifier", Value("-"), Cast("sequence_id", CharField())))
+        .filter(identifier__icontains=text.strip())
+        .values_list("id", flat=True)
+        .distinct()[: MAX_IDENTIFIER_MATCHES + 1]
+    ]
+    if len(ids) > MAX_IDENTIFIER_MATCHES:
+        raise WorkItemFilterError(
+            {"error": f"'{text}' matches more than {MAX_IDENTIFIER_MATCHES} work items; use a longer identifier"}
+        )
+    return ids or [NIL_UUID]
+
+
 def _visible_work_items(context):
     return Issue.objects.filter(
         workspace__slug=context.slug,
@@ -266,6 +297,9 @@ def _resolve_names(node, context):
             resolved[key] = value
             continue
         name, lookup = split_field_lookup(key)
+        if name == WORK_ITEM_FIELD and lookup == ICONTAINS:
+            resolved[f"{name}__{IN}"] = _attributed(name, value, _resolve_identifier_contains, context)
+            continue
         if name is None or lookup not in (EXACT, IN) or FILTER_FIELDS[name].value_type != UUID_TYPE:
             resolved[key] = value
             continue
@@ -386,6 +420,7 @@ NAME_RESOLVERS = {
     "issue_module__module_id": _resolve_module,
     PARENT_FIELD: _resolve_work_item,
     ANCESTOR_FIELD: _resolve_work_item,
+    WORK_ITEM_FIELD: _resolve_work_item,
 }
 
 MEMBER_FIELDS = frozenset(name for name, resolver in NAME_RESOLVERS.items() if resolver is _resolve_member)

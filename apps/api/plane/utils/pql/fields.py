@@ -121,6 +121,10 @@ FILTER_FIELDS = {
         lookups=frozenset({EXACT, IN}),
         groupable=False,
     ),
+    # The work item itself. The resolver turns identifiers (`PROJ-12`) into
+    # ids and `~` into the ids of the visible work items whose identifier
+    # contains the text, so `icontains` never reaches the ORM.
+    "id": FilterField(path="id", value_type=UUID_TYPE, lookups=frozenset({EXACT, IN, ICONTAINS}), groupable=False),
     "name": FilterField(path="name", value_type=TEXT_TYPE, lookups=TEXT_LOOKUPS, groupable=False),
     "target_date": FilterField(path="target_date", value_type=DATE_TYPE, lookups=DATE_LOOKUPS),
     "start_date": FilterField(path="start_date", value_type=DATE_TYPE, lookups=DATE_LOOKUPS),

@@ -58,11 +58,9 @@ conditionFunction
     : functionName callArguments
     ;
 
+// Function names are identifiers, not reserved words; parser.py checks them.
 functionName
-    : CHILDOF
-    | DESCENDANTOF
-    | CURRENTUSER
-    | NOW
+    : IDENT
     ;
 
 callArguments
@@ -71,9 +69,15 @@ callArguments
 
 comparison
     : operator value                 # compareOperator
-    | IN valueList                   # inList
-    | NOT IN valueList               # notInList
+    | IN listOperand                 # inList
+    | NOT IN listOperand             # notInList
     | IS NOT? NULL                   # isNull
+    ;
+
+// A list function such as openStates() stands for a value list.
+listOperand
+    : valueList
+    | valueFunction
     ;
 
 operator
@@ -114,10 +118,6 @@ IN: 'in';
 IS: 'is';
 NULL: 'null';
 CF: 'cf';
-CURRENTUSER: 'currentuser';
-NOW: 'now';
-CHILDOF: 'childof';
-DESCENDANTOF: 'descendantof';
 
 NEQ: '!=';
 GTE: '>=';
