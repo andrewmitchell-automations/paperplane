@@ -33,6 +33,7 @@ objects for the endpoint wiring to substitute before calling `compile_filters`:
 
     currentUser()            {"$currentUser": True}       -> the request user's id
     now() - 7d               {"$now": {"seconds": -604800}} -> that offset from now
+    daysAgo(7)               {"$now": {"seconds": -604800}} -> the same; also today(), daysFromNow(n)
     childOf("PROJ-12")       {"$childOf": "PROJ-12"}      -> the parent work item id
     descendantOf("PROJ-12")  {"$descendantOf": "PROJ-12"} -> that item's id, as an ancestor
 
@@ -107,7 +108,22 @@ FIELD_ALIASES = {
     "updated": "updated_at",
 }
 
-KNOWN_FIELD_NAMES = sorted(set(FILTER_FIELDS) | set(FIELD_ALIASES))
+# The field names of Plane's own PQL, as Plane spells them.
+PLANE_FIELD_ALIASES = {
+    "completedAt": "completed_at",
+    "createdAt": "created_at",
+    "createdBy": "created_by",
+    "dueDate": "target_date",
+    "startDate": "start_date",
+    "stateGroup": "state__group",
+    "targetDate": "target_date",
+    "updatedAt": "updated_at",
+}
+# Names are matched case-insensitively, so the lookup keys are lowercase.
+FIELD_ALIASES.update({alias.lower(): target for alias, target in PLANE_FIELD_ALIASES.items()})
+
+_PLANE_ALIAS_KEYS = {alias.lower() for alias in PLANE_FIELD_ALIASES}
+KNOWN_FIELD_NAMES = sorted(set(FILTER_FIELDS) | set(FIELD_ALIASES) - _PLANE_ALIAS_KEYS | set(PLANE_FIELD_ALIASES))
 
 OPERATOR_LOOKUPS = {
     "=": (EXACT, False),
@@ -122,10 +138,16 @@ OPERATOR_LOOKUPS = {
 FUNCTIONS = {
     "currentuser": "currentUser",
     "now": "now",
+    "today": "today",
+    "daysago": "daysAgo",
+    "daysfromnow": "daysFromNow",
     "childof": "childOf",
     "descendantof": "descendantOf",
 }
-VALUE_FUNCTIONS = ("currentUser", "now")
+VALUE_FUNCTIONS = ("currentUser", "now", "today", "daysAgo", "daysFromNow")
+# Value functions taking one whole number of days, and the direction each counts in from now.
+DAY_FUNCTIONS = {"daysAgo": -1, "daysFromNow": 1}
+DAY_SECONDS = 86400
 # Condition functions taking one quoted work item identifier, and the
 # placeholder node each one emits.
 IDENTIFIER_FUNCTIONS = {"childOf": CHILD_OF_PLACEHOLDER, "descendantOf": DESCENDANT_OF_PLACEHOLDER}
@@ -461,10 +483,13 @@ class _AstBuilder(PQLVisitor):
         if name not in VALUE_FUNCTIONS:
             raise self._error(token, f"{name}() is a condition, not a value", "one of " + ", ".join(VALUE_FUNCTIONS))
         arguments = self._arguments(call.callArguments())
-        for argument in arguments:
-            self.visit(argument)
-        if arguments:
+        values = [self.visit(argument) for argument in arguments]
+        if name in DAY_FUNCTIONS:
+            seconds = DAY_FUNCTIONS[name] * self._days(name, call.callArguments(), arguments, values)
+        elif arguments:
             raise self._error(token, f"{name}() takes no arguments, got {len(arguments)}", f"{name}()")
+        else:
+            seconds = 0
         offsets = ctx.durationOffset()
         if name == "currentUser":
             if offsets:
@@ -472,11 +497,26 @@ class _AstBuilder(PQLVisitor):
                     offsets[0].start, f"unexpected {_describe(offsets[0].start)}", "one of 'and', 'or', end of input"
                 )
             return {CURRENT_USER_PLACEHOLDER: True}
-        seconds = 0
         for offset in offsets:
             sign = -1 if offset.sign().MINUS() is not None else 1
             seconds += sign * self._duration(offset.DURATION().symbol)
         return {NOW_PLACEHOLDER: {"seconds": seconds}}
+
+    def _days(self, name, call, arguments, values):
+        """The day count of `daysAgo(n)` or `daysFromNow(n)`: one non-negative integer literal."""
+        valid = (
+            len(arguments) == 1
+            and isinstance(arguments[0], PQLParser.NumberValueContext)
+            and isinstance(values[0], int)
+            and values[0] >= 0
+        )
+        if not valid:
+            if len(arguments) > 1:
+                token = arguments[1].start
+            else:
+                token = arguments[0].start if arguments else call.RPAREN().symbol
+            raise self._error(token, f"{name}() takes one whole number of days", f"a number such as {name}(7)")
+        return values[0] * DAY_SECONDS
 
     def _duration(self, token):
         digits = len(token.text) - len(token.text.lstrip("0123456789"))

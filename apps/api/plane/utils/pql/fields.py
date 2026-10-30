@@ -43,7 +43,7 @@ DATE_LOOKUPS = frozenset({EXACT, IN, GT, GTE, LT, LTE, RANGE, ISNULL})
 
 # Mirrors Issue.PRIORITY_CHOICES and State.group choices.
 PRIORITY_CHOICES = frozenset({"urgent", "high", "medium", "low", "none"})
-STATE_GROUP_CHOICES = frozenset({"backlog", "unstarted", "started", "completed", "cancelled"})
+STATE_GROUP_CHOICES = frozenset({"backlog", "unstarted", "started", "completed", "cancelled", "triage"})
 
 CUSTOM_PROPERTY_PREFIX = "property__"
 

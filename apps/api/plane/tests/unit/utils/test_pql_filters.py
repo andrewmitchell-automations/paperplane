@@ -32,6 +32,7 @@ PARENT_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
 FIELD_CASES = [
     ({"state_id": STATE_ID}, Q(state_id=uuid.UUID(STATE_ID))),
     ({"state__group": "started"}, Q(state__group="started")),
+    ({"state__group": "triage"}, Q(state__group="triage")),
     ({"priority": "urgent"}, Q(priority="urgent")),
     ({"project_id": PROJECT_ID}, Q(project_id=uuid.UUID(PROJECT_ID))),
     ({"type_id": TYPE_ID}, Q(type_id=uuid.UUID(TYPE_ID))),

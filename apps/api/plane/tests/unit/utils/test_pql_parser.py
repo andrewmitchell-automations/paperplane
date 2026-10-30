@@ -40,6 +40,7 @@ OPTION_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
 
 CURRENT_USER = {CURRENT_USER_PLACEHOLDER: True}
 
+DAY = 86400
 WEEK = 604800
 
 OPERATOR_CASES = [
@@ -68,6 +69,16 @@ FIELD_NAME_CASES = [
     ('type = "' + TYPE_ID + '"', {"type_id": TYPE_ID}),
     ('cycle = "' + STATE_ID + '"', {"cycle_id": STATE_ID}),
     ('module = "' + STATE_ID + '"', {"issue_module__module_id": STATE_ID}),
+    # Plane's camelCase names.
+    ("stateGroup = started", {"state__group": "started"}),
+    ("STATEGROUP = triage", {"state__group": "triage"}),
+    ('dueDate <= "2026-11-15"', {"target_date__lte": "2026-11-15"}),
+    ('targetDate <= "2026-11-15"', {"target_date__lte": "2026-11-15"}),
+    ('startDate >= "2026-01-01"', {"start_date__gte": "2026-01-01"}),
+    ("updatedAt >= daysAgo(14)", {"updated_at__gte": {NOW_PLACEHOLDER: {"seconds": -14 * DAY}}}),
+    ("createdAt < today()", {"created_at__lt": {NOW_PLACEHOLDER: {"seconds": 0}}}),
+    ("completedAt is null", {"completed_at__isnull": True}),
+    ("createdBy = currentUser()", {"created_by": CURRENT_USER}),
 ]
 
 FUNCTION_CASES = [
@@ -79,6 +90,13 @@ FUNCTION_CASES = [
     ("target_date > now() - 7d", {"target_date__gt": {NOW_PLACEHOLDER: {"seconds": -WEEK}}}),
     ("target_date < now() + 1w", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": WEEK}}}),
     ("target_date < now() + 1w - 12h", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": WEEK - 43200}}}),
+    ("target_date < daysFromNow(3)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 3 * DAY}}}),
+    ("target_date < daysAgo(1)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": -DAY}}}),
+    ("target_date < DAYSAGO(1)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": -DAY}}}),
+    ("target_date < daysAgo(0)", {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 0}}}),
+    ("target_date > daysAgo(7) + 12h", {"target_date__gt": {NOW_PLACEHOLDER: {"seconds": -7 * DAY + 43200}}}),
+    ("target_date >= today() - 1d", {"target_date__gte": {NOW_PLACEHOLDER: {"seconds": -DAY}}}),
+    ("target_date = Today()", {"target_date": {NOW_PLACEHOLDER: {"seconds": 0}}}),
     ('childOf("PROJ-12")', {CHILD_OF_PLACEHOLDER: "PROJ-12"}),
     ('CHILDOF("PROJ-12")', {CHILD_OF_PLACEHOLDER: "PROJ-12"}),
     ('descendantOf("PROJ-12")', {DESCENDANT_OF_PLACEHOLDER: "PROJ-12"}),
@@ -228,6 +246,14 @@ ERROR_CASES = [
     ("childOf(PROJ)", 8, "childOf() takes a quoted work item identifier"),
     ("assignee = currentUser(1)", 11, "currentUser() takes no arguments, got 1"),
     ("target_date = now(1)", 14, "now() takes no arguments, got 1"),
+    ("target_date = today(1)", 14, "today() takes no arguments, got 1"),
+    ("target_date < daysAgo()", 22, "daysAgo() takes one whole number of days"),
+    ("target_date < daysAgo(-1)", 22, "daysAgo() takes one whole number of days"),
+    ("target_date < daysAgo(1.5)", 22, "daysAgo() takes one whole number of days"),
+    ('target_date < daysAgo("7")', 22, "daysAgo() takes one whole number of days"),
+    ("target_date < daysAgo(1, 2)", 25, "daysAgo() takes one whole number of days"),
+    ("target_date < daysFromNow(x)", 26, "daysFromNow() takes one whole number of days"),
+    ("daysAgo(1)", 0, "daysAgo() is a value, not a condition"),
     ("currentUser()", 0, "currentUser() is a value, not a condition"),
     ('assignee = childOf("PROJ-12")', 11, "childOf() is a condition, not a value"),
     ("assignee = whoAmI()", 11, "unknown function 'whoAmI'"),
