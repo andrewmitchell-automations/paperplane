@@ -14,6 +14,7 @@ const payload: TWorkItemQueryFields = {
       operators: ["=", "!=", "in", "not in"],
       choices: ["urgent", "high"],
       aliases: [],
+      plane_aliases: [],
       people: false,
     },
     {
@@ -23,6 +24,7 @@ const payload: TWorkItemQueryFields = {
       operators: ["=", "!=", "in", "not in", "is null", "is not null"],
       choices: null,
       aliases: ["assignee"],
+      plane_aliases: [],
       people: true,
     },
     {
@@ -32,6 +34,7 @@ const payload: TWorkItemQueryFields = {
       operators: ["=", "!=", "in", "not in", "is null", "is not null"],
       choices: null,
       aliases: [],
+      plane_aliases: [],
       people: true,
     },
     {
@@ -41,15 +44,17 @@ const payload: TWorkItemQueryFields = {
       operators: ["=", "!=", ">", "<"],
       choices: null,
       aliases: ["due_date"],
+      plane_aliases: ["dueDate", "targetDate"],
       people: false,
     },
   ],
   unsupported: { milestone_id: "milestones are not available" },
   functions: [
-    { name: "childOf", kind: "condition" },
-    { name: "currentUser", kind: "value" },
-    { name: "descendantOf", kind: "condition" },
-    { name: "now", kind: "value" },
+    { name: "childOf", kind: "condition", arguments: 1 },
+    { name: "currentUser", kind: "value", arguments: 0 },
+    { name: "descendantOf", kind: "condition", arguments: 1 },
+    { name: "now", kind: "value", arguments: 0 },
+    { name: "openStates", kind: "list", arguments: 0 },
   ],
   custom_property_syntax: 'cf["<property id or name>"]',
 };
@@ -70,7 +75,11 @@ describe("toVocabulary", () => {
       operators: ["=", "!=", "in", "not in"],
       choices: ["urgent", "high"],
     });
-    expect(vocabulary.fields[3]).toMatchObject({ aliases: ["due_date"], type: "date" });
+    expect(vocabulary.fields[3]).toMatchObject({
+      aliases: ["due_date"],
+      planeAliases: ["dueDate", "targetDate"],
+      type: "date",
+    });
     expect(vocabulary.functions).toEqual(payload.functions);
   });
 

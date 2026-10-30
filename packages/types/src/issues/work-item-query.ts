@@ -27,14 +27,21 @@ export type TWorkItemQueryField = {
   operators: string[];
   choices: string[] | null;
   aliases: string[];
+  /** Plane's camelCase names for the field, e.g. `dueDate`. */
+  plane_aliases: string[];
   /** Values are workspace members, so currentUser() applies. */
   people: boolean;
 };
 
 export type TWorkItemQueryFunction = {
   name: string;
-  /** A condition stands alone (`childOf("X")`); a value follows an operator (`now()`). */
-  kind: "condition" | "value";
+  /**
+   * A condition stands alone (`childOf("X")`); a value follows an operator (`now()`);
+   * a list follows `in` (`stateGroup in openStates()`).
+   */
+  kind: "condition" | "value" | "list";
+  /** How many arguments the function takes. */
+  arguments: number;
 };
 
 /** The vocabulary of Plane Query Language, for hints and completion. */

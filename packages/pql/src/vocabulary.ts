@@ -12,12 +12,16 @@ export type FieldInfo = {
   choices: string[] | null;
   // Values are people, so currentUser() applies.
   people?: boolean;
+  // Plane's camelCase names for the field, matched without regard to case.
+  planeAliases?: string[];
 };
 
 export type FunctionInfo = {
   name: string;
-  // A condition stands alone; a value follows an operator.
-  kind: "condition" | "value";
+  // A condition stands alone; a value follows an operator; a list follows `in`.
+  kind: "condition" | "value" | "list";
+  // How many arguments the function takes.
+  arguments: number;
 };
 
 export type Vocabulary = {
@@ -29,5 +33,10 @@ export type Vocabulary = {
 
 export function findField(vocabulary: Vocabulary, name: string): FieldInfo | undefined {
   const wanted = name.toLowerCase();
-  return vocabulary.fields.find((field) => field.name === wanted || field.aliases.includes(wanted));
+  return vocabulary.fields.find(
+    (field) =>
+      field.name === wanted ||
+      field.aliases.includes(wanted) ||
+      (field.planeAliases ?? []).some((alias) => alias.toLowerCase() === wanted)
+  );
 }

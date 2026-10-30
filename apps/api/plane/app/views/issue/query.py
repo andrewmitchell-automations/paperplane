@@ -23,7 +23,13 @@ from plane.app.permissions import ROLE, allow_permission
 from plane.app.views.base import BaseAPIView
 from plane.utils.pql import PQLSyntaxError, WorkItemFilterError, compile_pql, parse_pql
 from plane.utils.pql.fields import FILTER_FIELDS, UNSUPPORTED_FIELDS
-from plane.utils.pql.parser import FIELD_ALIASES, FUNCTIONS, VALUE_FUNCTIONS, operators_for
+from plane.utils.pql.parser import (
+    FUNCTIONS,
+    JQL_FIELD_ALIASES,
+    PLANE_FIELD_ALIASES,
+    function_signature,
+    operators_for,
+)
 from plane.utils.pql.resolve import MEMBER_FIELDS
 
 
@@ -101,7 +107,8 @@ class WorkItemQueryFieldsEndpoint(BaseAPIView):
                 "operators": operators_for(field),
                 "people": name in MEMBER_FIELDS,
                 "choices": sorted(field.choices) if field.choices else None,
-                "aliases": sorted(alias for alias, target in FIELD_ALIASES.items() if target == name),
+                "aliases": sorted(alias for alias, target in JQL_FIELD_ALIASES.items() if target == name),
+                "plane_aliases": sorted(alias for alias, target in PLANE_FIELD_ALIASES.items() if target == name),
             }
             for name, field in FILTER_FIELDS.items()
         ]
@@ -110,7 +117,7 @@ class WorkItemQueryFieldsEndpoint(BaseAPIView):
                 "fields": fields,
                 "unsupported": UNSUPPORTED_FIELDS,
                 "functions": [
-                    {"name": name, "kind": "value" if name in VALUE_FUNCTIONS else "condition"}
+                    dict(zip(("name", "kind", "arguments"), (name, *function_signature(name))))
                     for name in sorted(set(FUNCTIONS.values()))
                 ],
                 "custom_property_syntax": 'cf["<property id or name>"]',

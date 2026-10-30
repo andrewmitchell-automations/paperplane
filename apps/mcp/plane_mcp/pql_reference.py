@@ -23,7 +23,7 @@ Plane Query Language (PQL) filter string for work items. Output ONLY valid PQL.
 
 FIELDS (a name or a UUID; names match case-insensitively within the project)
   state (alias status)     "Paid" or a state UUID
-  state_group              "backlog" | "unstarted" | "started" | "completed" | "cancelled"
+  state_group              "backlog" | "unstarted" | "started" | "completed" | "cancelled" | "triage"
   priority                 "urgent" | "high" | "medium" | "low" | "none"
   project                  "SALES" (identifier), a name, or a project UUID
   type                     "Invoice" or a type UUID
@@ -36,6 +36,9 @@ FIELDS (a name or a UUID; names match case-insensitively within the project)
   name (alias title)       text, use ~
   target_date (alias due_date), start_date      dates
   created_at, updated_at, completed_at          compared on their calendar day
+  id                       a work item identifier: id = "PROJ-12", id in (...), id ~ "PROJ"
+  Plane's names also work: stateGroup, dueDate, targetDate, startDate, createdAt,
+  updatedAt, completedAt, createdBy.
 
 CUSTOM PROPERTIES  cf["<property name or id>"]
   cf["Amount"] > 1000          cf["Tier"] = "Gold"          cf["Due date"] >= "2026-01-01"
@@ -47,14 +50,18 @@ OPERATORS
   >  >=  <  <=                                             dates, timestamps, decimal properties
   ~  (case-insensitive contains)                           name, text properties
   AND  OR  NOT  and parentheses
-  Reserved words: and or not in is null cf currentUser now childOf descendantOf.
-  Quote one ("now") to use it as a value.
+  Reserved words: and or not in is null cf. Quote one ("in") to use it as a value.
 
 FUNCTIONS
   currentUser()                    the caller
   now(), now() - 7d, now() + 2w    offsets in h (hours), d (days), w (weeks)
+  today(), daysAgo(7), daysFromNow(3)   the same clock, counted in whole days
   childOf("PROJ-12")               direct children of a work item
   descendantOf("PROJ-12")          everything below it, at any depth
+  isTopLevel()                     work items without a parent
+  isOverdue()                      open work items due before today
+  state_group in openStates()      backlog, unstarted, started, triage;
+                                   also activeStates() (unstarted, started), closedStates()
 
 EXAMPLES
   priority = "urgent" AND assignee = currentUser()
@@ -64,6 +71,7 @@ EXAMPLES
   target_date >= now() - 7d AND target_date < now()
   cf["Amount"] > 1000 AND cf["Due date"] < "2027-01-01"
   name ~ "login" AND NOT state_group = "completed"
+  stateGroup IN openStates() AND updatedAt < daysAgo(14) AND isTopLevel()
 """
 
 # Returned when a `pql` filter is refused, so the retry can be self-corrected.
@@ -79,7 +87,7 @@ unknown name is refused with the field named.
 | Field | Aliases | Values |
 |---|---|---|
 | state | status | state name or UUID |
-| state_group | | backlog, unstarted, started, completed, cancelled |
+| state_group | stateGroup | backlog, unstarted, started, completed, cancelled, triage |
 | priority | | urgent, high, medium, low, none |
 | project | | project identifier (SALES), name or UUID |
 | type | | work item type name or UUID |
@@ -87,13 +95,14 @@ unknown name is refused with the field named.
 | assignees | assignee | email, display name, UUID or currentUser() |
 | module | | module name or UUID |
 | cycle | | cycle name or UUID |
-| created_by | | member UUID or currentUser() |
+| created_by | createdBy | member UUID or currentUser() |
 | parent | | work item identifier (PROJ-12) or UUID; direct children |
 | ancestor | | work item identifier or UUID; every level below |
 | name | title | text, filter with ~ |
-| target_date | due_date | YYYY-MM-DD or now() offset |
-| start_date | | YYYY-MM-DD or now() offset |
-| created_at, updated_at, completed_at | | compared on their calendar day |
+| target_date | due_date, dueDate, targetDate | YYYY-MM-DD or a date function |
+| start_date | startDate | YYYY-MM-DD or a date function |
+| created_at, updated_at, completed_at | createdAt, updatedAt, completedAt | compared on their calendar day |
+| id | | work item identifier (PROJ-12): =, !=, in, not in, ~ (identifier contains) |
 
 ### Custom properties
 
@@ -121,12 +130,20 @@ and parentheses.
 ```
 currentUser()              the caller
 now()                      now; now() - 7d, now() + 12h, now() - 2w (h, d, w)
+today()                    the same as now()
+daysAgo(7), daysFromNow(3) now minus or plus whole days; offsets may follow
 childOf("PROJ-12")         direct children of that work item
 descendantOf("PROJ-12")    every work item below it, at any depth
+isTopLevel()               work items without a parent
+isOverdue()                open work items whose due date is before today
+openStates()               after `state_group in`: backlog, unstarted, started, triage
+activeStates()             after `state_group in`: unstarted, started
+closedStates()             after `state_group in`: completed, cancelled
 ```
 
-The function names, `cf` and the keywords `and`, `or`, `not`, `in`, `is` and `null`
-are reserved words: quote them (`"now"`) to use them as values. `childOf` and
+`cf` and the keywords `and`, `or`, `not`, `in`, `is` and `null` are reserved words:
+quote them (`"in"`) to use them as values. Function names are matched without
+regard to case and are not reserved. `childOf` and
 `descendantOf` take a work item identifier such as PROJ-12 or a UUID, never a title. `parent = "PROJ-12"` and `ancestor = "PROJ-12"` are the same filters as
 fields.
 
@@ -155,6 +172,9 @@ created_at >= "2026-01-01"
 cf["Amount"] > 1000
 cf["Due date"] >= "2026-01-01" AND cf["Due date"] < "2027-01-01"
 name ~ "login" AND NOT state_group = "completed"
+stateGroup IN openStates() AND updatedAt < daysAgo(14)
+isOverdue() AND assignee = currentUser()
+id in ("PROJ-3", "PROJ-4") OR childOf("PROJ-12")
 ```
 """
 

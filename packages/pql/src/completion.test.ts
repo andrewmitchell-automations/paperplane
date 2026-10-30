@@ -29,6 +29,8 @@ describe("candidatesAt", () => {
       'cf[""]',
       'childOf("")',
       'descendantOf("")',
+      "isOverdue()",
+      "isTopLevel()",
     ]);
   });
 
@@ -81,8 +83,38 @@ describe("candidatesAt", () => {
     expect(await labels("assignee = ")).toEqual(["currentUser()"]);
   });
 
-  it("offers now() for dates", async () => {
-    expect(await labels("due_date < ")).toEqual(["now()", "now() - 7d"]);
+  it("offers the date functions for dates", async () => {
+    expect(await labels("due_date < ")).toEqual(["daysAgo()", "daysFromNow()", "now()", "now() - 7d", "today()"]);
+  });
+
+  it("offers no date function for other fields", async () => {
+    expect(await labels("priority = ")).not.toContain("today()");
+    expect(await labels("assignee = ")).not.toContain("daysAgo()");
+  });
+
+  it("places the caret inside the parentheses of a function with an argument", async () => {
+    const result = await candidatesAt("due_date < ", 11, vocabulary);
+    expect(result.options.find((o) => o.label === "daysAgo()")?.cursor).toBe("daysAgo(".length);
+    expect(result.options.find((o) => o.label === "today()")?.cursor).toBeUndefined();
+  });
+
+  it("finds a field by its Plane name without offering Plane names", async () => {
+    expect(await labels("dueDate < ")).toContain("today()");
+    expect(await labels("DUEDATE < ")).toContain("today()");
+    const fields = await labels("");
+    expect(fields).toContain("due_date");
+    expect(fields).not.toContain("dueDate");
+  });
+
+  it("offers conditions with and without arguments, but no list functions", async () => {
+    const result = await candidatesAt("", 0, vocabulary);
+    const isTopLevel = result.options.find((o) => o.label === "isTopLevel()");
+    expect(isTopLevel?.insert).toBe("isTopLevel()");
+    expect(isTopLevel?.cursor).toBeUndefined();
+    const names = result.options.map((o) => o.label);
+    expect(names).toContain("isOverdue()");
+    expect(names).not.toContain("openStates()");
+    expect(names).not.toContain('openStates("")');
   });
 
   it("offers nothing field-specific for a custom property value", async () => {

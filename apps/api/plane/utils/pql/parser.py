@@ -128,8 +128,14 @@ PLANE_FIELD_ALIASES = {
 # Names are matched case-insensitively, so the lookup keys are lowercase.
 FIELD_ALIASES.update({alias.lower(): target for alias, target in PLANE_FIELD_ALIASES.items()})
 
-_PLANE_ALIAS_KEYS = {alias.lower() for alias in PLANE_FIELD_ALIASES}
-KNOWN_FIELD_NAMES = sorted(set(FILTER_FIELDS) | set(FIELD_ALIASES) - _PLANE_ALIAS_KEYS | set(PLANE_FIELD_ALIASES))
+# The aliases besides Plane's, which the query bar lists apart.
+JQL_FIELD_ALIASES = {
+    alias: target
+    for alias, target in FIELD_ALIASES.items()
+    if alias not in {name.lower() for name in PLANE_FIELD_ALIASES}
+}
+
+KNOWN_FIELD_NAMES = sorted(set(FILTER_FIELDS) | set(JQL_FIELD_ALIASES) | set(PLANE_FIELD_ALIASES))
 
 OPERATOR_LOOKUPS = {
     "=": (EXACT, False),
@@ -634,6 +640,17 @@ class _AstBuilder(PQLVisitor):
 
 def _leaf_key(name, lookup):
     return name if lookup == EXACT else f"{name}__{lookup}"
+
+
+def function_signature(name):
+    """`(kind, arguments)` of a function: a "value", "condition" or "list", and how many arguments it takes."""
+    if name in LIST_FUNCTIONS:
+        kind = "list"
+    elif name in VALUE_FUNCTIONS:
+        kind = "value"
+    else:
+        kind = "condition"
+    return kind, 1 if name in DAY_FUNCTIONS or name in IDENTIFIER_FUNCTIONS else 0
 
 
 def operators_for(field):

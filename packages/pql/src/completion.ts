@@ -41,6 +41,7 @@ export type Subject = { field: string | null; property: string | null };
 const PREFERRED_RULES = new Set([P.RULE_fieldName, P.RULE_operator, P.RULE_value, P.RULE_propertyReference]);
 const WORD_RE = /^[\p{L}_][\p{L}\p{N}_]*$/u;
 const DURATION_EXAMPLES = ["1d", "7d", "2w", "12h"];
+const DATE_VALUE_FUNCTIONS = new Set(["now", "today", "daysAgo", "daysFromNow"]);
 
 function isWordLike(token: Token): boolean {
   return token.type === P.IDENT || KEYWORD_TOKENS.has(token.type) || token.type === P.CF;
@@ -133,11 +134,12 @@ function operatorCandidates(position: Position, vocabulary: Vocabulary, field: F
 
 function valueFunctions(vocabulary: Vocabulary, field: FieldInfo | undefined): Candidate[] {
   const options: Candidate[] = [];
-  for (const { name, kind } of vocabulary.functions) {
+  for (const { name, kind, arguments: count } of vocabulary.functions) {
     if (kind !== "value") continue;
     if (name === "currentUser" && !field?.people) continue;
-    if (name === "now" && field?.type !== "date") continue;
-    options.push({ label: `${name}()`, insert: `${name}()`, type: "function", boost: 1 });
+    if (DATE_VALUE_FUNCTIONS.has(name) && field?.type !== "date") continue;
+    const cursor = count > 0 ? name.length + 1 : undefined;
+    options.push({ label: `${name}()`, insert: `${name}()`, type: "function", boost: 1, cursor });
     if (name === "now") options.push({ label: "now() - 7d", insert: "now() - 7d", type: "function" });
   }
   return options;
@@ -177,9 +179,12 @@ function fieldCandidates(vocabulary: Vocabulary, position: Position): Candidate[
   }
   if (position.tokenCandidates.has(P.NOT)) options.push({ label: "not", insert: "not ", type: "keyword" });
   if (position.tokenCandidates.has(P.CF)) options.push({ label: 'cf[""]', insert: 'cf[""]', type: "field", cursor: 4 });
-  for (const { name, kind } of vocabulary.functions) {
-    if (kind === "condition") {
+  for (const { name, kind, arguments: count } of vocabulary.functions) {
+    if (kind !== "condition") continue;
+    if (count > 0) {
       options.push({ label: `${name}("")`, insert: `${name}("")`, type: "function", cursor: name.length + 2 });
+    } else {
+      options.push({ label: `${name}()`, insert: `${name}()`, type: "function" });
     }
   }
   return options;
