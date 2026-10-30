@@ -10240,6 +10240,7 @@ export interface components {
             organization_size?: string | null;
             timezone?: components["schemas"]["TimezoneEnum"];
             background_color?: string;
+            pql_dialect?: components["schemas"]["PqlDialectEnum"];
             /** Format: uuid */
             logo_asset?: string | null;
         };
@@ -10258,6 +10259,7 @@ export interface components {
             getting_started_checklist?: unknown;
             tips?: unknown;
             explored_features?: unknown;
+            pql_dialect?: (components["schemas"]["PqlDialectEnum"] | components["schemas"]["BlankEnum"] | components["schemas"]["NullEnum"]) | null;
         };
         PatchedWorkspaceThemeRequest: {
             /** Format: date-time */
@@ -10294,6 +10296,12 @@ export interface components {
             /** Format: double */
             sort_order?: number;
         };
+        /**
+         * @description * `jql` - JQL
+         *     * `plane` - Plane
+         * @enum {string}
+         */
+        PqlDialectEnum: "jql" | "plane";
         /**
          * @description * `urgent` - Urgent
          *     * `high` - High
@@ -11778,6 +11786,7 @@ export interface components {
             organization_size: string | null;
             timezone: components["schemas"]["TimezoneEnum"];
             background_color: string;
+            pql_dialect: components["schemas"]["PqlDialectEnum"];
             /** Format: uuid */
             readonly created_by: string | null;
             /**
@@ -11840,6 +11849,7 @@ export interface components {
             organization_size?: string | null;
             timezone?: components["schemas"]["TimezoneEnum"];
             background_color?: string;
+            pql_dialect?: components["schemas"]["PqlDialectEnum"];
             /** Format: uuid */
             logo_asset?: string | null;
         };
@@ -11879,6 +11889,7 @@ export interface components {
             getting_started_checklist: unknown;
             tips: unknown;
             explored_features: unknown;
+            pql_dialect: (components["schemas"]["PqlDialectEnum"] | components["schemas"]["BlankEnum"] | components["schemas"]["NullEnum"]) | null;
             /** Format: uuid */
             readonly created_by: string | null;
             /**
@@ -11898,6 +11909,7 @@ export interface components {
             getting_started_checklist?: unknown;
             tips?: unknown;
             explored_features?: unknown;
+            pql_dialect?: (components["schemas"]["PqlDialectEnum"] | components["schemas"]["BlankEnum"] | components["schemas"]["NullEnum"]) | null;
         };
         WorkspaceRecentVisit: {
             /** Format: uuid */
