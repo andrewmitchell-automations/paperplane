@@ -9,8 +9,10 @@ member of, the workspace wide list and count included.
 """
 
 import json
+from datetime import timedelta
 
 import pytest
+from django.utils import timezone
 from rest_framework import status
 
 from plane.db.models import (
@@ -411,6 +413,39 @@ class TestPlaceholders:
 
         assert response.status_code == status.HTTP_200_OK
         assert result_names(response) == {"Parent item"}
+
+    @pytest.mark.django_db
+    def test_is_overdue_returns_open_items_due_before_today(
+        self, api_key_client, workspace, project, state, create_user, work_items, parent_item, child_item, teammate_item
+    ):
+        today = timezone.now().date()
+        yesterday = today - timedelta(days=1)
+        parent_item.target_date = yesterday
+        parent_item.save(update_fields=["target_date"])
+        child_item.target_date = today
+        child_item.save(update_fields=["target_date"])
+        teammate_item.target_date = yesterday
+        teammate_item.save(update_fields=["target_date"])
+        Issue.objects.create(
+            name="Undated item",
+            workspace=workspace,
+            project=project,
+            state=state,
+            created_by=create_user,
+            type=link_starter_type(project),
+        )
+
+        response = api_key_client.get(project_list_url(workspace.slug, project.id), {"pql": "isOverdue()"})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert result_names(response) == {"Parent item"}
+
+    @pytest.mark.django_db
+    def test_is_top_level_excludes_children(self, api_key_client, workspace, project, work_items):
+        response = api_key_client.get(project_list_url(workspace.slug, project.id), {"pql": "isTopLevel()"})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert result_names(response) == {"Parent item", "Teammate item"}
 
 
 @pytest.mark.contract

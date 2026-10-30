@@ -39,7 +39,12 @@ objects for the endpoint wiring to substitute before calling `compile_filters`:
 
 The first two sit in value position inside an otherwise complete leaf; the
 others are whole nodes, because the field they resolve to needs the identifier
-looked up first. `compile_filters` rejects all of them unsubstituted, which is
+looked up first.
+
+Plane's PQL functions need no lookup of their own and expand in place:
+`stateGroup in openStates()` (also `activeStates()`, `closedStates()`) to a
+literal list of state groups, `isTopLevel()` to `{"parent_id__isnull": True}`
+and `isOverdue()` to a past due date on an open state. `compile_filters` rejects all of them unsubstituted, which is
 the intended failure mode: substitution is not optional.
 
 Keywords (`and`, `or`, `not`, `in`, `is`, `null`) and `cf` are reserved words:
@@ -49,6 +54,7 @@ call, checked against `FUNCTIONS`, and without `(` it is an ordinary field name
 or bare value.
 """
 
+import copy
 from dataclasses import dataclass
 from typing import Any
 
@@ -146,6 +152,8 @@ FUNCTIONS = {
     "openstates": "openStates",
     "activestates": "activeStates",
     "closedstates": "closedStates",
+    "istoplevel": "isTopLevel",
+    "isoverdue": "isOverdue",
 }
 VALUE_FUNCTIONS = ("currentUser", "now", "today", "daysAgo", "daysFromNow")
 # Value functions taking one whole number of days, and the direction each counts in from now.
@@ -159,6 +167,16 @@ LIST_FUNCTIONS = {
 }
 LIST_FUNCTION_FIELD = "state__group"
 LIST_OPERAND_EXPECTED = "'(' or a list function such as openStates()"
+# Condition functions without arguments, and the complete node each one stands for.
+CONDITION_FUNCTIONS = {
+    "isTopLevel": {"parent_id__isnull": True},
+    "isOverdue": {
+        "and": [
+            {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 0}}},
+            {"state__group__in": list(LIST_FUNCTIONS["openStates"])},
+        ]
+    },
+}
 # Condition functions taking one quoted work item identifier, and the
 # placeholder node each one emits.
 IDENTIFIER_FUNCTIONS = {"childOf": CHILD_OF_PLACEHOLDER, "descendantOf": DESCENDANT_OF_PLACEHOLDER}
@@ -490,9 +508,15 @@ class _AstBuilder(PQLVisitor):
         name = FUNCTIONS[token.text.lower()]
         if name in LIST_FUNCTIONS:
             raise self._error(token, f"{name}() is a list, not a condition", f"stateGroup in {name}()")
+        arguments = self._arguments(ctx.callArguments())
+        if name in CONDITION_FUNCTIONS:
+            for argument in arguments:
+                self.visit(argument)
+            if arguments:
+                raise self._error(token, f"{name}() takes no arguments, got {len(arguments)}", f"{name}()")
+            return copy.deepcopy(CONDITION_FUNCTIONS[name])
         if name not in IDENTIFIER_FUNCTIONS:
             raise self._error(token, f"{name}() is a value, not a condition", "a field name before it")
-        arguments = self._arguments(ctx.callArguments())
         values = [self.visit(argument) for argument in arguments]
         if len(values) != 1:
             raise self._error(

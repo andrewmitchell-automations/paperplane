@@ -200,6 +200,25 @@ LIST_FUNCTION_CASES = [
     ),
 ]
 
+IS_OVERDUE = {
+    "and": [
+        {"target_date__lt": {NOW_PLACEHOLDER: {"seconds": 0}}},
+        {"state__group__in": OPEN_STATES},
+    ]
+}
+
+CONDITION_FUNCTION_CASES = [
+    ("isTopLevel()", {"parent_id__isnull": True}),
+    ("ISTOPLEVEL()", {"parent_id__isnull": True}),
+    (
+        "stateGroup = started AND isTopLevel()",
+        {"and": [{"state__group": "started"}, {"parent_id__isnull": True}]},
+    ),
+    ("isOverdue()", IS_OVERDUE),
+    ("isoverdue()", IS_OVERDUE),
+    ("NOT isOverdue()", {"not": [IS_OVERDUE]}),
+]
+
 CUSTOM_PROPERTY_CASES = [
     (f'cf["{PROPERTY_ID}"] = "{OPTION_ID}"', {f"property__{PROPERTY_ID}": OPTION_ID}),
     (f'cf["{PROPERTY_ID}"] > 5', {f"property__{PROPERTY_ID}__gt": 5}),
@@ -273,6 +292,10 @@ ERROR_CASES = [
     ('cf["p"] in openStates()', 11, "openStates() only applies to stateGroup"),
     ("openStates()", 0, "openStates() is a list, not a condition"),
     ("stateGroup in openStates(1)", 14, "openStates() takes no arguments, got 1"),
+    ('isTopLevel("X")', 0, "isTopLevel() takes no arguments, got 1"),
+    ("isOverdue(1, 2)", 0, "isOverdue() takes no arguments, got 2"),
+    ("priority = isOverdue()", 11, "isOverdue() is a condition, not a value"),
+    ("stateGroup in isTopLevel()", 14, "isTopLevel() is not a list"),
     ("stateGroup in openStates", 24, "unexpected end of input; expected '('"),
     ("priority in urgent", 12, "expected '(' or a list function"),
     ("stateGroup in now()", 14, "now() is not a list"),
@@ -341,6 +364,7 @@ COMPILE_CASES = [
     + PRECEDENCE_CASES
     + IN_CASES
     + LIST_FUNCTION_CASES
+    + CONDITION_FUNCTION_CASES
     + CUSTOM_PROPERTY_CASES
     + DOCUMENTED_CASES,
 )
@@ -561,6 +585,12 @@ def test_spans_locate_fields_and_values():
         ("property__Amount", 55, '"Amount"', None, False),
         ("property__Amount", 67, "5", 5, True),
     ]
+
+
+def test_condition_functions_return_independent_nodes():
+    first = parse_pql("isOverdue()")
+    first["and"][1]["state__group__in"].append("completed")
+    assert parse_pql("isOverdue()") == IS_OVERDUE
 
 
 def test_spans_locate_identifier_function_arguments():
